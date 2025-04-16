@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* The components layer is used to define reusable component classes.
+This is where you place your custom classes that will be reused throughout your project */
+@layer components {
+  .title {
+    @apply text-3xl md:text-4xl lg:text-5xl text-center text-blue-900;
+  }
+  .sectionTitle {
+    @apply text-2xl md:text-3xl lg:text-4xl text-center text-blue-900;
+  }
+  .text {
+    @apply text-sm md:text-base lg:text-lg text-blue-900;
+  }
+}
