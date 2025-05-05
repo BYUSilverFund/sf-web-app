@@ -72,7 +72,7 @@ const getQuantPositionsLambda = async () => {
 
 // const getUnderCurrentPositions = async () => {
 //   const response = await fetch(
-//     process.env.REACT_APP_S3_UNDERGRAD_POSITIONS_OBJECT_URL
+//     process.env.NEXT_PUBLIC_S3_UNDERGRAD_POSITIONS_OBJECT_URL
 //   );
 //   const reader = response.body.getReader();
 //   const result = await reader.read();
@@ -88,7 +88,7 @@ const getQuantPositionsLambda = async () => {
 
 // const getMBACurrentPositions = async () => {
 //   const response = await fetch(
-//     process.env.REACT_APP_S3_GRAD_POSITIONS_OBJECT_URL
+//     process.env.NEXT_PUBLIC_S3_GRAD_POSITIONS_OBJECT_URL
 //   );
 //   const reader = response.body.getReader();
 //   const result = await reader.read();
@@ -104,7 +104,7 @@ const getQuantPositionsLambda = async () => {
 
 // const getBrighamCapitalPositions = async () => {
 //   const response = await fetch(
-//     process.env.REACT_APP_S3_BRIGHAM_CAPITAL_POSITIONS_OBJECT_URL
+//     process.env.NEXT_PUBLIC_S3_BRIGHAM_CAPITAL_POSITIONS_OBJECT_URL
 //   );
 //   const reader = response.body.getReader();
 //   const result = await reader.read();
@@ -120,7 +120,7 @@ const getQuantPositionsLambda = async () => {
 
 // const getQuantPositions = async () => {
 //   const response = await fetch(
-//     process.env.REACT_APP_S3_QUANT_POSITIONS_OBJECT_URL
+//     process.env.NEXT_PUBLIC_S3_QUANT_POSITIONS_OBJECT_URL
 //   );
 //   const reader = response.body.getReader();
 //   const result = await reader.read();
@@ -326,8 +326,8 @@ const Home: React.FC = () => {
                   row.ticker !== "ETF29" && row.ticker !== "cash"
                     ? `https://finance.yahoo.com/quote/${row.ticker}`
                     : row.ticker === "ETF29"
-                    ? "https://finance.yahoo.com/quote/%5ERUA?p=^RUA&.tsrc=fin-srch"
-                    : undefined
+                      ? "https://finance.yahoo.com/quote/%5ERUA?p=^RUA&.tsrc=fin-srch"
+                      : undefined
                 }
                 className="text-blue-900 no-underline"
                 target="_blank"
