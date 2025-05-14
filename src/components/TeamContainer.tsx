@@ -108,6 +108,12 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             position="Quantitative"
             linkedIn="https://www.linkedin.com/in/brandonwaits/"
           />
+          <TeamCard
+            headShot={KyleMarsh.src}
+            name="Kyle Marsh"
+            position="Undergraduate"
+            linkedIn="https://www.linkedin.com/in/kyle-marsh/"
+          />
         </div>
       )}
       {activeTab === "Advisors" && (

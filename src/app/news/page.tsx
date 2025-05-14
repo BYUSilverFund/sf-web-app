@@ -1,5 +1,4 @@
 // import components
-import Footer from "@/components/Footer";
 import NewsCard from "@/components/NewsCard";
 import { SquareSvgTl, SquareSvgBr, SquareSvgTr } from "@/components/SquareSvg";
 //import images

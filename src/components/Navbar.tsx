@@ -70,28 +70,6 @@ function NavbarNav({ className }: NavbarProps) {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              {/* <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex select-none flex-col justify-center rounded-md bg-[#002E5D] p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
-                  >
-                    <div className="flex flex-row items-center justify-center">
-                      <img
-                        src={light ? SFlogoW.src : SFlogoB.src}
-                        alt="Silver Fund Logo"
-                        className="h-5"
-                      />
-                      <strong className="text-white mx-2">x</strong>
-                      <img
-                        src={light ? BYUlogoW.src : BYUlogoB.src}
-                        alt="BYUlogo"
-                        className="h-5"
-                      />
-                    </div>
-                  </a>
-                </NavigationMenuLink>
-              </li> */}
               <ListItem href="/team" title="Team">
                 Meet the current Silver Fund team
               </ListItem>
@@ -158,9 +136,6 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem";
 
 // TITLE AND LOGO SECTION OF THE NAVBAR
-
-import SFlogoB from "@/images/sf-logo-blue.png";
-import BYUlogoB from "@/images/byu-logo-text-blue.png";
 import SFlogoW from "@/images/sf-logo-white.png";
 import BYUlogoW from "@/images/byu-logo-text-white.png";
 

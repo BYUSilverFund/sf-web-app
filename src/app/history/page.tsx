@@ -65,7 +65,7 @@ const History: React.FC = () => {
                   After designing the sugar beet piling machinery, Mr. Silver
                   moved his family to Denver in 1934. He founded the
                   Silver-Roberts Iron Works with Fred Roberts. In 1940, he
-                  bought out his partner and changed the company's name to
+                  bought out his partner and changed the company&apos;s name to
                   Silver Engineering Works.
                 </p>
               </div>

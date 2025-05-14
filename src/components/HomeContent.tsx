@@ -1,16 +1,10 @@
 "use client";
 import { StaticImageData } from "next/image";
 import React, { ReactNode } from "react";
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef } from "react";
 // import components
-import PlacementContainer from "./Placements";
 import TeamContainer from "./TeamContainer";
-import {
-  SquareSvgBr,
-  SquareSvgTl,
-  SquareSvgBl,
-  SquareSvgTr,
-} from "./SquareSvg";
+import { SquareSvgBr, SquareSvgTl, SquareSvgTr } from "./SquareSvg";
 // import packages
 import gsap from "gsap"; // for animations
 // images import for the positions
@@ -70,7 +64,7 @@ const Slogan = () => {
       ref={itemsRef}
     >
       <h3 className="my-14 lg:mx-10 text-blue title text-center">
-        BYU's Premier Student-Led Investment Group
+        BYU&apos;s Premier Student-Led Investment Group
       </h3>
       <ChipsContainer />
     </div>
@@ -113,28 +107,36 @@ const ScrollAnimation = () => {
 
   // Handle scroll updates
   useEffect(() => {
+    // Function to update the scrollY state with the current scroll position
     const handleScroll = () => setScrollY(window.scrollY);
 
+    // Function to handle intersection events and add/remove scroll event listener
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting) {
+        // Add scroll event listener when the container is in view
         window.addEventListener("scroll", handleScroll);
       } else {
+        // Remove scroll event listener when the container is out of view
         window.removeEventListener("scroll", handleScroll);
       }
     };
 
+    // Create an IntersectionObserver to observe the container's visibility
     const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.1,
+      threshold: 0.1, // Trigger when 10% of the container is visible
     });
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    const currentContainer = containerRef.current;
+    if (currentContainer) {
+      // Start observing the container
+      observer.observe(currentContainer);
     }
 
+    // Cleanup function to remove event listeners and stop observing
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (currentContainer) {
+        observer.unobserve(currentContainer);
       }
     };
   }, []);
@@ -183,21 +185,6 @@ const ScrollAnimation = () => {
   );
 };
 
-// vertical container (not used right now)
-function LargeInvestments() {
-  return (
-    <div className="hidden lg:flex flex-col flex-1 items-center">
-      <InvestmentCard logo={CCCSLogo} ticker="CCCS" />
-      <InvestmentCard logo={MODGLogo} ticker="MODG" />
-      <InvestmentCard logo={RMDLogo} ticker="RMD" />
-      <InvestmentCard logo={CAKELogo} ticker="CAKE" />
-      <InvestmentCard logo={MELILogo} ticker="MELI" />
-      <InvestmentCard logo={RSGLogo} ticker="RSG" />
-      <InvestmentCard logo={VIKLogo} ticker="VIK" />
-      <InvestmentCard logo={NFLXLogo} ticker="NFLX" />
-    </div>
-  );
-}
 const Investments = () => {
   return (
     <div className="flex flex-wrap w-[80%] justify-center m-8">

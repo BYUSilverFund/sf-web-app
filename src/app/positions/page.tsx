@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Spinner from "../../components/LoadingSpinner";
 
 // Material UI imports
@@ -145,10 +144,11 @@ const tickerCheck = (ticker: string) => {
   }
 };
 
-// FIXME (change from any type. just did that to get it working (make an interface for it))
-const getPosInfo = async (positions: any[]) => {
+const getPosInfo = async (
+  positions: { ticker: string; positionvalue: string }[]
+) => {
   let total_equity = 0;
-  let pos_info: any = [];
+  let pos_info: { ticker: string; weight: number }[] = [];
   positions.forEach((position) => {
     total_equity += parseFloat(position.positionvalue);
   });
@@ -160,67 +160,41 @@ const getPosInfo = async (positions: any[]) => {
     });
   });
   await Promise.all(promises);
-  pos_info = pos_info.filter((pos: any) => pos.weight > 0.0);
-  pos_info.sort((a: any, b: any) => (a.weight < b.weight ? 1 : -1));
+  pos_info = pos_info.filter((pos) => pos.weight > 0.0);
+  pos_info.sort((a, b) => (a.weight < b.weight ? 1 : -1));
 
   return pos_info;
 };
 
 const Home: React.FC = () => {
-  interface Position {
-    ticker: string;
-    weight: number;
-  }
   interface PositionInfo {
     ticker: string;
     weight: number;
   }
 
-  const [underPositions, setUnderPositions] = useState<Position[]>([]);
   const [underPosInfo, setUnderPosInfo] = useState<PositionInfo[]>([]);
-  const [mbaPositions, setMbaPositions] = useState<Position[]>([]);
   const [mbaPosInfo, setMbaPosInfo] = useState<PositionInfo[]>([]);
-  const [brighamCapitalPositions, setBrighamCapitalPositions] = useState<
-    Position[]
-  >([]);
   const [brighamCapitalPosInfo, setBrighamCapitalPosInfo] = useState<
     PositionInfo[]
   >([]);
-  const [quantPositions, setQuantPositions] = useState<Position[]>([]);
   const [quantPosInfo, setQuantPosInfo] = useState<PositionInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       getUnderCurrentPositionsLambda()
-        .then((res) => {
-          setUnderPositions(res);
-          return res;
-        })
         .then((res) => getPosInfo(res))
         .then((res) => setUnderPosInfo(res)),
 
       getMBACurrentPositionsLambda()
-        .then((res) => {
-          setMbaPositions(res);
-          return res;
-        })
         .then((res) => getPosInfo(res))
         .then((res) => setMbaPosInfo(res)),
 
       getBrighamCapitalPositionsLambda()
-        .then((res) => {
-          setBrighamCapitalPositions(res);
-          return res;
-        })
         .then((res) => getPosInfo(res))
         .then((res) => setBrighamCapitalPosInfo(res)),
 
       getQuantPositionsLambda()
-        .then((res) => {
-          setQuantPositions(res);
-          return res;
-        })
         .then((res) => getPosInfo(res))
         .then((res) => setQuantPosInfo(res)),
     ]).finally(() => setLoading(false));
@@ -377,6 +351,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+      <br></br>
     </div>
   );
 };
