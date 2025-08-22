@@ -1,2 +1,3 @@
-export * from "./allFunds";
+export * from "./fund"
 export * from "./benchmark"
+export * from "./portfolio"

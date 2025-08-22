@@ -1,4 +1,4 @@
-import { AllFundsSummaryResponse, BenchmarkSummaryResponse } from "@/lib/types";
+import { FundSummaryResponse, BenchmarkSummaryResponse } from "@/lib/types";
 
 import {
   Table,
@@ -15,7 +15,7 @@ export function AllFundsTable({
   allFundsSummary,
   benchmarkSummary,
 }: {
-  allFundsSummary: AllFundsSummaryResponse;
+  allFundsSummary: FundSummaryResponse;
   benchmarkSummary: BenchmarkSummaryResponse;
 }) {
   return (

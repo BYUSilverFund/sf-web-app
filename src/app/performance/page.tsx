@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getAllFundsSummary, getAllFundsTimeSeries } from "@/lib/api/allFunds";
+import { getFundSummary, getFundTimeSeries } from "@/lib/api/fund";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import {
   BenchmarkRequest,
   BenchmarkSummaryResponse,
 } from "@/lib/types/benchmark";
 import {
-  AllFundsRequest,
-  AllFundsSummaryResponse,
-  AllFundsTimeSeriesResponse,
+  FundRequest,
+  FundSummaryResponse,
+  FundTimeSeriesResponse,
 } from "@/lib/types";
 import { format } from "date-fns";
 import * as React from "react";
@@ -32,13 +32,13 @@ export default function Page() {
 
   const [start, setStart] = useState<Date>(yesterdayLastYear);
   const [end, setEnd] = useState<Date>(yesterday);
-  const [allFundsSummary, setAllFundsSummary] = useState<AllFundsSummaryResponse>();
+  const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =useState<BenchmarkSummaryResponse>();
-  const [allFundsTimeSeries, setAllFundsTimeSeries] = useState<AllFundsTimeSeriesResponse>();
+  const [fundTimeSeries, setFundTimeSeries] = useState<FundTimeSeriesResponse>();
 
   useEffect(() => {
     if (start && end) {
-      const allFundsRequest: AllFundsRequest = {
+      const allFundsRequest: FundRequest = {
         start: format(start, "yyyy-MM-dd"),
         end: format(end, "yyyy-MM-dd"),
       };
@@ -48,36 +48,39 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      getAllFundsSummary(allFundsRequest)
-        .then(setAllFundsSummary)
+      getFundSummary(allFundsRequest)
+        .then(setFundSummary)
         .catch(console.error);
       getBenchmarkSummary(benchmarkRequest)
         .then(setBenchmarkSummary)
         .catch(console.error);
 
-      getAllFundsTimeSeries(allFundsRequest)
-        .then(setAllFundsTimeSeries)
+      getFundTimeSeries(allFundsRequest)
+        .then(setFundTimeSeries)
         .catch(console.error);
     }
   }, [start, end]);
 
   return (
     <div>
-      {allFundsSummary && benchmarkSummary && allFundsTimeSeries && (
+      {fundSummary && benchmarkSummary && fundTimeSeries && (
         <div className="space-y-4 p-4">
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton setStart={setStart} setEnd={setEnd} />
-            <div>As of {format(allFundsSummary.end, "PPP")}</div>
+            <div>As of {format(fundSummary.end, "PPP")}</div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col">
-            <AllFundsTable allFundsSummary={allFundsSummary} benchmarkSummary={benchmarkSummary}/>
+            <AllFundsTable allFundsSummary={fundSummary} benchmarkSummary={benchmarkSummary}/>
           </Card>
           {/* Row 3 */}
           <div className="flex gap-2">
             <Card className="p-4">
-              <ReturnsChart data={allFundsTimeSeries["records"]} />
+              <ReturnsChart data={fundTimeSeries["records"]} />
+            </Card>
+            <Card>
+              Portfolios
             </Card>
           </div>
         </div>

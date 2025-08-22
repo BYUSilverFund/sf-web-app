@@ -1,9 +1,9 @@
-export interface AllFundsRequest {
+export interface FundRequest {
   start: string; // ISO date string: "YYYY-MM-DD"
   end: string;   // ISO date string: "YYYY-MM-DD"
 }
 
-export interface AllFundsSummaryResponse {
+export interface FundSummaryResponse {
   start: string; // ISO date string
   end: string;   // ISO date string
   value: number;
@@ -18,7 +18,7 @@ export interface AllFundsSummaryResponse {
   information_ratio: number;
 }
 
-export interface AllFundsRecord {
+export interface FundRecord {
   date: string;  // ISO date string
   value: number;
   return_: number;
@@ -28,8 +28,8 @@ export interface AllFundsRecord {
   benchmark_cummulative_return: number;
 }
 
-export interface AllFundsTimeSeriesResponse {
+export interface FundTimeSeriesResponse {
   start: string; // ISO date string
   end: string;   // ISO date string
-  records: AllFundsRecord[];
+  records: FundRecord[];
 }

@@ -65,6 +65,13 @@ function NavbarNav({ className }: NavbarProps) {
           </NavigationMenuItem>
         ))}
         <NavigationMenuItem>
+            <Link href="/performance" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Performance
+              </NavigationMenuLink>
+            </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
           <NavigationMenuTrigger className="text-white">
             People
           </NavigationMenuTrigger>

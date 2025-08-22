@@ -1,11 +1,11 @@
-import { AllFundsRequest, AllFundsSummaryResponse, AllFundsTimeSeriesResponse } from "../types";
+import { PortfolioRequest, PortfolioSummaryResponse, PortfolioTimeSeriesResponse } from "../types";
 
 export async function getAllFundsSummary(
-    request: AllFundsRequest
-): Promise<AllFundsSummaryResponse> {
+    request: PortfolioRequest
+): Promise<PortfolioSummaryResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "all-funds/summary", {
+        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "portfolio/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -15,7 +15,7 @@ export async function getAllFundsSummary(
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const allFundsSummaryResponse: AllFundsSummaryResponse = await response.json();
+        const allFundsSummaryResponse: PortfolioSummaryResponse = await response.json();
 
         return allFundsSummaryResponse;
     } catch (error) {
@@ -25,11 +25,11 @@ export async function getAllFundsSummary(
 }
 
 export async function getAllFundsTimeSeries(
-    request: AllFundsRequest
-): Promise<AllFundsTimeSeriesResponse> {
+    request: PortfolioRequest
+): Promise<PortfolioTimeSeriesResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "all-funds/time-series", {
+        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "portfolio/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -39,7 +39,7 @@ export async function getAllFundsTimeSeries(
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const allFundsTimeSeriesResponse: AllFundsTimeSeriesResponse = await response.json();
+        const allFundsTimeSeriesResponse: PortfolioTimeSeriesResponse = await response.json();
 
         return allFundsTimeSeriesResponse;
     } catch (error) {
