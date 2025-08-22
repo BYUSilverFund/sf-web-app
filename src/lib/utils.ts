@@ -19,3 +19,12 @@ export function formatPercent(value: number, fractionDigits: number = 2): string
 export function formatFloat(value: number, fractionDigits: number = 2): string {
   return `${value.toFixed(fractionDigits)}`;
 }
+
+export function formatPortfolio(name: string): string | undefined{
+  return {
+    grad: 'Grad',
+    undergrad: 'Undergrad',
+    quant: 'Quant',
+    brigham_capital: 'Brigham Capital'
+  }[name]
+}

@@ -11,7 +11,7 @@ import {
 
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
 
-export function AllFundsTable({
+export function FundSummaryTable({
   allFundsSummary,
   benchmarkSummary,
 }: {

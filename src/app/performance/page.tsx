@@ -16,29 +16,26 @@ import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { ReturnsChart } from "@/components/ReturnsChart";
-import { AllFundsTable } from "@/components/AllFundsTable";
+import { FundSummaryTable } from "@/components/FundSummaryTable";
+import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/allPortfolios";
+import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
+import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 
 export default function Page() {
   const today = new Date();
+  const todayLastYear = new Date();
+  todayLastYear.setFullYear(today.getFullYear() - 1);
 
-  // yesterday
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  // yesterday one year ago
-  const yesterdayLastYear = new Date();
-  yesterdayLastYear.setFullYear(today.getFullYear() - 1);
-  yesterdayLastYear.setDate(today.getDate() - 1);
-
-  const [start, setStart] = useState<Date>(yesterdayLastYear);
-  const [end, setEnd] = useState<Date>(yesterday);
+  const [start, setStart] = useState<Date>(todayLastYear);
+  const [end, setEnd] = useState<Date>(today);
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =useState<BenchmarkSummaryResponse>();
   const [fundTimeSeries, setFundTimeSeries] = useState<FundTimeSeriesResponse>();
+  const [allPortfoliosSummary, setAllPortfoliosSummary] = useState<AllPortfoliosSummaryResponse>();
 
   useEffect(() => {
     if (start && end) {
-      const allFundsRequest: FundRequest = {
+      const fundRequest: FundRequest = {
         start: format(start, "yyyy-MM-dd"),
         end: format(end, "yyyy-MM-dd"),
       };
@@ -48,22 +45,29 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      getFundSummary(allFundsRequest)
+      const allPortfoliosRequest: AllPortfoliosRequest = {
+        start: format(start, "yyyy-MM-dd"),
+        end: format(end, "yyyy-MM-dd"),      
+      }
+
+      getFundSummary(fundRequest)
         .then(setFundSummary)
         .catch(console.error);
       getBenchmarkSummary(benchmarkRequest)
         .then(setBenchmarkSummary)
         .catch(console.error);
-
-      getFundTimeSeries(allFundsRequest)
+      getFundTimeSeries(fundRequest)
         .then(setFundTimeSeries)
+        .catch(console.error);
+      getAllPortfoliosSummary(allPortfoliosRequest)
+        .then(setAllPortfoliosSummary)
         .catch(console.error);
     }
   }, [start, end]);
 
   return (
     <div>
-      {fundSummary && benchmarkSummary && fundTimeSeries && (
+      {fundSummary && benchmarkSummary && fundTimeSeries && allPortfoliosSummary &&(
         <div className="space-y-4 p-4">
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
@@ -71,16 +75,16 @@ export default function Page() {
             <div>As of {format(fundSummary.end, "PPP")}</div>
           </Card>
           {/* Row 2 */}
-          <Card className="flex flex-col">
-            <AllFundsTable allFundsSummary={fundSummary} benchmarkSummary={benchmarkSummary}/>
+          <Card className="flex flex-col h-fit">
+            <FundSummaryTable allFundsSummary={fundSummary} benchmarkSummary={benchmarkSummary}/>
           </Card>
           {/* Row 3 */}
-          <div className="flex gap-2">
-            <Card className="p-4">
+          <div className="flex gap-4">
+            <Card className="px-4">
               <ReturnsChart data={fundTimeSeries["records"]} />
             </Card>
             <Card>
-              Portfolios
+              <AllPortfoliosSummaryTable allPortfoliosSummary={allPortfoliosSummary}/>
             </Card>
           </div>
         </div>
