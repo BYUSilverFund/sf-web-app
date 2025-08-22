@@ -19,15 +19,18 @@ import { ReturnsChart } from "@/components/ReturnsChart";
 import { FundSummaryTable } from "@/components/FundSummaryTable";
 import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/allPortfolios";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
-import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
+import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable copy";
 
 export default function Page() {
   const today = new Date();
-  const todayLastYear = new Date();
-  todayLastYear.setFullYear(today.getFullYear() - 1);
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
 
-  const [start, setStart] = useState<Date>(todayLastYear);
-  const [end, setEnd] = useState<Date>(today);
+  const yesterdayLastYear = new Date();
+  yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
+
+  const [start, setStart] = useState<Date>(yesterdayLastYear);
+  const [end, setEnd] = useState<Date>(yesterday);
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =useState<BenchmarkSummaryResponse>();
   const [fundTimeSeries, setFundTimeSeries] = useState<FundTimeSeriesResponse>();
@@ -66,7 +69,7 @@ export default function Page() {
   }, [start, end]);
 
   return (
-    <div>
+    <div className="px-24">
       {fundSummary && benchmarkSummary && fundTimeSeries && allPortfoliosSummary &&(
         <div className="space-y-4 p-4">
           {/* Row 1 */}
@@ -83,7 +86,7 @@ export default function Page() {
             <Card className="px-4">
               <ReturnsChart data={fundTimeSeries["records"]} />
             </Card>
-            <Card className="h-fit">
+            <Card className="h-fit w-full">
               <AllPortfoliosSummaryTable allPortfoliosSummary={allPortfoliosSummary}/>
             </Card>
           </div>

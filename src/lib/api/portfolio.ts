@@ -1,6 +1,6 @@
 import { PortfolioRequest, PortfolioSummaryResponse, PortfolioTimeSeriesResponse } from "../types";
 
-export async function getAllFundsSummary(
+export async function getPortfolioSummary(
     request: PortfolioRequest
 ): Promise<PortfolioSummaryResponse> {
 
@@ -24,7 +24,7 @@ export async function getAllFundsSummary(
     }
 }
 
-export async function getAllFundsTimeSeries(
+export async function getPortfolioTimeSeries(
     request: PortfolioRequest
 ): Promise<PortfolioTimeSeriesResponse> {
 
