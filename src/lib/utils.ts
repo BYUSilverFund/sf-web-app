@@ -28,3 +28,24 @@ export function formatPortfolio(name: string): string | undefined{
     brigham_capital: 'Brigham Capital'
   }[name]
 }
+
+export function defaultEnd(): Date{
+    const today = new Date();
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    return yesterday
+}
+
+export function defaultStart(): Date{
+    const today = new Date();
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const yesterdayLastYear = new Date();
+    yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
+
+    return yesterdayLastYear
+}

@@ -4,20 +4,14 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
+import { defaultEnd, defaultStart } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-
-  const yesterdayLastYear = new Date();
-  yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
-
-  const [start, setStart] = useState<Date>(yesterdayLastYear);
-  const [end, setEnd] = useState<Date>(yesterday);
+  const [start, setStart] = useState<Date>(defaultStart());
+  const [end, setEnd] = useState<Date>(defaultEnd());
   const [allHoldingsSummary, setAllHoldingsSummary] =
     useState<AllHoldingsSummaryResponse>();
 
@@ -43,7 +37,7 @@ export default function Page() {
         <div className="space-y-4 p-4">
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton setStart={setStart} setEnd={setEnd} />
+            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
             <div>As of {format(allHoldingsSummary.end, "PPP")}</div>
           </Card>
           {/* Row 2 */}
