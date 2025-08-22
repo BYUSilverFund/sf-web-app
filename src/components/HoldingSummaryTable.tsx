@@ -29,7 +29,7 @@ export function HoldingSummaryTable({
           <TableHead>Value</TableHead>
           <TableHead>Total Return</TableHead>
           <TableHead>Volatility</TableHead>
-          <TableHead>Dividends Per Share</TableHead>
+          <TableHead>Dividends</TableHead>
           <TableHead>Dividend Yield</TableHead>
           <TableHead>Alpha</TableHead>
           <TableHead>Beta</TableHead>
@@ -41,7 +41,7 @@ export function HoldingSummaryTable({
           <TableCell>{formatCurrency(holdingSummary.value)}</TableCell>
           <TableCell>{formatPercent(holdingSummary.total_return)}</TableCell>
           <TableCell>{formatPercent(holdingSummary.volatility)}</TableCell>
-          <TableCell>{formatCurrency(holdingSummary.dividends_per_share)}</TableCell>
+          <TableCell>{formatCurrency(holdingSummary.dividends)}</TableCell>
           <TableCell>{formatPercent(holdingSummary.dividend_yield)}</TableCell>
           <TableCell>{formatPercent(holdingSummary.alpha)}</TableCell>
           <TableCell>{formatFloat(holdingSummary.beta)}</TableCell>

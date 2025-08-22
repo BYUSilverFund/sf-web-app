@@ -17,6 +17,7 @@ export interface HoldingSummaryResponse {
   value: number
   total_return: number
   volatility: number
+  dividends: number
   dividends_per_share: number
   dividend_yield: number
   alpha: number
