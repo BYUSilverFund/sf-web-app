@@ -83,7 +83,7 @@ export default function Page() {
             <Card className="px-4">
               <ReturnsChart data={fundTimeSeries["records"]} />
             </Card>
-            <Card>
+            <Card className="h-fit">
               <AllPortfoliosSummaryTable allPortfoliosSummary={allPortfoliosSummary}/>
             </Card>
           </div>
