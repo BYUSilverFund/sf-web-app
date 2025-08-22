@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   BenchmarkRequest,
   BenchmarkSummaryResponse,
+  DividendsResponse,
   HoldingRequest,
   HoldingSummaryResponse,
   HoldingTimeSeriesResponse,
@@ -15,8 +16,9 @@ import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { ReturnsChart } from "@/components/ReturnsChart";
-import { getHoldingSummary, getHoldingTimeSeries } from "@/lib/api/holding";
+import { getDividends, getHoldingSummary, getHoldingTimeSeries } from "@/lib/api/holding";
 import { HoldingSummaryTable } from "@/components/HoldingSummaryTable";
+import { DividendsTable } from "@/components/DividendsTable";
 
 export default function Page() {
   const today = new Date();
@@ -31,6 +33,7 @@ export default function Page() {
   const [holdingSummary, setHoldingSummary] = useState<HoldingSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] = useState<BenchmarkSummaryResponse>();
   const [holdingTimeSeries, setHoldingTimeSeries] = useState<HoldingTimeSeriesResponse>();
+  const [dividends, setDividends] = useState<DividendsResponse>();
 
   const params = useParams<{ fund: string, holding: string}>()
 
@@ -57,12 +60,15 @@ export default function Page() {
       getHoldingTimeSeries(holdingRequest)
         .then(setHoldingTimeSeries)
         .catch(console.error)
+      getDividends(holdingRequest)
+        .then(setDividends)
+        .catch(console.error)
     }
   }, [start, end, params.fund, params.holding]);
 
   return (
     <div className="px-24">
-      {holdingSummary && holdingTimeSeries && benchmarkSummary &&(
+      {holdingSummary && holdingTimeSeries && benchmarkSummary && dividends &&(
         <div className="space-y-4 p-4">
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
@@ -76,8 +82,14 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={holdingTimeSeries["records"]} />
+              <ReturnsChart data={holdingTimeSeries.records} />
             </Card>
+            <div className="flex flex-col gap-4 w-full">
+                <Card className="flex flex-col">
+                    <div className="text-center py-4 border-b border-solid">Dividends</div>
+                    <DividendsTable dividends={dividends}/>
+                </Card>
+            </div>
           </div>
         </div>
       )}

@@ -46,3 +46,18 @@ export interface HoldingTimeSeriesResponse {
   end: string
   records: HoldingRecord[]
 }
+
+export interface DividendsRecord {
+  date: string
+  shares: number
+  dividends_per_share: number
+  dividends: number
+}
+
+export interface DividendsResponse {
+  fund: string
+  ticker: string
+  start: string
+  end: string
+  dividends: DividendsRecord[]
+}
