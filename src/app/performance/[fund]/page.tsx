@@ -85,7 +85,7 @@ export default function Page() {
               <ReturnsChart data={portfolioTimeSeries["records"]} />
             </Card>
             <Card className="h-fit w-full">
-              <AllHoldingsSummaryTable allHoldingsSummary={allHoldingsSummary}/>
+              <AllHoldingsSummaryTable fund={params.fund} allHoldingsSummary={allHoldingsSummary}/>
             </Card>
           </div>
         </div>

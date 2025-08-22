@@ -7,8 +7,10 @@ import { AllHoldingsSummaryResponse } from "@/lib/types";
 import Link from "next/link";
 
 export function AllHoldingsSummaryTable({
+  fund,
   allHoldingsSummary,
 }: {
+  fund: string
   allHoldingsSummary: AllHoldingsSummaryResponse;
 }) {
   console.log(allHoldingsSummary)
@@ -19,7 +21,7 @@ export function AllHoldingsSummaryTable({
       .filter((a) => a.active)
       .slice(0, 5)
       .map((holding, index) => (
-        <Link key={index} className="flex justify-between px-4 hover:bg-secondary py-2" href={`/performance/${holding.ticker}`}>
+        <Link key={index} className="flex justify-between px-4 hover:bg-secondary py-2" href={`/performance/${fund}/${holding.ticker}`}>
           <div>{holding.ticker}</div>
           <div className="flex flex-col text-right">
             <div>{formatCurrency(holding.value)}</div>
