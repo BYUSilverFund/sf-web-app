@@ -56,20 +56,19 @@ function NavbarNav({ className }: NavbarProps) {
         {["/", "/positions"].map((href) => (
           <NavigationMenuItem key={href}>
             {pathname !== href && (
-              <Link href={href} legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {href === "/" ? "Home" : "Portfolio"}
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <Link href={href}>{href === "/" ? "Home" : "Portfolio"}</Link>
+              </NavigationMenuLink>
             )}
           </NavigationMenuItem>
         ))}
         <NavigationMenuItem>
-            <Link href="/performance" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Performance
-              </NavigationMenuLink>
-            </Link>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/performance">Performance</Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-white">
@@ -105,11 +104,9 @@ function NavbarNav({ className }: NavbarProps) {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="https://47fund.byu.edu/signin" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Login
-            </NavigationMenuLink>
-          </Link>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="https://47fund.byu.edu/signin">Login</Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
