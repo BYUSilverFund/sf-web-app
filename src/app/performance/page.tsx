@@ -21,6 +21,7 @@ import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 import { defaultEnd, defaultStart } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 export default function Page() {
   const [start, setStart] = useState<Date>(defaultStart());
@@ -69,7 +70,7 @@ export default function Page() {
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
-            <div>As of {format(fundSummary.end, "PPP")}</div>
+            <div>As of {formatDate(fundSummary.end)}</div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">

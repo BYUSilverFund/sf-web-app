@@ -20,7 +20,7 @@ import { PortfolioSummaryTable } from "@/components/PortfolioSummarytable";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
-import { defaultEnd, defaultStart, formatPortfolio } from "@/lib/utils";
+import { defaultEnd, defaultStart, formatDate, formatPortfolio } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Page() {
@@ -63,7 +63,7 @@ export default function Page() {
 
   const pages = [
     {
-      name: 'Fund',
+      name: 'All Funds',
       href: '/performance'
     }
   ]
@@ -76,7 +76,7 @@ export default function Page() {
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
-            <div>As of {format(portfolioSummary.end, "PPP")}</div>
+            <div>As of {formatDate(portfolioSummary.end)}</div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">

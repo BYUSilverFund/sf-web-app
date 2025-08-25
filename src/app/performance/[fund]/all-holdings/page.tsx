@@ -34,7 +34,7 @@ export default function Page() {
 
   const pages = [
     {
-      name: 'Fund',
+      name: 'All Funds',
       href: '/performance'
     },
     {

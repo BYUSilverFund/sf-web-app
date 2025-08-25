@@ -19,7 +19,7 @@ import { ReturnsChart } from "@/components/ReturnsChart";
 import { getDividends, getHoldingSummary, getHoldingTimeSeries } from "@/lib/api/holding";
 import { HoldingSummaryTable } from "@/components/HoldingSummaryTable";
 import { DividendsTable } from "@/components/DividendsTable";
-import { defaultEnd, defaultStart, formatPortfolio } from "@/lib/utils";
+import { defaultEnd, defaultStart, formatDate, formatPortfolio } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Page() {
@@ -63,7 +63,7 @@ export default function Page() {
 
   const pages = [
     {
-      name: 'Fund',
+      name: 'All Funds',
       href: '/performance'
     },
     {
@@ -80,7 +80,7 @@ export default function Page() {
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
-            <div>As of {format(holdingSummary.end, "PPP")}</div>
+            <div>As of {formatDate(holdingSummary.end)}</div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">

@@ -29,6 +29,26 @@ export function formatPortfolio(name: string): string | undefined{
   }[name]
 }
 
+export function formatDate(dateStr: string): string {
+  const [yearStr, monthStr, dayStr] = dateStr.split("-");
+  const year = parseInt(yearStr, 10);
+  const monthIndex = parseInt(monthStr, 10) - 1; // 0-based
+  const day = parseInt(dayStr, 10);
+
+  const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(
+    new Date(year, monthIndex, 1) // only use for month name
+  );
+
+  const getOrdinal = (n: number): string => {
+    if (n % 10 === 1 && n % 100 !== 11) return `${n}st`;
+    if (n % 10 === 2 && n % 100 !== 12) return `${n}nd`;
+    if (n % 10 === 3 && n % 100 !== 13) return `${n}rd`;
+    return `${n}th`;
+  };
+
+  return `${month} ${getOrdinal(day)}, ${year}`;
+}
+
 export function defaultEnd(): Date{
     const today = new Date();
 
