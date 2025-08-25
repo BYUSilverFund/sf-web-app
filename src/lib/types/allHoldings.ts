@@ -8,10 +8,16 @@ export interface AllHoldingsRequest {
 export interface AllHoldingsRecord {
   ticker: string
   active: boolean
+  shares: number
+  price: number
   value: number
   total_return: number
   volatility: number
   dividends: number
+  dividends_per_share: number
+  dividend_yield: number
+  alpha: number
+  beta: number
 }
 
 

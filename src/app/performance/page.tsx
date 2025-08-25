@@ -19,7 +19,7 @@ import { ReturnsChart } from "@/components/ReturnsChart";
 import { FundSummaryTable } from "@/components/FundSummaryTable";
 import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/allPortfolios";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
-import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable copy";
+import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 import { defaultEnd, defaultStart } from "@/lib/utils";
 
 export default function Page() {
