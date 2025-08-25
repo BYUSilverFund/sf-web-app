@@ -1,5 +1,6 @@
 'use client'
 import { AllPortfoliosDataTable } from "@/components/AllPortfoliosDataTable";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
@@ -27,10 +28,18 @@ export default function Page() {
     }
   }, [start, end]);
 
+  const pages = [
+    {
+      name: 'Fund',
+      href: '/performance'
+    },
+  ]
+
   return (
     <div className="px-24">
       {allPortfoliosSummary && (
         <div className="space-y-4 p-4">
+          <Breadcrumbs pages={pages} currentPage="All Portfolios"/>
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />

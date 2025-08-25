@@ -1,10 +1,11 @@
 'use client'
 import { AllHoldingsDataTable } from "@/components/AllHoldingsDataTable";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
-import { defaultEnd, defaultStart } from "@/lib/utils";
+import { defaultEnd, defaultStart, formatPortfolio } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,10 +32,22 @@ export default function Page() {
     }
   }, [start, end, params.fund]);
 
+  const pages = [
+    {
+      name: 'Fund',
+      href: '/performance'
+    },
+    {
+      name: formatPortfolio(params.fund),
+      href: `/performance/${params.fund}`
+    }
+  ]
+
   return (
     <div className="px-24">
       {allHoldingsSummary && (
         <div className="space-y-4 p-4">
+          <Breadcrumbs pages={pages} currentPage="All Holdings"/>
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
