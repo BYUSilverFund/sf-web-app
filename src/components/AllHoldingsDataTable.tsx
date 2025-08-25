@@ -16,7 +16,6 @@ import {
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -34,31 +33,9 @@ import {
 } from "@/components/ui/table";
 import { AllHoldingsRecord } from "@/lib/types";
 
-import { formatPercent, formatCurrency } from "@/lib/utils";
+import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
 
 export const columns: ColumnDef<AllHoldingsRecord>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "ticker",
     header: ({ column }) => {
@@ -74,7 +51,52 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     },
     cell: ({ row }) => <div>{row.getValue("ticker")}</div>,
   },
-    {
+  {
+    accessorKey: "active",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Active
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("active") ? 'Active' : 'Inactive'}</div>,
+  },
+  {
+    accessorKey: "shares",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Shares
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue('shares')}</div>,
+  },
+  {
+    accessorKey: "price",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
+  },
+  {
     accessorKey: "value",
     header: ({ column }) => {
       return (
@@ -89,7 +111,7 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     },
     cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
   },
-    {
+  {
     accessorKey: "total_return",
     header: ({ column }) => {
       return (
@@ -104,7 +126,22 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     },
     cell: ({ row }) => <div>{formatPercent(row.getValue("total_return"))}</div>,
   },
-      {
+  {
+    accessorKey: "volatility",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Volatility
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("volatility"))}</div>,
+  },
+  {
     accessorKey: "dividends",
     header: ({ column }) => {
       return (
@@ -118,6 +155,51 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
       );
     },
     cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends"))}</div>,
+  },
+  {
+    accessorKey: "dividends_per_share",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Dividends Per Share
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends_per_share"))}</div>,
+  },  
+  {
+    accessorKey: "alpha",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Alpha
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("alpha"))}</div>,
+  },  
+  {
+    accessorKey: "beta",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Beta
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
   },
 ];
 

@@ -13,7 +13,7 @@ export function AllHoldingsSummaryTable({
   fund: string
   allHoldingsSummary: AllHoldingsSummaryResponse;
 }) {
-  console.log(allHoldingsSummary)
+
   return (
     <div className="flex flex-col">
       <div className="text-center py-4 border-b border-solid">Top 5 Holdings by Value</div>
@@ -21,7 +21,7 @@ export function AllHoldingsSummaryTable({
         <div className="text-center py-4 bg-secondary">View All</div>
       </Link>
       {allHoldingsSummary.holdings
-      .filter((a) => a.active)
+      // .filter((a) => a.active) # TODO: fix
       .slice(0, 5)
       .map((holding, index) => (
         <Link key={index} className="flex justify-between px-4 hover:bg-secondary py-2" href={`/performance/${fund}/${holding.ticker}`}>
