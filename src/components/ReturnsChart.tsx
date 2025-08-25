@@ -62,7 +62,7 @@ export function ReturnsChart({ data }: { data: object[] }) {
   } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={chartConfig} className="h-[600px] w-[1000]">
+    <ChartContainer config={chartConfig} className="h-[600px] w-[1000] py-4">
       <LineChart
         accessibilityLayer
         data={data}
