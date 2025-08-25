@@ -1,4 +1,4 @@
-import { DividendsResponse, HoldingRequest, HoldingSummaryResponse, HoldingTimeSeriesResponse } from "../types";
+import { DividendsResponse, HoldingRequest, HoldingSummaryResponse, HoldingTimeSeriesResponse, TradesResponse } from "../types";
 
 export async function getHoldingSummary(
     request: HoldingRequest
@@ -64,6 +64,30 @@ export async function getDividends(
         }
 
         const result: DividendsResponse = await response.json();
+
+        return result;
+    } catch (error) {
+        console.error("Database Error:", error);
+        throw new Error("Failed to fetch data.");
+    }
+}
+
+export async function getTrades(
+    request: HoldingRequest
+): Promise<TradesResponse> {
+
+    try {
+        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "holding/trades", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result: TradesResponse = await response.json();
 
         return result;
     } catch (error) {

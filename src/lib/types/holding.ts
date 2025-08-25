@@ -62,3 +62,19 @@ export interface DividendsResponse {
   end: string
   dividends: DividendsRecord[]
 }
+
+export interface TradesRecord {
+  date: string
+  type: string
+  shares: number
+  price: number
+  value: number
+}
+
+export interface TradesResponse {
+  fund: string
+  ticker: string
+  start: string
+  end: string
+  trades: TradesRecord[]
+}
