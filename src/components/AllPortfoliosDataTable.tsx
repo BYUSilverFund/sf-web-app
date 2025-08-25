@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/table";
 import { AllPortfoliosRecord } from "@/lib/types";
 
-import { formatPercent, formatCurrency, formatPortfolio } from "@/lib/utils";
+import { formatPercent, formatCurrency, formatPortfolio, formatFloat } from "@/lib/utils";
 
 export const columns: ColumnDef<AllPortfoliosRecord>[] = [
   {
@@ -66,7 +66,7 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
     },
     cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
   },
-    {
+  {
     accessorKey: "total_return",
     header: ({ column }) => {
       return (
@@ -81,7 +81,37 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
     },
     cell: ({ row }) => <div>{formatPercent(row.getValue("total_return"))}</div>,
   },
-      {
+  {
+    accessorKey: "volatility",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Volatility
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("volatility"))}</div>,
+  },
+  {
+    accessorKey: "sharpe_ratio",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sharpe
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatFloat(row.getValue("sharpe_ratio"))}</div>,
+  },
+  {
     accessorKey: "dividends",
     header: ({ column }) => {
       return (
@@ -95,6 +125,81 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
       );
     },
     cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends"))}</div>,
+  },
+  {
+    accessorKey: "dividend_yield",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Dividend Yield
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("dividend_yield"))}</div>,
+  },
+  {
+    accessorKey: "alpha",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Alpha
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("alpha"))}</div>,
+  },
+  {
+    accessorKey: "beta",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Beta
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
+  },
+  {
+    accessorKey: "tracking_error",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tracking Error
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("tracking_error"))}</div>,
+  },
+  {
+    accessorKey: "information_ratio",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Information Ratio
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatFloat(row.getValue("information_ratio"))}</div>,
   },
 ];
 
