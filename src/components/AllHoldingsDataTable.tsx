@@ -212,11 +212,9 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
       return <></>;
     },
     cell: ({ row }) => (
-      <Button>
-        <Link href={`${row.getValue("ticker")}`}>
-          View
-        </Link>
-      </Button>
+      <Link href={`${row.getValue("ticker")}`}>
+        <Button>View</Button>
+      </Link>
     ),
   },
 ];
