@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryResponse, FundRequest } from "@/lib/types";
-import { defaultEnd, defaultStart } from "@/lib/utils";
+import { defaultEnd, defaultStart, formatDate } from "@/lib/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
@@ -43,7 +43,7 @@ export default function Page() {
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
             <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
-            <div>As of {format(allPortfoliosSummary.end, "PPP")}</div>
+            <div>As of {formatDate(allPortfoliosSummary.end)}</div>
           </Card>
           {/* Row 2 */}
           <Card>
