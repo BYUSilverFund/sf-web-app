@@ -1,0 +1,21 @@
+version: 1
+env:
+  variables:
+    NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT: ${LAMBDA_POSITIONS_ENDPOINT}
+    NEXT_PUBLIC_FASTAPI_URL: ${FASTAPI_URL}
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: out
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*

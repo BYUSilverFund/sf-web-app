@@ -16,6 +16,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
         <img
           src={headShot}
           className="absolute inset-0 w-full h-full object-top object-cover grayscale"
+          alt="Team Member"
         />
         <div className="absolute right-0 h-full w-[20%] bg-gradient-to-r from-transparent to-[#002E5D] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
         {linkedIn && (
