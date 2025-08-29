@@ -6,7 +6,8 @@ import Spinner from "../../components/LoadingSpinner";
 // import Papa from "papaparse";
 
 const getUnderCurrentPositionsLambda = async () => {
-  const endpoint = process.env.NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT;
+  const endpoint =
+    "https://4dla5qlhqncb5frfksg3ikmjnu0fexxk.lambda-url.us-west-2.on.aws/";
   if (!endpoint) {
     throw new Error("NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT not defined");
   }
@@ -22,7 +23,8 @@ const getUnderCurrentPositionsLambda = async () => {
 };
 
 const getMBACurrentPositionsLambda = async () => {
-  const endpoint = process.env.NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT;
+  const endpoint =
+    "https://4dla5qlhqncb5frfksg3ikmjnu0fexxk.lambda-url.us-west-2.on.aws/";
   if (!endpoint) {
     throw new Error("NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT not defined");
   }
@@ -38,7 +40,8 @@ const getMBACurrentPositionsLambda = async () => {
 };
 
 const getBrighamCapitalPositionsLambda = async () => {
-  const endpoint = process.env.NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT;
+  const endpoint =
+    "https://4dla5qlhqncb5frfksg3ikmjnu0fexxk.lambda-url.us-west-2.on.aws/";
   if (!endpoint) {
     throw new Error("NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT not defined");
   }
@@ -54,7 +57,8 @@ const getBrighamCapitalPositionsLambda = async () => {
 };
 
 const getQuantPositionsLambda = async () => {
-  const endpoint = process.env.NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT;
+  const endpoint =
+    "https://4dla5qlhqncb5frfksg3ikmjnu0fexxk.lambda-url.us-west-2.on.aws/";
   if (!endpoint) {
     throw new Error("NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT not defined");
   }

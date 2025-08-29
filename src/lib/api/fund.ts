@@ -5,7 +5,7 @@ export async function getFundSummary(
 ): Promise<FundSummaryResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "fund/summary", {
+        const response = await fetch("https://api.silverfund.byu.edu/fund/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -29,7 +29,7 @@ export async function getFundTimeSeries(
 ): Promise<FundTimeSeriesResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "fund/time-series", {
+        const response = await fetch("https://api.silverfund.byu.edu/fund/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),

@@ -5,7 +5,7 @@ export async function getHoldingSummary(
 ): Promise<HoldingSummaryResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "holding/summary", {
+        const response = await fetch("https://api.silverfund.byu.edu/holding/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -29,7 +29,7 @@ export async function getHoldingTimeSeries(
 ): Promise<HoldingTimeSeriesResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "holding/time-series", {
+        const response = await fetch("https://api.silverfund.byu.edu/holding/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -53,7 +53,7 @@ export async function getDividends(
 ): Promise<DividendsResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "holding/dividends", {
+        const response = await fetch("https://api.silverfund.byu.edu/holding/dividends", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -77,7 +77,7 @@ export async function getTrades(
 ): Promise<TradesResponse> {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_FASTAPI_URL + "holding/trades", {
+        const response = await fetch("https://api.silverfund.byu.edu/holding/trades", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),

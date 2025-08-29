@@ -97,13 +97,20 @@ export default function FundClient() {
               <div>As of {formatDate(portfolioSummary.end)}</div>
             </Card>
             <Card className="flex flex-col h-fit">
-              <PortfolioSummaryTable portfolio={params.fund} portfolioSummary={portfolioSummary} benchmarkSummary={benchmarkSummary} />
+              <PortfolioSummaryTable
+                portfolio={params.fund}
+                portfolioSummary={portfolioSummary}
+                benchmarkSummary={benchmarkSummary}
+              />
             </Card>
             <Card>
               <ReturnsChart data={portfolioTimeSeries.records} />
             </Card>
             <Card>
-              <AllHoldingsSummaryTable fund={params.fund} allHoldingsSummary={allHoldingsSummary} />
+              <AllHoldingsSummaryTable
+                fund={params.fund}
+                allHoldingsSummary={allHoldingsSummary}
+              />
             </Card>
           </div>
         )}
