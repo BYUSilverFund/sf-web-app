@@ -6,11 +6,9 @@ env:
 
 frontend:
   phases:
-    preBuild:
-      commands:
-        - npm ci
     build:
       commands:
+        - npm install
         - npm run build
   artifacts:
     baseDirectory: .next/
