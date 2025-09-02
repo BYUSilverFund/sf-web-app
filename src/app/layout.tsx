@@ -1,19 +1,19 @@
 // Import necessary types and components from Next.js and Google Fonts
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "../components/Footer";
 import Navbar from "@/components/Navbar";
 
-// Configure the Geist Sans font with specific settings
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Configure the Inter font with specific settings
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-// Configure the Geist Mono font with specific settings
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Configure the Roboto Mono font with specific settings
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
   subsets: ["latin"],
 });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
+        className={`${inter.variable} ${robotoMono.variable} antialiased bg-gray-50`}
       >
         <Navbar />
         {children}
