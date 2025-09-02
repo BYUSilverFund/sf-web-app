@@ -5,7 +5,7 @@ import { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 // grad fund images
-import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpg";
+import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
 import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
 import AaronGill from "@/images/fund-members/aaron-gill.jpg";
 import MacleanLunt from "@/images/fund-members/maclean-lunt.jpg";

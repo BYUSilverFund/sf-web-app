@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 
 // grad fund images
-import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpg";
-// import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
+import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
+import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
 // Quantitative images
 import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
 import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
@@ -51,15 +51,15 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
       {activeTab === "Presidents" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3vw] md:gap-[2vw] mb-16">
           <TeamCard
-            headShot={HudsonVogel.src}
-            name="Hudson Vogel"
-            position="Undergraduate"
-            linkedIn="https://www.linkedin.com/in/hudson-vogel/"
+            headShot={BrandonWaits.src}
+            name="Brandon Waits"
+            position="Quantitative Fund"
+            linkedIn="https://www.linkedin.com/in/brandonwaits/"
           />
           <TeamCard
             headShot={AndrewHall.src}
             name="Andrew Hall"
-            position="Quantitative"
+            position="Quantitative Fund"
             linkedIn="https://www.linkedin.com/in/andrewhall1124/"
           />
           <TeamCard
@@ -68,23 +68,23 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             position="Graduate Fund"
             linkedIn="https://www.linkedin.com/in/elizabeth-nelson-hall/"
           />
-          {/* <TeamCard
+          <TeamCard
             headShot={JosephLunt.src}
             name="Joseph Lunt"
             position="Graduate Fund"
             linkedIn="https://www.linkedin.com/in/joseph-lunt-54740bb2/"
-          /> */}
-          <TeamCard
-            headShot={BrandonWaits.src}
-            name="Brandon Waits"
-            position="Quantitative"
-            linkedIn="https://www.linkedin.com/in/brandonwaits/"
           />
           <TeamCard
             headShot={ChristianBaggaley.src}
             name="Christian Baggaley"
-            position="Undergrad"
+            position="Undergraduate Fund"
             linkedIn="https://www.linkedin.com/in/christiantbaggaley/"
+          />
+          <TeamCard
+            headShot={HudsonVogel.src}
+            name="Hudson Vogel"
+            position="Undergraduate Fund"
+            linkedIn="https://www.linkedin.com/in/hudson-vogel/"
           />
         </div>
       )}
