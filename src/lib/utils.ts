@@ -20,7 +20,7 @@ export function formatFloat(value: number, fractionDigits: number = 2): string {
   return `${value.toFixed(fractionDigits)}`;
 }
 
-export function formatPortfolio(name: string): string | undefined{
+export function formatPortfolio(name: string): string | undefined {
   return {
     grad: 'Grad',
     undergrad: 'Undergrad',
@@ -49,23 +49,34 @@ export function formatDate(dateStr: string): string {
   return `${month} ${getOrdinal(day)}, ${year}`;
 }
 
-export function defaultEnd(): Date{
-    const today = new Date();
 
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
 
-    return yesterday
+export function defaultEnd(): Date {
+  const today = new Date()
+
+  const may = 4; // May = month index 4 (0-based)
+
+  let cohortEnd = new Date(today.getFullYear() + 1, may, 0); // last day of April next year
+
+  // If today is before May, use last year's May as start
+  if (today.getMonth() < may) {
+    cohortEnd = new Date(today.getFullYear(), may, 0);
+  }
+  
+  return cohortEnd
+  
 }
 
-export function defaultStart(): Date{
-    const today = new Date();
+export function defaultStart(): Date {
+  const today = new Date()
 
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+  const may = 4; // May = month index 4 (0-based)
 
-    const yesterdayLastYear = new Date();
-    yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
+  let cohortStart = new Date(today.getFullYear(), may, 1);
 
-    return yesterdayLastYear
+  if (today.getMonth() < may) {
+    cohortStart = new Date(today.getFullYear() - 1, may, 1);
+  }
+
+  return cohortStart
 }

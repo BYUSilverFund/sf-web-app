@@ -27,7 +27,7 @@ type ViewButtonProps = {
 };
 
 export function ViewButton({ start, end, setStart, setEnd }: ViewButtonProps) {
-  const [view, setView] = useState("1year");
+  const [view, setView] = useState("cohort");
 
   const today = new Date()
 
@@ -133,7 +133,7 @@ export function ViewButton({ start, end, setStart, setEnd }: ViewButtonProps) {
 
   return (
     <div className="flex gap-4">
-      <Select defaultValue="1year" onValueChange={handleView}>
+      <Select defaultValue="cohort" onValueChange={handleView}>
         <SelectTrigger className="w-[180px]">
           <SelectValue />
         </SelectTrigger>
