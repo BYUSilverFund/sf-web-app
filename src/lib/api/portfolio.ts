@@ -1,11 +1,12 @@
 import { PortfolioRequest, PortfolioSummaryResponse, PortfolioTimeSeriesResponse } from "../types";
+import { API_BASE_URL } from "../variables";
 
 export async function getPortfolioSummary(
     request: PortfolioRequest
 ): Promise<PortfolioSummaryResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/portfolio/summary", {
+        const response = await fetch(API_BASE_URL + "portfolio/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -29,7 +30,7 @@ export async function getPortfolioTimeSeries(
 ): Promise<PortfolioTimeSeriesResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/portfolio/time-series", {
+        const response = await fetch(API_BASE_URL + "portfolio/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
