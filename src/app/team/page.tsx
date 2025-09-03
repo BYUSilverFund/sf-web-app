@@ -112,7 +112,7 @@ const GradFundTab: React.FC = () => {
       <TeamCard
         headShot={ElizabethHall.src}
         name="Elizabeth Hall"
-        linkedIn="https://www.linkedin.com/in/elizabeth-nelson-hall/"
+        linkedIn="https://www.linkedin.com/in/elizabethdhall/"
       />
       <TeamCard
         headShot={JosephLunt.src}
