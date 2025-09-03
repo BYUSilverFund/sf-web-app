@@ -3,18 +3,14 @@ import React, { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 
 // grad fund images
-import ZachBancroft from "@/images/zachary_bancroft.jpg";
-import ErikChristiansen from "@/images/erik_christiansen.jpg";
-import ElizabethHall from "@/images/elizabeth-hall.jpg";
-import JosephLunt from "@/images/joseph-lunt.jpg";
+import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
+import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
 // Quantitative images
-import BrandonWaits from "@/images/brandon_waits.jpg";
-import DipeshGhimire from "@/images/dipesh-ghimire.jpg";
-import AndrewHall from "@/images/andrew-hall.jpg";
+import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
+import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
 // Undergraduate images
-import BrendanPricer from "@/images/brendan_pricer.jpg";
-import HudsonVogel from "@/images/hudson-vogel.jpg";
-import KyleMarsh from "@/images/kyle-marsh.jpg";
+import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
+import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
 
 const TeamContainer: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Presidents");
@@ -55,21 +51,15 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
       {activeTab === "Presidents" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3vw] md:gap-[2vw] mb-16">
           <TeamCard
-            headShot={BrendanPricer.src}
-            name="Brendan Pricer"
-            position="Undergraduate"
-            linkedIn="https://www.linkedin.com/in/brendan-pricer/"
-          />
-          <TeamCard
-            headShot={HudsonVogel.src}
-            name="Hudson Vogel"
-            position="Undergraduate"
-            linkedIn="https://www.linkedin.com/in/hudson-vogel/"
+            headShot={BrandonWaits.src}
+            name="Brandon Waits"
+            position="Quantitative Fund"
+            linkedIn="https://www.linkedin.com/in/brandonwaits/"
           />
           <TeamCard
             headShot={AndrewHall.src}
             name="Andrew Hall"
-            position="Quantitative"
+            position="Quantitative Fund"
             linkedIn="https://www.linkedin.com/in/andrewhall1124/"
           />
           <TeamCard
@@ -79,40 +69,22 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             linkedIn="https://www.linkedin.com/in/elizabeth-nelson-hall/"
           />
           <TeamCard
-            headShot={ZachBancroft.src}
-            name="Zachary Bancroft"
-            position="Graduate"
-            linkedIn="https://www.linkedin.com/in/zachary-bancroft-2b0a661b8/"
-          />
-          <TeamCard
             headShot={JosephLunt.src}
             name="Joseph Lunt"
             position="Graduate Fund"
             linkedIn="https://www.linkedin.com/in/joseph-lunt-54740bb2/"
           />
           <TeamCard
-            headShot={DipeshGhimire.src}
-            name="Dipesh Ghimire"
-            position="Quantitative"
-            linkedIn="https://www.linkedin.com/in/dipesh-ghimire-7348b321b/"
+            headShot={ChristianBaggaley.src}
+            name="Christian Baggaley"
+            position="Undergraduate Fund"
+            linkedIn="https://www.linkedin.com/in/christiantbaggaley/"
           />
           <TeamCard
-            headShot={ErikChristiansen.src}
-            name="Erik Christiansen"
-            position="Graduate"
-            linkedIn="https://www.linkedin.com/in/erik-christiansen-83b772157/"
-          />
-          <TeamCard
-            headShot={BrandonWaits.src}
-            name="Brandon Waits"
-            position="Quantitative"
-            linkedIn="https://www.linkedin.com/in/brandonwaits/"
-          />
-          <TeamCard
-            headShot={KyleMarsh.src}
-            name="Kyle Marsh"
-            position="Undergraduate"
-            linkedIn="https://www.linkedin.com/in/kyle-marsh/"
+            headShot={HudsonVogel.src}
+            name="Hudson Vogel"
+            position="Undergraduate Fund"
+            linkedIn="https://www.linkedin.com/in/hudson-vogel/"
           />
         </div>
       )}

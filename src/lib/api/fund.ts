@@ -1,11 +1,12 @@
 import { FundRequest, FundSummaryResponse, FundTimeSeriesResponse } from "../types";
+import { API_BASE_URL } from "../variables";
 
 export async function getFundSummary(
     request: FundRequest
 ): Promise<FundSummaryResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/fund/summary", {
+        const response = await fetch(API_BASE_URL + "fund/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -29,7 +30,7 @@ export async function getFundTimeSeries(
 ): Promise<FundTimeSeriesResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/fund/time-series", {
+        const response = await fetch(API_BASE_URL + "fund/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),

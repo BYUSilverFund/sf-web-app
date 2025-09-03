@@ -1,11 +1,12 @@
 import { DividendsResponse, HoldingRequest, HoldingSummaryResponse, HoldingTimeSeriesResponse, TradesResponse } from "../types";
+import { API_BASE_URL } from "../variables";
 
 export async function getHoldingSummary(
     request: HoldingRequest
 ): Promise<HoldingSummaryResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/holding/summary", {
+        const response = await fetch(API_BASE_URL + "holding/summary", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -29,7 +30,7 @@ export async function getHoldingTimeSeries(
 ): Promise<HoldingTimeSeriesResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/holding/time-series", {
+        const response = await fetch(API_BASE_URL + "holding/time-series", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -53,7 +54,7 @@ export async function getDividends(
 ): Promise<DividendsResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/holding/dividends", {
+        const response = await fetch(API_BASE_URL + "holding/dividends", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),
@@ -77,7 +78,7 @@ export async function getTrades(
 ): Promise<TradesResponse> {
 
     try {
-        const response = await fetch("https://api.silverfund.byu.edu/holding/trades", {
+        const response = await fetch(API_BASE_URL + "holding/trades", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),

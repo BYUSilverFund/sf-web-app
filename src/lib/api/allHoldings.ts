@@ -1,11 +1,12 @@
 import { AllHoldingsRequest, AllHoldingsSummaryResponse } from "../types";
+import { API_BASE_URL } from "../variables";
 
 export async function getAllHoldingsSummary(
   request: AllHoldingsRequest
 ): Promise<AllHoldingsSummaryResponse> {
   try {
     const response = await fetch(
-      "https://api.silverfund.byu.edu/all-holdings/summary",
+      API_BASE_URL + "all-holdings/summary",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

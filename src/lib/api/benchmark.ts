@@ -1,11 +1,12 @@
 import { BenchmarkRequest, BenchmarkSummaryResponse } from "../types";
+import { API_BASE_URL } from "../variables";
 
 export async function getBenchmarkSummary(
   request: BenchmarkRequest
 ): Promise<BenchmarkSummaryResponse> {
   try {
     const response = await fetch(
-      "https://api.silverfund.byu.edu/benchmark/summary",
+      API_BASE_URL + "benchmark/summary",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

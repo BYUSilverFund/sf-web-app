@@ -5,18 +5,17 @@ import { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 // grad fund images
-import ZachBancroft from "@/images/zachary_bancroft.jpg";
-import ErikChristiansen from "@/images/erik_christiansen.jpg";
-import ElizabethHall from "@/images/elizabeth-hall.jpg";
-import JosephLunt from "@/images/joseph-lunt.jpg";
+import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
+import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
+import AaronGill from "@/images/fund-members/aaron-gill.jpg";
+import MacleanLunt from "@/images/fund-members/maclean-lunt.jpg";
+import ZachMatthews from "@/images/fund-members/zachary-matthews.jpg";
 // quant fund images
-import BrandonWaits from "@/images/brandon_waits.jpg";
-import DipeshGhimire from "@/images/dipesh-ghimire.jpg";
-import AndrewHall from "@/images/andrew-hall.jpg";
+import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
+import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
 // undergrad fund images
-import BrendanPricer from "@/images/brendan_pricer.jpg";
-import HudsonVogel from "@/images/hudson-vogel.jpg";
-import KyleMarsh from "@/images/kyle-marsh.jpg";
+import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
+import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
 
 interface TeamTabContainerProps {
   children: React.ReactNode;
@@ -63,24 +62,6 @@ const BioTab: React.FC = () => {
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <TeamBio
-          name="Brendan Pricer"
-          img={BrendanPricer.src}
-          bio="Brendan is a senior in BYU's finance program, pursuing a career in fundamental equity analysis. He grew up in Corona, California, and was an avid baseball player throughout his childhood. After graduating high school, he served a two-year mission for The Church of Jesus Christ of Latter-day Saints in the UK. Upon returning, he married his high school sweetheart, who is also a senior at BYU. Currently, he is interning on the technology sector team at Grandeur Peak Global Advisors. He has been involved with Silver Fund/Brigham Capital for two years, and credits the organization for most of his early professional success."
-          team="Undergraduate"
-        />
-        <TeamBio
-          name="Zachary Bancroft"
-          img={ZachBancroft.src}
-          bio="Zachary is from Bountiful, UT, and he served a mission in the Philippines, Cauayan Mission. He is a second-year graduate student pursuing a master's in accountancy with a focus on tax (MAcc). Currently, he works as the Head Site Coordinator for BYU's VITA lab and as a tax preparer for Udall CPA Group. In his free time, he enjoys playing soccer, watching Utah Jazz games, and spending time with his wife. This is his second semester participating in the Silver Fund, and he is excited to help others get involved."
-          team="Graduate"
-        />
-        <TeamBio
-          name="Erik Christiansen"
-          img={ErikChristiansen.src}
-          bio="Erik is a second-year MBA student with an emphasis in finance. He hails from Las Vegas, NV and studied economics in his undergrad at BYU. This will be his second year in Silver Fund and he has loved every minute. He has also had the chance to intern for Ethos Investment Management and Grandeur Peak Global Advisors while being in school pursuing a career in equity research. In his spare time he enjoys playing soccer, cycling, and he is a competitive chess player."
-          team="Graduate"
-        />
-        <TeamBio
           name="Brandon Waits"
           img={BrandonWaits.src}
           bio="Brandon is currently studying computational mathematics, venturing to apply his quantitative skillset to financial markets. After working on the portfolio strategy team at Ensign Peak Advisors, Brandon hopes to pursue future opportunities in portfolio analytics, risk management, and quantitative investment research. In his free time, Brandon enjoys hiking in national parks and cooking with his wok."
@@ -119,24 +100,29 @@ const GradFundTab: React.FC = () => {
   return (
     <>
       <TeamCard
-        headShot={ErikChristiansen.src}
-        name="Erik Christiansen"
-        linkedIn="https://www.linkedin.com/in/erik-christiansen-83b772157/"
+        headShot={AaronGill.src}
+        name="Aaron Gill"
+        linkedIn="https://www.linkedin.com/in/aaron-w-gill/"
       />
       <TeamCard
-        headShot={ZachBancroft.src}
-        name="Zachary Bancroft"
-        linkedIn="https://www.linkedin.com/in/zachary-bancroft-2b0a661b8/"
+        headShot={ZachMatthews.src}
+        name="Zachary Matthews"
+        linkedIn="https://www.linkedin.com/in/zacharygmatthews/"
       />
       <TeamCard
         headShot={ElizabethHall.src}
         name="Elizabeth Hall"
-        linkedIn="https://www.linkedin.com/in/elizabeth-nelson-hall/"
+        linkedIn="https://www.linkedin.com/in/elizabethdhall/"
       />
       <TeamCard
         headShot={JosephLunt.src}
         name="Joseph Lunt"
         linkedIn="https://www.linkedin.com/in/joseph-lunt-54740bb2/"
+      />
+      <TeamCard
+        headShot={MacleanLunt.src}
+        name="Maclean Lunt"
+        linkedIn="https://www.linkedin.com/in/maclean-lunt/"
       />
     </>
   );
@@ -151,11 +137,6 @@ const QuantFundTab: React.FC = () => {
         linkedIn="https://www.linkedin.com/in/brandonwaits/"
       />
       <TeamCard
-        headShot={DipeshGhimire.src}
-        name="Dipesh Ghimire"
-        linkedIn="https://www.linkedin.com/in/dipesh-ghimire-7348b321b/"
-      />
-      <TeamCard
         headShot={AndrewHall.src}
         name="Andrew Hall"
         linkedIn="https://www.linkedin.com/in/andrewhall1124/"
@@ -168,19 +149,14 @@ const UndergradFundTab: React.FC = () => {
   return (
     <>
       <TeamCard
-        headShot={BrendanPricer.src}
-        name="Brendan Pricer"
-        linkedIn="https://www.linkedin.com/in/brendan-pricer/"
-      />
-      <TeamCard
-        headShot={KyleMarsh.src}
-        name="Kyle Marsh"
-        linkedIn="https://www.linkedin.com/in/kyle-marsh/"
-      />
-      <TeamCard
         headShot={HudsonVogel.src}
         name="Hudson Vogel"
         linkedIn="https://www.linkedin.com/in/hudson-vogel/"
+      />
+      <TeamCard
+        headShot={ChristianBaggaley.src}
+        name="Christian Baggaley"
+        linkedIn="https://www.linkedin.com/in/christiantbaggaley/"
       />
     </>
   );
