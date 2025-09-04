@@ -56,7 +56,7 @@ export function PortfolioSummaryTable({
         <TableRow>
           <TableCell>Benchmark</TableCell>
           <TableCell>
-            {formatCurrency(benchmarkSummary?.adjusted_close)}
+            {formatCurrency(benchmarkSummary.adjusted_close)}
           </TableCell>
           <TableCell>{formatPercent(benchmarkSummary.total_return)}</TableCell>
           <TableCell>{formatPercent(benchmarkSummary.volatility)}</TableCell>
@@ -67,6 +67,10 @@ export function PortfolioSummaryTable({
           <TableCell>
             {formatPercent(benchmarkSummary.dividend_yield)}
           </TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </TableRow>
       </TableBody>
     </Table>

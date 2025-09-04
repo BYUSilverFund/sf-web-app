@@ -49,10 +49,10 @@ export function HoldingSummaryTable({
         <TableRow>
           <TableCell>Benchmark</TableCell>
           <TableCell>{formatCurrency(benchmarkSummary.adjusted_close)}</TableCell>
+          <TableCell>{formatPercent(benchmarkSummary.total_return)}</TableCell>
           <TableCell>{formatPercent(benchmarkSummary.volatility)}</TableCell>
           <TableCell>{formatCurrency(benchmarkSummary.dividends_per_share)}</TableCell>
           <TableCell>{formatPercent(benchmarkSummary.dividend_yield)}</TableCell>
-          <TableCell></TableCell>
           <TableCell></TableCell>
           <TableCell></TableCell>
         </TableRow>
