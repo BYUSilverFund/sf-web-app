@@ -65,6 +65,10 @@ export function FundSummaryTable({
           <TableCell>
             {formatPercent(benchmarkSummary.dividend_yield)}
           </TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </TableRow>
       </TableBody>
     </Table>
