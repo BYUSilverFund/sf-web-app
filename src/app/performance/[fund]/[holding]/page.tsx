@@ -25,8 +25,9 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TradesTable } from "@/components/TradesTable";
 
 export default function Page() {
-  const [start, setStart] = useState<Date>(defaultStart());
-  const [end, setEnd] = useState<Date>(defaultEnd());
+  const [view, setView] = useState("max");
+  const [start, setStart] = useState<Date>(defaultStart(view));
+  const [end, setEnd] = useState<Date>(defaultEnd(view));
   const [holdingSummary, setHoldingSummary] = useState<HoldingSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] = useState<BenchmarkSummaryResponse>();
   const [holdingTimeSeries, setHoldingTimeSeries] = useState<HoldingTimeSeriesResponse>();
@@ -85,7 +86,7 @@ export default function Page() {
           <Breadcrumbs pages={pages} currentPage={params.holding}/>
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
+            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
             <div>As of {formatDate(holdingSummary.end)}</div>
           </Card>
           {/* Row 2 */}
@@ -95,7 +96,7 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={holdingTimeSeries.records} />
+              <ReturnsChart data={holdingTimeSeries.records} label={params.holding}/>
             </Card>
             <div className="flex flex-col gap-4 w-full">
                 <Card className="flex flex-col">
