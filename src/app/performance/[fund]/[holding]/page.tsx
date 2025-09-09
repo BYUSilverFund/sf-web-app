@@ -95,7 +95,7 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={holdingTimeSeries.records} />
+              <ReturnsChart data={holdingTimeSeries.records} label={params.holding}/>
             </Card>
             <div className="flex flex-col gap-4 w-full">
                 <Card className="flex flex-col">

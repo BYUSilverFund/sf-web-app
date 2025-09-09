@@ -85,7 +85,7 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={portfolioTimeSeries["records"]} />
+              <ReturnsChart data={portfolioTimeSeries["records"]} label={formatPortfolio(params.fund)}/>
             </Card>
             <Card className="h-fit w-full">
               <AllHoldingsSummaryTable fund={params.fund} allHoldingsSummary={allHoldingsSummary}/>
