@@ -10,8 +10,9 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const [start, setStart] = useState<Date>(defaultStart());
-  const [end, setEnd] = useState<Date>(defaultEnd());
+  const [view, setView] = useState('cohort')
+  const [start, setStart] = useState<Date>(defaultStart(view));
+  const [end, setEnd] = useState<Date>(defaultEnd(view));
   const [allPortfoliosSummary, setAllPortfoliosSummary] =
     useState<AllPortfoliosSummaryResponse>();
 
@@ -42,7 +43,7 @@ export default function Page() {
           <Breadcrumbs pages={pages} currentPage="All Portfolios"/>
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
+            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
             <div>As of {formatDate(allPortfoliosSummary.end)}</div>
           </Card>
           {/* Row 2 */}
