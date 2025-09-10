@@ -13,7 +13,7 @@ import { ActiveSwitch } from "@/components/ActiveSwitch";
 
 export default function Page() {
   const [active, setActive] = useState(true);
-  const [view, setView] = useState('max');
+  const [view, setView] = useState('cohort');
   const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
   const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
   const [allHoldingsSummary, setAllHoldingsSummary] =
