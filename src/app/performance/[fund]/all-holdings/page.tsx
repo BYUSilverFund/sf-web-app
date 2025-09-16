@@ -5,14 +5,17 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
-import { defaultEnd, defaultStart, formatDate, formatPortfolio } from "@/lib/utils";
+import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { ActiveSwitch } from "@/components/ActiveSwitch";
 
 export default function Page() {
-  const [start, setStart] = useState<Date>(defaultStart());
-  const [end, setEnd] = useState<Date>(defaultEnd());
+  const [active, setActive] = useState(true);
+  const [view, setView] = useState('cohort');
+  const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
+  const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
   const [allHoldingsSummary, setAllHoldingsSummary] =
     useState<AllHoldingsSummaryResponse>();
 
@@ -43,19 +46,30 @@ export default function Page() {
     }
   ]
 
+  const holdings = useMemo(() => { // This useMemo hook was authored by Claude. I'm too lazy to check it. -- Andrew
+    if (!allHoldingsSummary?.holdings) return [];
+    if (active) {
+      return allHoldingsSummary.holdings.filter((holding) => holding.active);
+    }
+    return allHoldingsSummary.holdings;
+  }, [allHoldingsSummary?.holdings, active]);
+
   return (
     <div className="px-24">
       {allHoldingsSummary && (
         <div className="space-y-4 p-4">
           <Breadcrumbs pages={pages} currentPage="All Holdings"/>
           {/* Row 1 */}
-          <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
-            <div>As of {formatDate(allHoldingsSummary.end)}</div>
+          <Card className="flex p-4 justify-between">
+            <div className="flex gap-2 items-center">
+              <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
+              <div>As of {formatDate(allHoldingsSummary.end)}</div>
+            </div>
+            <ActiveSwitch active={active} setActive={setActive}/>
           </Card>
           {/* Row 2 */}
           <Card>
-            <AllHoldingsDataTable data={allHoldingsSummary.holdings}/>
+            <AllHoldingsDataTable data={holdings}/>
           </Card>
         </div>
       )}

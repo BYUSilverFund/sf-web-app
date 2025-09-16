@@ -50,33 +50,64 @@ export function formatDate(dateStr: string): string {
 }
 
 
-
-export function defaultEnd(): Date {
-  const today = new Date()
-
-  const may = 4; // May = month index 4 (0-based)
-
-  let cohortEnd = new Date(today.getFullYear() + 1, may, 0); // last day of April next year
-
-  // If today is before May, use last year's May as start
-  if (today.getMonth() < may) {
-    cohortEnd = new Date(today.getFullYear(), may, 0);
-  }
-  
-  return cohortEnd
-  
+export function defaultStart(view: string): Date {
+  return getDateFromView(view)[0];
 }
 
-export function defaultStart(): Date {
+export function defaultEnd(view: string): Date {
+  return getDateFromView(view)[1];
+}
+
+export function getDateFromView(view: string): [Date, Date] {
   const today = new Date()
 
-  const may = 4; // May = month index 4 (0-based)
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
 
-  let cohortStart = new Date(today.getFullYear(), may, 1);
+  const yesterdayLastYear = new Date();
+  yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
+    switch (view) {
+      case "cohort": {
+        // Determine cohort period (May -> May)
+        const may = 4; // May = month index 4 (0-based)
 
-  if (today.getMonth() < may) {
-    cohortStart = new Date(today.getFullYear() - 1, may, 1);
-  }
+        let cohortStart = new Date(today.getFullYear(), may, 1);
+        let cohortEnd = new Date(today.getFullYear() + 1, may, 0); // last day of April next year
 
-  return cohortStart
-}
+        // If today is before May, use last year's May as start
+        if (today.getMonth() < may) {
+          cohortStart = new Date(today.getFullYear() - 1, may, 1);
+          cohortEnd = new Date(today.getFullYear(), may, 0);
+        }
+
+        return [cohortStart, cohortEnd];
+      }
+
+      case "max":
+        return [new Date(2020, 1, 1), yesterday];
+
+      case "1year":
+        return [yesterdayLastYear, yesterday]
+
+      case "1month": {
+        const oneMonthAgo = new Date(yesterday);
+        oneMonthAgo.setMonth(yesterday.getMonth() - 1);
+        return [oneMonthAgo, yesterday]
+      }
+
+      case "3months": {
+        const threeMonthsAgo = new Date(yesterday);
+        threeMonthsAgo.setMonth(yesterday.getMonth() - 3);
+        return [threeMonthsAgo, yesterday];
+      }
+
+      case "1week": {
+        const oneWeekAgo = new Date(yesterday);
+        oneWeekAgo.setDate(yesterday.getDate() - 7);
+        return [oneWeekAgo, yesterday];
+      }
+
+      default:
+        return [yesterdayLastYear, yesterday];
+    }
+  };

@@ -18,86 +18,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getDateFromView } from "@/lib/utils";
 
 type ViewButtonProps = {
   start: Date;
   end: Date;
   setStart: React.Dispatch<React.SetStateAction<Date>>;
   setEnd: React.Dispatch<React.SetStateAction<Date>>;
+  view: string;
+  setView: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export function ViewButton({ start, end, setStart, setEnd }: ViewButtonProps) {
-  const [view, setView] = useState("cohort");
+export function ViewButton({ start, end, setStart, setEnd, view, setView }: ViewButtonProps) {
 
-  const today = new Date()
-
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-
-  const yesterdayLastYear = new Date();
-  yesterdayLastYear.setFullYear(yesterday.getFullYear() - 1);
-
-  const handleView = (value: string) => {
-
-
-    setView(value);
-
-    switch (value) {
-      case "cohort": {
-        // Determine cohort period (May -> May)
-        const may = 4; // May = month index 4 (0-based)
-
-        let cohortStart = new Date(today.getFullYear(), may, 1);
-        let cohortEnd = new Date(today.getFullYear() + 1, may, 0); // last day of April next year
-
-        // If today is before May, use last year's May as start
-        if (today.getMonth() < may) {
-          cohortStart = new Date(today.getFullYear() - 1, may, 1);
-          cohortEnd = new Date(today.getFullYear(), may, 0);
-        }
-
-        setStart(cohortStart);
-        setEnd(cohortEnd);
-        break;
-      }
-
-      case "max":
-        setStart(new Date(2020, 1, 1))
-        setEnd(yesterday)
-        break;
-
-      case "1year":
-        setStart(yesterdayLastYear);
-        setEnd(yesterday);
-        break;
-
-      case "1month": {
-        const oneMonthAgo = new Date(yesterday);
-        oneMonthAgo.setMonth(yesterday.getMonth() - 1);
-        setStart(oneMonthAgo);
-        setEnd(yesterday);
-        break;
-      }
-
-      case "3months": {
-        const threeMonthsAgo = new Date(yesterday);
-        threeMonthsAgo.setMonth(yesterday.getMonth() - 3);
-        setStart(threeMonthsAgo);
-        setEnd(yesterday);
-        break;
-      }
-
-      case "1week": {
-        const oneWeekAgo = new Date(yesterday);
-        oneWeekAgo.setDate(yesterday.getDate() - 7);
-        setStart(oneWeekAgo);
-        setEnd(yesterday);
-        break;
-      }
-
-      default:
-        break;
-    }
+  const handleView = (view: string) => {
+    setView(view);
+    const dates = getDateFromView(view);
+    setStart(dates[0]);
+    setEnd(dates[1]);
   };
 
   const viewOptions = [
@@ -133,7 +71,7 @@ export function ViewButton({ start, end, setStart, setEnd }: ViewButtonProps) {
 
   return (
     <div className="flex gap-4">
-      <Select defaultValue="cohort" onValueChange={handleView}>
+      <Select defaultValue={view} onValueChange={handleView}>
         <SelectTrigger className="w-[180px]">
           <SelectValue />
         </SelectTrigger>

@@ -20,12 +20,13 @@ import { FundSummaryTable } from "@/components/FundSummaryTable";
 import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/allPortfolios";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
-import { defaultEnd, defaultStart } from "@/lib/utils";
+import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 
 export default function Page() {
-  const [start, setStart] = useState<Date>(defaultStart());
-  const [end, setEnd] = useState<Date>(defaultEnd());
+  const [view, setView] = useState('cohort');
+  const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
+  const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =useState<BenchmarkSummaryResponse>();
   const [fundTimeSeries, setFundTimeSeries] = useState<FundTimeSeriesResponse>();
@@ -69,7 +70,7 @@ export default function Page() {
         <div className="space-y-4 p-4">
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
+            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
             <div>As of {formatDate(fundSummary.end)}</div>
           </Card>
           {/* Row 2 */}
@@ -79,7 +80,7 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={fundTimeSeries["records"]} />
+              <ReturnsChart data={fundTimeSeries["records"]} label="All Funds"/>
             </Card>
             <Card className="h-fit w-full">
               <AllPortfoliosSummaryTable allPortfoliosSummary={allPortfoliosSummary}/>

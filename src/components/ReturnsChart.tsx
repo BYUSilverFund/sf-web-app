@@ -16,27 +16,20 @@ interface TooltipData {
   benchmark_cummulative_return: number;
 }
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: { payload: TooltipData }[];
-  label?: string;
-}
 
-function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
-  if (active && payload && payload.length) {
+function CustomTooltip({payload, label, fund}: {payload?: { payload: TooltipData }[], label?: string, fund?: string}) {
+  if (payload && payload.length) {
     const data = payload[0].payload;
 
     return (
       <div className="bg-background border border-border rounded-md p-4 space-y-2">
         <div>{label}</div>
         <div>{formatCurrency(data.value)}</div>
-
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-sm bg-[#82ca9d]"></span>
-          <div>All Funds</div>
+          <div>{fund}</div>
           <div>{formatPercent(data.cummulative_return)}</div>
         </div>
-
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-sm bg-[#8884d8]"></span>
           <div>Benchmark</div>
@@ -49,10 +42,10 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   return null;
 }
 
-export function ReturnsChart({ data }: { data: object[] }) {
+export function ReturnsChart({ data, label }: { data: object[], label?: string }) {
   const chartConfig = {
     cummulative_return: {
-      label: "All Funds",
+      label: label,
       color: "var(--chart-1)",
     },
     benchmark_cummulative_return: {
@@ -99,7 +92,7 @@ export function ReturnsChart({ data }: { data: object[] }) {
           strokeWidth={3}
           dot={false}
         />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<CustomTooltip fund={label}/>} />
         <Legend
           align="left"
           verticalAlign="top"
@@ -107,7 +100,7 @@ export function ReturnsChart({ data }: { data: object[] }) {
           height={40}
           formatter={(value: string) =>
             ({
-              cummulative_return: "All Funds",
+              cummulative_return: label,
               benchmark_cummulative_return: "Benchmark",
             })[value]
           }

@@ -20,12 +20,13 @@ import { PortfolioSummaryTable } from "@/components/PortfolioSummarytable";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
-import { defaultEnd, defaultStart, formatDate, formatPortfolio } from "@/lib/utils";
+import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Page() {
-  const [start, setStart] = useState<Date>(defaultStart());
-  const [end, setEnd] = useState<Date>(defaultEnd());
+  const [view, setView] = useState('cohort')
+  const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
+  const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
   const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] = useState<BenchmarkSummaryResponse>();
   const [portfolioTimeSeries, setPortfolioTimeSeries] = useState<PortfolioTimeSeriesResponse>();
@@ -75,7 +76,7 @@ export default function Page() {
           <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)}/>
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} />
+            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
             <div>As of {formatDate(portfolioSummary.end)}</div>
           </Card>
           {/* Row 2 */}
@@ -85,7 +86,7 @@ export default function Page() {
           {/* Row 3 */}
           <div className="flex gap-4">
             <Card className="px-4">
-              <ReturnsChart data={portfolioTimeSeries["records"]} />
+              <ReturnsChart data={portfolioTimeSeries["records"]} label={formatPortfolio(params.fund)}/>
             </Card>
             <Card className="h-fit w-full">
               <AllHoldingsSummaryTable fund={params.fund} allHoldingsSummary={allHoldingsSummary}/>
