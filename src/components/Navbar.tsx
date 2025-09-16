@@ -103,11 +103,6 @@ function NavbarNav({ className }: NavbarProps) {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="https://47fund.byu.edu/signin">Login</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );
