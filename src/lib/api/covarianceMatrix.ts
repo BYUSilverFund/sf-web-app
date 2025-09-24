@@ -51,3 +51,28 @@ export async function getAvailableTickers(): Promise<TickerList>{
     throw new Error("Failed to fetch data.");
   }
 }
+
+export async function getFundTickers(request: Fund): Promise<TickerList>{
+  try {
+    const response = await fetch(
+      API_BASE_URL + "covariance-matrix/fund-tickers",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result =
+      await response.json();
+
+    return result;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch data.");
+  }
+}

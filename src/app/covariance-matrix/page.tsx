@@ -1,10 +1,11 @@
 "use client";
 
-import { getAvailableTickers, getCovarianceMatrix } from "@/lib/api/covarianceMatrix";
+import { getAvailableTickers, getCovarianceMatrix, getFundTickers } from "@/lib/api/covarianceMatrix";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronDown, X, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,19 @@ export default function Page() {
   const [tickers, setTickers] = useState<string[]>([]);
   const [availableTickers, setAvailableTickers] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState<string>("Custom");
+
+  const funds = [
+    {'name': 'Graduate', 'value': 'grad'},
+    {'name': 'Undergraduate', 'value': 'undergrad'},
+    {'name': 'Brigham Capital', 'value': 'brigham_capital'},
+    {'name': 'Quant', 'value': 'quant'},
+  ]
+
+  const presetOptions = [
+    { name: 'Custom', value: 'Custom' },
+    ...funds
+  ];
 
   useEffect(() => {
     getAvailableTickers().then((response) => setAvailableTickers(response.tickers)).catch(console.error)
@@ -29,6 +43,21 @@ export default function Page() {
 
   const removeTicker = (ticker: string) => {
     setTickers(prev => prev.filter(t => t !== ticker));
+  };
+
+  const handlePresetChange = async (value: string) => {
+    setSelectedPreset(value);
+    if (value === "Custom") {
+      setTickers([]);
+    } else {
+      try {
+        const fundTickers = await getFundTickers({ fund: value });
+        setTickers(fundTickers.tickers);
+      } catch (error) {
+        console.error("Failed to fetch fund tickers:", error);
+        alert("Failed to load fund tickers. Please try again.");
+      }
+    }
   };
 
   const downloadCovarianceMatrix = async () => {
@@ -55,8 +84,23 @@ export default function Page() {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center p-4">
         <Card className="space-y-4 p-4">
+        <div className="space-y-2">
+            <label className="text-sm font-medium">Select Preset</label>
+            <Select value={selectedPreset} onValueChange={handlePresetChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose a preset" />
+              </SelectTrigger>
+              <SelectContent>
+                {presetOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+        </div>
         <div className="space-y-2">
             <label className="text-sm font-medium">Select Tickers</label>
             <Popover open={isOpen} onOpenChange={setIsOpen}>
