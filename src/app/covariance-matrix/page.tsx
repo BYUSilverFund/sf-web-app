@@ -1,0 +1,133 @@
+"use client";
+
+import { getAvailableTickers, getCovarianceMatrix } from "@/lib/api/covarianceMatrix";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ChevronDown, X, Check } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+export default function Page() {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [tickers, setTickers] = useState<string[]>([]);
+  const [availableTickers, setAvailableTickers] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    getAvailableTickers().then((response) => setAvailableTickers(response.tickers)).catch(console.error)
+  }, []);
+
+  const handleTickerToggle = (ticker: string) => {
+    setTickers(prev =>
+      prev.includes(ticker)
+        ? prev.filter(t => t !== ticker)
+        : [...prev, ticker]
+    );
+  };
+
+  const removeTicker = (ticker: string) => {
+    setTickers(prev => prev.filter(t => t !== ticker));
+  };
+
+  const downloadCovarianceMatrix = async () => {
+    setIsDownloading(true);
+    try {
+      const tickerList = { tickers: tickers };
+      const blob = await getCovarianceMatrix(tickerList);
+
+      // This is super hacky but it works. -- Andrew Hall
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "latest.csv";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Download failed. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  return (
+    <div className="flex justify-center">
+        <Card className="space-y-4 p-4">
+        <div className="space-y-2">
+            <label className="text-sm font-medium">Select Tickers</label>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={isOpen}
+                className="w-full justify-between"
+                >
+                {tickers.length === 0
+                    ? "Select tickers..."
+                    : `${tickers.length} ticker${tickers.length === 1 ? '' : 's'} selected`}
+                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+                <Command>
+                <CommandInput placeholder="Search tickers..." />
+                <CommandList>
+                    <CommandEmpty>Loading...</CommandEmpty>
+                    <CommandGroup>
+                    {availableTickers.map((ticker) => (
+                        <CommandItem
+                        key={ticker}
+                        value={ticker}
+                        onSelect={() => handleTickerToggle(ticker)}
+                        >
+                        <Check
+                            className={cn(
+                            "mr-2 h-4 w-4",
+                            tickers.includes(ticker) ? "opacity-100" : "opacity-0"
+                            )}
+                        />
+                        {ticker}
+                        </CommandItem>
+                    ))}
+                    </CommandGroup>
+                </CommandList>
+                </Command>
+            </PopoverContent>
+            </Popover>
+        </div>
+
+        {tickers.length > 0 && (
+            <div className="space-y-2">
+            <label className="text-sm font-medium">Selected Tickers</label>
+            <div className="flex flex-wrap gap-2">
+                {tickers.map((ticker) => (
+                <div key={ticker} className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">
+                    <span>{ticker}</span>
+                    <button
+                    onClick={() => removeTicker(ticker)}
+                    className="hover:text-destructive"
+                    >
+                    <X className="h-3 w-3" />
+                    </button>
+                </div>
+                ))}
+            </div>
+            </div>
+        )}
+
+        <Button
+            onClick={downloadCovarianceMatrix}
+            disabled={isDownloading || tickers.length === 0}
+            className="w-full"
+        >
+            {isDownloading ? "Downloading..." : "Download Covariance Matrix"}
+        </Button>
+        </Card>
+    </div>
+  );
+}
