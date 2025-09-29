@@ -66,7 +66,7 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             headShot={ElizabethHall.src}
             name="Elizabeth Hall"
             position="Graduate Fund"
-            linkedIn="https://www.linkedin.com/in/elizabeth-nelson-hall/"
+            linkedIn="https://www.linkedin.com/in/elizabethdhall/"
           />
           <TeamCard
             headShot={JosephLunt.src}

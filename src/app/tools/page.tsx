@@ -162,7 +162,7 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <div>
             <h5 className="w-full text-lg font-semibold">Silver Fund Tools</h5>
             <ul>
@@ -174,7 +174,7 @@ const Tools: React.FC = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
       <br />
     </div>
