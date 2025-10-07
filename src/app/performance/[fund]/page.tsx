@@ -10,9 +10,12 @@ import {
 } from "@/lib/types";
 import { format } from "date-fns";
 import * as React from "react";
-import { getPortfolioSummary, getPortfolioTimeSeries } from "@/lib/api/portfolio";
+import {
+  getPortfolioSummary,
+  getPortfolioTimeSeries,
+} from "@/lib/api/portfolio";
 
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
@@ -24,15 +27,19 @@ import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Page() {
-  const [view, setView] = useState('cohort')
+  const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
   const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
-  const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummaryResponse>();
-  const [benchmarkSummary, setBenchmarkSummary] = useState<BenchmarkSummaryResponse>();
-  const [portfolioTimeSeries, setPortfolioTimeSeries] = useState<PortfolioTimeSeriesResponse>();
-  const [allHoldingsSummary, setAllHoldingsSummary] = useState<AllHoldingsSummaryResponse>();
+  const [portfolioSummary, setPortfolioSummary] =
+    useState<PortfolioSummaryResponse>();
+  const [benchmarkSummary, setBenchmarkSummary] =
+    useState<BenchmarkSummaryResponse>();
+  const [portfolioTimeSeries, setPortfolioTimeSeries] =
+    useState<PortfolioTimeSeriesResponse>();
+  const [allHoldingsSummary, setAllHoldingsSummary] =
+    useState<AllHoldingsSummaryResponse>();
 
-  const params = useParams<{ fund: string}>()
+  const params = useParams<{ fund: string }>();
 
   useEffect(() => {
     if (start && end) {
@@ -44,56 +51,73 @@ export default function Page() {
 
       const benchmarkRequest: BenchmarkRequest = {
         start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),      
-      }
+        end: format(end, "yyyy-MM-dd"),
+      };
 
       getPortfolioSummary(portfolioRequest)
         .then(setPortfolioSummary)
         .catch(console.error);
       getBenchmarkSummary(benchmarkRequest)
         .then(setBenchmarkSummary)
-        .catch(console.error)
+        .catch(console.error);
       getPortfolioTimeSeries(portfolioRequest)
         .then(setPortfolioTimeSeries)
-        .catch(console.error)
+        .catch(console.error);
       getAllHoldingsSummary(portfolioRequest)
         .then(setAllHoldingsSummary)
-        .catch(console.error)
+        .catch(console.error);
     }
   }, [start, end, params.fund]);
 
   const pages = [
     {
-      name: 'All Funds',
-      href: '/performance'
-    }
-  ]
+      name: "All Funds",
+      href: "/performance",
+    },
+  ];
 
   return (
     <div className="px-24">
-      {portfolioSummary && benchmarkSummary && portfolioTimeSeries && allHoldingsSummary &&(
-        <div className="space-y-4 p-4">
-          <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)}/>
-          {/* Row 1 */}
-          <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
+      <div className="space-y-4 p-4">
+        <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)} />
+        {/* Row 1 */}
+        <Card className="flex p-4 gap-2 items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+          />
+          {portfolioSummary && (
             <div>As of {formatDate(portfolioSummary.end)}</div>
+          )}
+        </Card>
+        {/* Row 2 */}
+        <Card className="flex flex-col h-fit">
+          <PortfolioSummaryTable
+            portfolio={params.fund}
+            portfolioSummary={portfolioSummary}
+            benchmarkSummary={benchmarkSummary}
+          />
+        </Card>
+        {/* Row 3 */}
+        <div className="flex gap-4">
+          <Card className="px-4 w-full">
+            <ReturnsChart
+              data={portfolioTimeSeries && portfolioTimeSeries["records"]}
+              label={formatPortfolio(params.fund)}
+            />
           </Card>
-          {/* Row 2 */}
-          <Card className="flex flex-col h-fit">
-            <PortfolioSummaryTable portfolio={params.fund} portfolioSummary={portfolioSummary} benchmarkSummary={benchmarkSummary}/>
+          <Card className="h-fit w-1/5">
+            <AllHoldingsSummaryTable
+              fund={params.fund}
+              allHoldingsSummary={allHoldingsSummary}
+            />
           </Card>
-          {/* Row 3 */}
-          <div className="flex gap-4">
-            <Card className="px-4">
-              <ReturnsChart data={portfolioTimeSeries["records"]} label={formatPortfolio(params.fund)}/>
-            </Card>
-            <Card className="h-fit w-full">
-              <AllHoldingsSummaryTable fund={params.fund} allHoldingsSummary={allHoldingsSummary}/>
-            </Card>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

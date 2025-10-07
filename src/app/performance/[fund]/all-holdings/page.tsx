@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { AllHoldingsDataTable } from "@/components/AllHoldingsDataTable";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -13,11 +13,12 @@ import { ActiveSwitch } from "@/components/ActiveSwitch";
 
 export default function Page() {
   const [active, setActive] = useState(true);
-  const [view, setView] = useState('cohort');
+  const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
   const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
-  const [allHoldingsSummary, setAllHoldingsSummary] =
-    useState<AllHoldingsSummaryResponse>();
+  const [allHoldingsSummary, setAllHoldingsSummary] = useState<
+    AllHoldingsSummaryResponse | undefined
+  >();
 
   const params = useParams<{ fund: string }>();
 
@@ -37,16 +38,17 @@ export default function Page() {
 
   const pages = [
     {
-      name: 'All Funds',
-      href: '/performance'
+      name: "All Funds",
+      href: "/performance",
     },
     {
       name: formatPortfolio(params.fund),
-      href: `/performance/${params.fund}`
-    }
-  ]
+      href: `/performance/${params.fund}`,
+    },
+  ];
 
-  const holdings = useMemo(() => { // This useMemo hook was authored by Claude. I'm too lazy to check it. -- Andrew
+  const holdings = useMemo(() => {
+    // This useMemo hook was authored by Claude. I'm too lazy to check it. -- Andrew
     if (!allHoldingsSummary?.holdings) return [];
     if (active) {
       return allHoldingsSummary.holdings.filter((holding) => holding.active);
@@ -56,23 +58,32 @@ export default function Page() {
 
   return (
     <div className="px-24">
-      {allHoldingsSummary && (
-        <div className="space-y-4 p-4">
-          <Breadcrumbs pages={pages} currentPage="All Holdings"/>
-          {/* Row 1 */}
-          <Card className="flex p-4 justify-between">
-            <div className="flex gap-2 items-center">
-              <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
-              <div>As of {formatDate(allHoldingsSummary.end)}</div>
-            </div>
-            <ActiveSwitch active={active} setActive={setActive}/>
-          </Card>
-          {/* Row 2 */}
-          <Card>
-            <AllHoldingsDataTable data={holdings}/>
-          </Card>
-        </div>
-      )}
+      <div className="space-y-4 p-4">
+        <Breadcrumbs pages={pages} currentPage="All Holdings" />
+        {/* Row 1 */}
+        <Card className="flex p-4 justify-between">
+          <div className="flex gap-2 items-center">
+            {allHoldingsSummary && (
+              <>
+                <ViewButton
+                  start={start}
+                  end={end}
+                  setStart={setStart}
+                  setEnd={setEnd}
+                  view={view}
+                  setView={setView}
+                />
+                <div>As of {formatDate(allHoldingsSummary.end)}</div>
+              </>
+            )}
+          </div>
+          <ActiveSwitch active={active} setActive={setActive} />
+        </Card>
+        {/* Row 2 */}
+        <Card>
+          <AllHoldingsDataTable data={holdings} />
+        </Card>
+      </div>
     </div>
   );
 }

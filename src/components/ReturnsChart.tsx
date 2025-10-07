@@ -16,8 +16,15 @@ interface TooltipData {
   benchmark_cummulative_return: number;
 }
 
-
-function CustomTooltip({payload, label, fund}: {payload?: { payload: TooltipData }[], label?: string, fund?: string}) {
+function CustomTooltip({
+  payload,
+  label,
+  fund,
+}: {
+  payload?: { payload: TooltipData }[];
+  label?: string;
+  fund?: string;
+}) {
   if (payload && payload.length) {
     const data = payload[0].payload;
 
@@ -42,7 +49,13 @@ function CustomTooltip({payload, label, fund}: {payload?: { payload: TooltipData
   return null;
 }
 
-export function ReturnsChart({ data, label }: { data: object[], label?: string }) {
+export function ReturnsChart({
+  data,
+  label,
+}: {
+  data: object[] | undefined;
+  label?: string;
+}) {
   const chartConfig = {
     cummulative_return: {
       label: label,
@@ -55,7 +68,7 @@ export function ReturnsChart({ data, label }: { data: object[], label?: string }
   } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={chartConfig} className="h-[600px] w-[1000] py-4">
+    <ChartContainer config={chartConfig} className="h-full w-full py-4">
       <LineChart
         accessibilityLayer
         data={data}
@@ -92,7 +105,7 @@ export function ReturnsChart({ data, label }: { data: object[], label?: string }
           strokeWidth={3}
           dot={false}
         />
-        <Tooltip content={<CustomTooltip fund={label}/>} />
+        <Tooltip content={<CustomTooltip fund={label} />} />
         <Legend
           align="left"
           verticalAlign="top"

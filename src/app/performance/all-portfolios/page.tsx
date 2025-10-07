@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { AllPortfoliosDataTable } from "@/components/AllPortfoliosDataTable";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const [view, setView] = useState('cohort')
+  const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date>(defaultStart(view));
   const [end, setEnd] = useState<Date>(defaultEnd(view));
   const [allPortfoliosSummary, setAllPortfoliosSummary] =
@@ -31,24 +31,31 @@ export default function Page() {
 
   const pages = [
     {
-      name: 'All Funds',
-      href: '/performance'
+      name: "All Funds",
+      href: "/performance",
     },
-  ]
+  ];
 
   return (
     <div className="px-24">
       {allPortfoliosSummary && (
         <div className="space-y-4 p-4">
-          <Breadcrumbs pages={pages} currentPage="All Portfolios"/>
+          <Breadcrumbs pages={pages} currentPage="All Portfolios" />
           {/* Row 1 */}
           <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
+            <ViewButton
+              start={start}
+              end={end}
+              setStart={setStart}
+              setEnd={setEnd}
+              view={view}
+              setView={setView}
+            />
             <div>As of {formatDate(allPortfoliosSummary.end)}</div>
           </Card>
           {/* Row 2 */}
           <Card>
-            <AllPortfoliosDataTable data={allPortfoliosSummary.portfolios}/>
+            <AllPortfoliosDataTable data={allPortfoliosSummary.portfolios} />
           </Card>
         </div>
       )}

@@ -17,20 +17,26 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import { FundSummaryTable } from "@/components/FundSummaryTable";
-import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "@/lib/types/allPortfolios";
+import {
+  AllPortfoliosRequest,
+  AllPortfoliosSummaryResponse,
+} from "@/lib/types/allPortfolios";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 
 export default function Page() {
-  const [view, setView] = useState('cohort');
+  const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
   const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
-  const [benchmarkSummary, setBenchmarkSummary] =useState<BenchmarkSummaryResponse>();
-  const [fundTimeSeries, setFundTimeSeries] = useState<FundTimeSeriesResponse>();
-  const [allPortfoliosSummary, setAllPortfoliosSummary] = useState<AllPortfoliosSummaryResponse>();
+  const [benchmarkSummary, setBenchmarkSummary] =
+    useState<BenchmarkSummaryResponse>();
+  const [fundTimeSeries, setFundTimeSeries] =
+    useState<FundTimeSeriesResponse>();
+  const [allPortfoliosSummary, setAllPortfoliosSummary] =
+    useState<AllPortfoliosSummaryResponse>();
 
   useEffect(() => {
     if (start && end) {
@@ -46,12 +52,10 @@ export default function Page() {
 
       const allPortfoliosRequest: AllPortfoliosRequest = {
         start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),      
-      }
+        end: format(end, "yyyy-MM-dd"),
+      };
 
-      getFundSummary(fundRequest)
-        .then(setFundSummary)
-        .catch(console.error);
+      getFundSummary(fundRequest).then(setFundSummary).catch(console.error);
       getBenchmarkSummary(benchmarkRequest)
         .then(setBenchmarkSummary)
         .catch(console.error);
@@ -66,28 +70,41 @@ export default function Page() {
 
   return (
     <div className="px-24">
-      {fundSummary && benchmarkSummary && fundTimeSeries && allPortfoliosSummary &&(
-        <div className="space-y-4 p-4">
-          {/* Row 1 */}
-          <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
-            <div>As of {formatDate(fundSummary.end)}</div>
+      <div className="space-y-4 p-4">
+        {/* Row 1 */}
+        <Card className="flex p-4 gap-2 items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+          />
+          {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
+        </Card>
+        {/* Row 2 */}
+        <Card className="flex flex-col h-fit">
+          <FundSummaryTable
+            allFundsSummary={fundSummary}
+            benchmarkSummary={benchmarkSummary}
+          />
+        </Card>
+        {/* Row 3 */}
+        <div className="flex gap-4">
+          <Card className="px-4 w-full">
+            <ReturnsChart
+              data={fundTimeSeries && fundTimeSeries["records"]}
+              label="All Funds"
+            />
           </Card>
-          {/* Row 2 */}
-          <Card className="flex flex-col h-fit">
-            <FundSummaryTable allFundsSummary={fundSummary} benchmarkSummary={benchmarkSummary}/>
+          <Card className="h-fit w-1/5">
+            <AllPortfoliosSummaryTable
+              allPortfoliosSummary={allPortfoliosSummary}
+            />
           </Card>
-          {/* Row 3 */}
-          <div className="flex gap-4">
-            <Card className="px-4">
-              <ReturnsChart data={fundTimeSeries["records"]} label="All Funds"/>
-            </Card>
-            <Card className="h-fit w-full">
-              <AllPortfoliosSummaryTable allPortfoliosSummary={allPortfoliosSummary}/>
-            </Card>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
