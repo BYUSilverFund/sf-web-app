@@ -68,7 +68,7 @@ export function ReturnsChart({
   } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={chartConfig} className="h-full w-full py-4">
+    <ChartContainer config={chartConfig} className="h-full w-full md:py-4 py-1">
       <LineChart
         accessibilityLayer
         data={data}

@@ -13,9 +13,9 @@ import { formatCurrency } from "@/lib/utils";
 export function DividendsTable({
   dividends,
 }: {
-  dividends: DividendsResponse;
+  dividends: DividendsResponse | undefined;
 }) {
-  if (dividends.dividends.length === 0)
+  if (!dividends || dividends.dividends.length === 0)
     return <div className="text-center py-2 text-muted-foreground">None</div>;
 
   return (

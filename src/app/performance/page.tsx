@@ -69,10 +69,10 @@ export default function Page() {
   }, [start, end]);
 
   return (
-    <div className="px-24">
+    <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         {/* Row 1 */}
-        <Card className="flex p-4 gap-2 items-center">
+        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
           <ViewButton
             start={start}
             end={end}
@@ -91,14 +91,14 @@ export default function Page() {
           />
         </Card>
         {/* Row 3 */}
-        <div className="flex gap-4">
+        <div className="md:flex space-y-2 md:space-y-0 gap-4">
           <Card className="px-4 w-full">
             <ReturnsChart
               data={fundTimeSeries && fundTimeSeries["records"]}
               label="All Funds"
             />
           </Card>
-          <Card className="h-fit w-1/5">
+          <Card className="h-fit md:w-2/6 w-full">
             <AllPortfoliosSummaryTable
               allPortfoliosSummary={allPortfoliosSummary}
             />

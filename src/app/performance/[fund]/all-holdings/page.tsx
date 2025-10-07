@@ -57,12 +57,12 @@ export default function Page() {
   }, [allHoldingsSummary?.holdings, active]);
 
   return (
-    <div className="px-24">
+    <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         <Breadcrumbs pages={pages} currentPage="All Holdings" />
         {/* Row 1 */}
         <Card className="flex p-4 justify-between">
-          <div className="flex gap-2 items-center">
+          <div className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             {allHoldingsSummary && (
               <>
                 <ViewButton

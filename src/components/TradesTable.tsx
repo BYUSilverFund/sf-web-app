@@ -10,8 +10,12 @@ import {
 } from "./ui/table";
 import { formatCurrency } from "@/lib/utils";
 
-export function TradesTable({ trades }: { trades: TradesResponse }) {
-  if (trades.trades.length === 0)
+export function TradesTable({
+  trades,
+}: {
+  trades: TradesResponse | undefined;
+}) {
+  if (!trades || trades.trades.length === 0)
     return <div className="text-center py-2 text-muted-foreground">None</div>;
 
   return (

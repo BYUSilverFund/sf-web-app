@@ -37,28 +37,28 @@ export default function Page() {
   ];
 
   return (
-    <div className="px-24">
-      {allPortfoliosSummary && (
-        <div className="space-y-4 p-4">
-          <Breadcrumbs pages={pages} currentPage="All Portfolios" />
-          {/* Row 1 */}
-          <Card className="flex p-4 gap-2 items-center">
-            <ViewButton
-              start={start}
-              end={end}
-              setStart={setStart}
-              setEnd={setEnd}
-              view={view}
-              setView={setView}
-            />
+    <div className="lg:px-24 md:px-12 sm:px-6">
+      <div className="space-y-4 p-4">
+        <Breadcrumbs pages={pages} currentPage="All Portfolios" />
+        {/* Row 1 */}
+        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+          />
+          {allPortfoliosSummary && (
             <div>As of {formatDate(allPortfoliosSummary.end)}</div>
-          </Card>
-          {/* Row 2 */}
-          <Card>
-            <AllPortfoliosDataTable data={allPortfoliosSummary.portfolios} />
-          </Card>
-        </div>
-      )}
+          )}
+        </Card>
+        {/* Row 2 */}
+        <Card>
+          <AllPortfoliosDataTable data={allPortfoliosSummary?.portfolios} />
+        </Card>
+      </div>
     </div>
   );
 }

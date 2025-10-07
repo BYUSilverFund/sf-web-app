@@ -93,62 +93,58 @@ export default function Page() {
       : Math.min(trades?.trades?.length ?? 5, 5);
 
   return (
-    <div className="px-24">
-      {holdingSummary &&
-        holdingTimeSeries &&
-        benchmarkSummary &&
-        dividends &&
-        trades && (
-          <div className="space-y-4 p-4">
-            <Breadcrumbs pages={pages} currentPage={params.holding} />
-            {/* Row 1 */}
-            <Card className="flex p-4 gap-2 items-center">
-              <ViewButton
-                start={start}
-                end={end}
-                setStart={setStart}
-                setEnd={setEnd}
-                view={view}
-                setView={setView}
-              />
-              <div>As of {formatDate(holdingSummary.end)}</div>
-            </Card>
-            {/* Row 2 */}
-            <Card className="flex flex-col h-fit">
-              <HoldingSummaryTable
-                ticker={params.holding}
-                holdingSummary={holdingSummary}
-                benchmarkSummary={benchmarkSummary}
-              />
-            </Card>
-            {/* Row 3 */}
-            <div className="flex gap-4">
-              <Card className="px-4 w-full">
-                <ReturnsChart
-                  data={holdingTimeSeries.records}
-                  label={params.holding}
-                />
-              </Card>
-              <div className="flex flex-col gap-4 w-full">
-                <Card className="flex flex-col w-full">
-                  <div className="text-center py-4 border-b border-solid">
-                    Dividends
-                  </div>
-                  <DividendsTable dividends={dividends} />
-                </Card>
-                <Card className="flex flex-col w-full">
-                  <div className="text-center py-4 border-b border-solid">
-                    {tradeDisplayCount === null
-                      ? null
-                      : "Last " + tradeDisplayCount}{" "}
-                    Trades
-                  </div>
-                  <TradesTable trades={trades} />
-                </Card>
+    <div className="lg:px-24 md:px-12 sm:px-6">
+      {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
+      <div className="space-y-4 p-4">
+        <Breadcrumbs pages={pages} currentPage={params.holding} />
+        {/* Row 1 */}
+        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+          />
+          {holdingSummary && <div>As of {formatDate(holdingSummary.end)}</div>}
+        </Card>
+        {/* Row 2 */}
+        <Card className="flex flex-col h-fit">
+          <HoldingSummaryTable
+            ticker={params.holding}
+            holdingSummary={holdingSummary}
+            benchmarkSummary={benchmarkSummary}
+          />
+        </Card>
+        {/* Row 3 */}
+        <div className="lg:flex gap-4 space-y-4 lg:space-y-0">
+          <Card className="px-4 w-full">
+            <ReturnsChart
+              data={holdingTimeSeries?.records}
+              label={params.holding}
+            />
+          </Card>
+          <div className="flex flex-col gap-4 w-full">
+            <Card className="flex flex-col w-full">
+              <div className="text-center py-4 border-b border-solid">
+                Dividends
               </div>
-            </div>
+              <DividendsTable dividends={dividends} />
+            </Card>
+            <Card className="flex flex-col w-full">
+              <div className="text-center py-4 border-b border-solid">
+                {tradeDisplayCount === null
+                  ? null
+                  : "Last " + tradeDisplayCount}{" "}
+                Trades
+              </div>
+              <TradesTable trades={trades} />
+            </Card>
           </div>
-        )}
+        </div>
+      </div>
+      {/* )} */}
     </div>
   );
 }
