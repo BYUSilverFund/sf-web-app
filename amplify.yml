@@ -1,19 +1,19 @@
 version: 1
-env:
-  variables:
-    NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT: ${LAMBDA_POSITIONS_ENDPOINT}
-    NEXT_PUBLIC_FASTAPI_URL: ${FASTAPI_URL}
-
 frontend:
   phases:
-    build:
+    preBuild:
       commands:
         - npm install
+    build:
+      commands:
+        # Write environment variables to a file that Next.js will read during build
+        - echo "NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT=$LAMBDA_POSITIONS_ENDPOINT" >> .env.production
+        - echo "NEXT_PUBLIC_FASTAPI_URL=$FASTAPI_URL" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next/
     files:
-      - '/*'
+      - "/*"
   cache:
     paths:
       - node_modules/**/*
