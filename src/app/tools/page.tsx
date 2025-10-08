@@ -162,6 +162,19 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
+        {/* <div className="flex justify-center">
+          <div>
+            <h5 className="w-full text-lg font-semibold">Silver Fund Tools</h5>
+            <ul>
+              <li>
+                <ToolLink
+                  href="/covariance-matrix"
+                  text="Covariance Matrix Downloader"
+                />
+              </li>
+            </ul>
+          </div>
+        </div> */}
       </div>
       <br />
     </div>

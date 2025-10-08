@@ -212,7 +212,7 @@ const Home: React.FC = () => {
           Below is a list of the top 10 current positions held by the Silver
           Fund teams.
           <br />
-          These include the positions held by the Undergraduate, MBA, Brigham
+          These include the positions held by the Undergraduate, Graduate, Brigham
           Capital, and Quant teams.
         </p>
         <Spinner />
@@ -227,7 +227,7 @@ const Home: React.FC = () => {
         Below is a list of the top 10 current positions held by the Silver Fund
         teams.
         <br />
-        These include the positions held by the Undergraduate, MBA, Brigham
+        These include the positions held by the Undergraduate, Graduate, Brigham
         Capital, and Quant teams.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
@@ -294,7 +294,7 @@ const Home: React.FC = () => {
         <div className="max-w-md mx-auto">
           {/* MBA Positions */}
           <div className="text-center text-2xl font-semibold mb-4">
-            MBA Positions
+            Graduate Positions
           </div>
           <div className="grid grid-cols-3 gap-4">
             {mbaPosInfo.map((row) => (
