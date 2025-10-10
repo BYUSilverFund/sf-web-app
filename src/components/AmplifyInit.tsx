@@ -28,12 +28,7 @@ export default function AmplifyInit(): null {
 
     try {
       Amplify.configure(cfg as any);
-      // Helpful runtime debugging: show the active Amplify config in the browser console
-      // (only prints in client runtime).
-      // eslint-disable-next-line no-console
-      console.log("Amplify configured:", Amplify.getConfig());
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error("Amplify.configure error:", err);
     }
   }, []);

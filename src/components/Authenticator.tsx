@@ -9,7 +9,8 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
   const services = {
     async handleSignUp(input: SignUpInput) {
       const { username, password } = input;
-      if (username.split("@")[1] !== "byu.edu") {
+      const domains = ["byu.edu", "student.byu.edu"];
+      if (!domains.includes(username.split("@")[1])) {
         throw new Error("Please use your BYU email to sign up.");
       }
       return signUp({
@@ -19,7 +20,8 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
     },
     async handleSignIn(input: SignInInput) {
       const { username, password } = input;
-      if (username.split("@")[1] !== "byu.edu") {
+      const domains = ["byu.edu", "student.byu.edu"];
+      if (!domains.includes(username.split("@")[1])) {
         throw new Error("Please use your BYU email to sign in.");
       }
       return signIn({
@@ -44,7 +46,7 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
 
   return (
     <AmplifyAuthenticator
-      services={services}
+      // services={services}
       formFields={formFields}
       className="m-4"
     >
