@@ -1,9 +1,11 @@
 // Import necessary types and components from Next.js and Google Fonts
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
+import { Amplify } from "aws-amplify";
 import "./globals.css";
 import Footer from "../components/Footer";
 import Navbar from "@/components/Navbar";
+import AmplifyInit from "@/components/AmplifyInit";
 
 // Configure the Inter font with specific settings
 const inter = Inter({
@@ -61,6 +63,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased bg-gray-50`}
       >
+        <AmplifyInit />
         <Navbar />
         {children}
         <Footer />
