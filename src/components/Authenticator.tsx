@@ -6,6 +6,7 @@ import "@aws-amplify/ui-react/styles.css";
 import type React from "react";
 
 function Authenticator({ children }: { children?: React.ReactNode }) {
+  // frontend email domain check
   const services = {
     async handleSignUp(input: SignUpInput) {
       const { username, password } = input;
@@ -46,19 +47,21 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
 
   return (
     <AmplifyAuthenticator
-      // services={services}
+      services={services}
       formFields={formFields}
       className="m-4"
     >
       {({ signOut, user }) => (
         <>
-          <h1>Hello {user?.username}</h1>
-          <button
-            onClick={signOut}
-            className="bg-blue-800 text-white p-2 rounded"
-          >
-            Sign out
-          </button>
+          <div className="text-right m-2 space-y-2">
+            <p>You are signed in</p>
+            <button
+              onClick={signOut}
+              className="bg-blue-900 text-white p-2 rounded"
+            >
+              Sign Out
+            </button>
+          </div>
           {children}
         </>
       )}
