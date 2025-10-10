@@ -12,15 +12,25 @@ import {
 import { format } from "date-fns";
 import * as React from "react";
 
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { ReturnsChart } from "@/components/ReturnsChart";
-import { getDividends, getHoldingSummary, getHoldingTimeSeries, getTrades } from "@/lib/api/holding";
+import {
+  getDividends,
+  getHoldingSummary,
+  getHoldingTimeSeries,
+  getTrades,
+} from "@/lib/api/holding";
 import { HoldingSummaryTable } from "@/components/HoldingSummaryTable";
 import { DividendsTable } from "@/components/DividendsTable";
-import { defaultEnd, defaultStart, formatDate, formatPortfolio } from "@/lib/utils";
+import {
+  defaultEnd,
+  defaultStart,
+  formatDate,
+  formatPortfolio,
+} from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TradesTable } from "@/components/TradesTable";
 
@@ -28,13 +38,16 @@ export default function Page() {
   const [view, setView] = useState("max");
   const [start, setStart] = useState<Date>(defaultStart(view));
   const [end, setEnd] = useState<Date>(defaultEnd(view));
-  const [holdingSummary, setHoldingSummary] = useState<HoldingSummaryResponse>();
-  const [benchmarkSummary, setBenchmarkSummary] = useState<BenchmarkSummaryResponse>();
-  const [holdingTimeSeries, setHoldingTimeSeries] = useState<HoldingTimeSeriesResponse>();
+  const [holdingSummary, setHoldingSummary] =
+    useState<HoldingSummaryResponse>();
+  const [benchmarkSummary, setBenchmarkSummary] =
+    useState<BenchmarkSummaryResponse>();
+  const [holdingTimeSeries, setHoldingTimeSeries] =
+    useState<HoldingTimeSeriesResponse>();
   const [dividends, setDividends] = useState<DividendsResponse>();
   const [trades, setTrades] = useState<TradesResponse>();
 
-  const params = useParams<{ fund: string, holding: string}>()
+  const params = useParams<{ fund: string; holding: string }>();
 
   useEffect(() => {
     if (start && end) {
@@ -47,70 +60,91 @@ export default function Page() {
 
       const benchmarkRequest: BenchmarkRequest = {
         start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),      
-      }
+        end: format(end, "yyyy-MM-dd"),
+      };
 
       getHoldingSummary(holdingRequest)
         .then(setHoldingSummary)
         .catch(console.error);
       getBenchmarkSummary(benchmarkRequest)
         .then(setBenchmarkSummary)
-        .catch(console.error)
+        .catch(console.error);
       getHoldingTimeSeries(holdingRequest)
         .then(setHoldingTimeSeries)
-        .catch(console.error)
-      getDividends(holdingRequest)
-        .then(setDividends)
-        .catch(console.error)
-      getTrades(holdingRequest)
-        .then(setTrades)
-        .catch(console.error)
+        .catch(console.error);
+      getDividends(holdingRequest).then(setDividends).catch(console.error);
+      getTrades(holdingRequest).then(setTrades).catch(console.error);
     }
   }, [start, end, params.fund, params.holding]);
 
   const pages = [
     {
-      name: 'All Funds',
-      href: '/performance'
+      name: "All Funds",
+      href: "/performance",
     },
     {
       name: formatPortfolio(params.fund),
-      href: `/performance/${params.fund}`
-    }
-  ]
+      href: `/performance/${params.fund}`,
+    },
+  ];
+  const tradeDisplayCount =
+    trades?.trades && trades.trades.length === 0
+      ? null
+      : Math.min(trades?.trades?.length ?? 5, 5);
 
   return (
-    <div className="px-24">
-      {holdingSummary && holdingTimeSeries && benchmarkSummary && dividends && trades &&(
-        <div className="space-y-4 p-4">
-          <Breadcrumbs pages={pages} currentPage={params.holding}/>
-          {/* Row 1 */}
-          <Card className="flex p-4 gap-2 items-center">
-            <ViewButton start={start} end={end} setStart={setStart} setEnd={setEnd} view={view} setView={setView}/>
-            <div>As of {formatDate(holdingSummary.end)}</div>
+    <div className="lg:px-24 md:px-12 sm:px-6">
+      {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
+      <div className="space-y-4 p-4">
+        <Breadcrumbs pages={pages} currentPage={params.holding} />
+        {/* Row 1 */}
+        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+          />
+          {holdingSummary && <div>As of {formatDate(holdingSummary.end)}</div>}
+        </Card>
+        {/* Row 2 */}
+        <Card className="flex flex-col h-fit">
+          <HoldingSummaryTable
+            ticker={params.holding}
+            holdingSummary={holdingSummary}
+            benchmarkSummary={benchmarkSummary}
+          />
+        </Card>
+        {/* Row 3 */}
+        <div className="lg:flex gap-4 space-y-4 lg:space-y-0">
+          <Card className="px-4 w-full">
+            <ReturnsChart
+              data={holdingTimeSeries?.records}
+              label={params.holding}
+            />
           </Card>
-          {/* Row 2 */}
-          <Card className="flex flex-col h-fit">
-            <HoldingSummaryTable ticker={params.holding} holdingSummary={holdingSummary} benchmarkSummary={benchmarkSummary}/>
-          </Card>
-          {/* Row 3 */}
-          <div className="flex gap-4">
-            <Card className="px-4">
-              <ReturnsChart data={holdingTimeSeries.records} label={params.holding}/>
+          <div className="flex flex-col gap-4 w-full">
+            <Card className="flex flex-col w-full">
+              <div className="text-center py-4 border-b border-solid">
+                Dividends
+              </div>
+              <DividendsTable dividends={dividends} />
             </Card>
-            <div className="flex flex-col gap-4 w-full">
-                <Card className="flex flex-col">
-                    <div className="text-center py-4 border-b border-solid">Dividends</div>
-                    <DividendsTable dividends={dividends}/>
-                </Card>
-                <Card className="flex flex-col">
-                    <div className="text-center py-4 border-b border-solid">Last 5 Trades</div>
-                    <TradesTable trades={trades}/>
-                </Card>
-            </div>
+            <Card className="flex flex-col w-full">
+              <div className="text-center py-4 border-b border-solid">
+                {tradeDisplayCount === null
+                  ? null
+                  : "Last " + tradeDisplayCount}{" "}
+                Trades
+              </div>
+              <TradesTable trades={trades} />
+            </Card>
           </div>
         </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   );
 }

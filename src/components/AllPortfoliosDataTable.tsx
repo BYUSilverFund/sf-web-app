@@ -227,9 +227,11 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
 ];
 
 export function AllPortfoliosDataTable({
-  data,
+  // default to empty array so the table code always receives an array
+  // (prevents runtime errors when `data` is undefined while loading)
+  data = [],
 }: {
-  data: AllPortfoliosRecord[];
+  data?: AllPortfoliosRecord[] | undefined;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

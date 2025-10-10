@@ -1,22 +1,5 @@
-import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import gql from "graphql-tag";
-
-Amplify.configure({
-  API: {
-    GraphQL: {
-      endpoint:
-        "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
-      defaultAuthMode: "apiKey",
-      apiKey: "da2-udsupx5mc5atlhdbwa35uckq6a",
-      region: "us-west-2",
-      customEndpoint:
-        "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
-      customEndpointRegion: "us-west-2",
-    },
-  },
-});
-
 
 export interface AlumniInfo {
   name: string;
@@ -53,5 +36,6 @@ export const getAlumniInfo = async (): Promise<AlumniInfo[]> => {
     authMode: "apiKey",
   });
 
-  return (result as ListSilverFundAlumniInfosResponse).data.listSilverFundAlumniInfos.items;
+  return (result as ListSilverFundAlumniInfosResponse).data
+    .listSilverFundAlumniInfos.items;
 };

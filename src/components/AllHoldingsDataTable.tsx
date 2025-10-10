@@ -219,7 +219,11 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
   },
 ];
 
-export function AllHoldingsDataTable({ data }: { data: AllHoldingsRecord[] }) {
+export function AllHoldingsDataTable({
+  data,
+}: {
+  data: AllHoldingsRecord[] | undefined;
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -229,7 +233,7 @@ export function AllHoldingsDataTable({ data }: { data: AllHoldingsRecord[] }) {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -310,30 +314,27 @@ export function AllHoldingsDataTable({ data }: { data: AllHoldingsRecord[] }) {
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+              {table.getRowModel().rows.length === 0 && (
+                <TableRow className="h-[33.33vh]">
                   <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
+                    colSpan={table.getAllLeafColumns().length}
+                    className="text-center"
+                  ></TableCell>
                 </TableRow>
               )}
             </TableBody>

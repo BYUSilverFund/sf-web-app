@@ -15,12 +15,12 @@ export function FundSummaryTable({
   allFundsSummary,
   benchmarkSummary,
 }: {
-  allFundsSummary: FundSummaryResponse;
-  benchmarkSummary: BenchmarkSummaryResponse;
+  allFundsSummary: FundSummaryResponse | undefined;
+  benchmarkSummary: BenchmarkSummaryResponse | undefined;
 }) {
   return (
     <Table>
-      <TableHeader>
+      {/* <TableHeader>
         <TableRow>
           <TableHead></TableHead>
           <TableHead>Value</TableHead>
@@ -70,7 +70,7 @@ export function FundSummaryTable({
           <TableCell></TableCell>
           <TableCell></TableCell>
         </TableRow>
-      </TableBody>
+      </TableBody> */}
     </Table>
   );
 }
