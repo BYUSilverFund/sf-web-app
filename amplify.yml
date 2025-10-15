@@ -1,4 +1,11 @@
 version: 1
+env:
+  variables:
+    NEXT_PUBLIC_FASTAPI_URL: ${FASTAPI_URL}
+    NEXT_PUBLIC_COGNITO_REGION: ${COGNITO_REGION}
+    NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
+    NEXT_PUBLIC_COGNITO_APP_CLIENT_ID: ${COGNITO_APP_CLIENT_ID}
+
 frontend:
   phases:
     preBuild:
@@ -6,12 +13,19 @@ frontend:
         - npm install
     build:
       commands:
-        # # Write environment variables to a file that Next.js will read during build
-        # - echo "NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT=$LAMBDA_POSITIONS_ENDPOINT" >> .env.production
-        # - echo "NEXT_PUBLIC_FASTAPI_URL=$FASTAPI_URL" >> .env.production
-        # - echo "NEXT_PUBLIC_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" >> .env.production
-        # - echo "NEXT_PUBLIC_COGNITO_APP_CLIENT_ID=$COGNITO_APP_CLIENT_ID" >> .env.production
-        # - echo "NEXT_PUBLIC_COGNITO_AWS_REGION=$COGNITO_AWS_REGION" >> .env.production
+        # Debug: show which branch and values are being used
+        - echo "Building branch $AWS_BRANCH"
+        - echo "FASTAPI_URL=$FASTAPI_URL"
+        - echo "COGNITO_APP_CLIENT_ID=$COGNITO_APP_CLIENT_ID"
+
+        # Write environment variables to .env.production
+        - echo "NEXT_PUBLIC_FASTAPI_URL=$FASTAPI_URL" >> .env.production
+        - echo "NEXT_PUBLIC_COGNITO_REGION=$COGNITO_REGION" >> .env.production
+        - echo "NEXT_PUBLIC_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" >> .env.production
+        - echo "NEXT_PUBLIC_COGNITO_APP_CLIENT_ID=$COGNITO_APP_CLIENT_ID" >> .env.production
+
+        # Verify what was written
+        - cat .env.production
         - npm run build
   artifacts:
     baseDirectory: .next/
@@ -20,3 +34,4 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - .next/cache/**/*
