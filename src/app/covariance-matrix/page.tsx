@@ -58,7 +58,7 @@ export default function Page() {
     setTickers((prev) =>
       prev.includes(ticker)
         ? prev.filter((t) => t !== ticker)
-        : [...prev, ticker]
+        : [...prev, ticker],
     );
   };
 
@@ -159,7 +159,7 @@ export default function Page() {
                               "mr-2 h-4 w-4",
                               tickers.includes(ticker)
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {ticker}

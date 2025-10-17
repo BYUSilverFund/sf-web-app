@@ -149,7 +149,7 @@ const tickerCheck = (ticker: string) => {
 };
 
 const getPosInfo = async (
-  positions: { ticker: string; positionvalue: string }[]
+  positions: { ticker: string; positionvalue: string }[],
 ) => {
   let total_equity = 0;
   let pos_info: { ticker: string; weight: number }[] = [];
@@ -212,8 +212,8 @@ const Home: React.FC = () => {
           Below is a list of the top 10 current positions held by the Silver
           Fund teams.
           <br />
-          These include the positions held by the Undergraduate, Graduate, Brigham
-          Capital, and Quant teams.
+          These include the positions held by the Undergraduate, Graduate,
+          Brigham Capital, and Quant teams.
         </p>
         <Spinner />
       </div>

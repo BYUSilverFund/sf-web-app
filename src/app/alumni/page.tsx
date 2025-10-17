@@ -26,7 +26,7 @@ const Alumni: React.FC = () => {
       (row) =>
         row.name.toLowerCase().includes(name.toLowerCase()) &&
         row.current_position.toLowerCase().includes(position.toLowerCase()) &&
-        row.current_company.toLowerCase().includes(company.toLowerCase())
+        row.current_company.toLowerCase().includes(company.toLowerCase()),
     );
     setFilteredData(filtered);
     setPage(1);

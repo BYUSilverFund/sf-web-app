@@ -29,8 +29,14 @@ type ViewButtonProps = {
   setView: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export function ViewButton({ start, end, setStart, setEnd, view, setView }: ViewButtonProps) {
-
+export function ViewButton({
+  start,
+  end,
+  setStart,
+  setEnd,
+  view,
+  setView,
+}: ViewButtonProps) {
   const handleView = (view: string) => {
     setView(view);
     const dates = getDateFromView(view);
@@ -61,7 +67,7 @@ export function ViewButton({ start, end, setStart, setEnd, view, setView }: View
     },
     {
       name: "Max",
-      value: 'max'
+      value: "max",
     },
     {
       name: "Custom",
