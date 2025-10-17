@@ -4,6 +4,8 @@ frontend:
     preBuild:
       commands:
         - npm install
+        - npm run lint
+        - npm run format
     build:
       commands:
         - echo "NEXT_PUBLIC_FASTAPI_URL=$FASTAPI_URL" >> .env.production
