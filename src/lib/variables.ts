@@ -1,1 +1,1 @@
-export const API_BASE_URL = "https://api.silverfund.byu.edu/"
+export const API_BASE_URL = process.env.NEXT_PUBLIC_FASTAPI_URL + "/";

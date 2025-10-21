@@ -1,7 +1,6 @@
 // Import necessary types and components from Next.js and Google Fonts
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
-import { Amplify } from "aws-amplify";
 import "./globals.css";
 import Footer from "../components/Footer";
 import Navbar from "@/components/Navbar";

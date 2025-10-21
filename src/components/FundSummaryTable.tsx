@@ -20,7 +20,7 @@ export function FundSummaryTable({
 }) {
   return (
     <Table>
-      {/* <TableHeader>
+      <TableHeader>
         <TableRow>
           <TableHead></TableHead>
           <TableHead>Value</TableHead>
@@ -38,39 +38,59 @@ export function FundSummaryTable({
       <TableBody>
         <TableRow>
           <TableCell>All Funds</TableCell>
-          <TableCell>{formatCurrency(allFundsSummary.value)}</TableCell>
-          <TableCell>{formatPercent(allFundsSummary.total_return)}</TableCell>
-          <TableCell>{formatPercent(allFundsSummary.volatility)}</TableCell>
-          <TableCell>{formatFloat(allFundsSummary.sharpe_ratio)}</TableCell>
-          <TableCell>{formatCurrency(allFundsSummary.dividends)}</TableCell>
-          <TableCell>{formatPercent(allFundsSummary.dividend_yield)}</TableCell>
-          <TableCell>{formatPercent(allFundsSummary.alpha)}</TableCell>
-          <TableCell>{formatFloat(allFundsSummary.beta)}</TableCell>
-          <TableCell>{formatPercent(allFundsSummary.tracking_error)}</TableCell>
-          <TableCell>
-            {formatFloat(allFundsSummary.information_ratio)}
-          </TableCell>
+          {allFundsSummary && (
+            <>
+              <TableCell>{formatCurrency(allFundsSummary.value)}</TableCell>
+              <TableCell>
+                {formatPercent(allFundsSummary.total_return)}
+              </TableCell>
+              <TableCell>{formatPercent(allFundsSummary.volatility)}</TableCell>
+              <TableCell>{formatFloat(allFundsSummary.sharpe_ratio)}</TableCell>
+              <TableCell>{formatCurrency(allFundsSummary.dividends)}</TableCell>
+              <TableCell>
+                {formatPercent(allFundsSummary.dividend_yield)}
+              </TableCell>
+              <TableCell>{formatPercent(allFundsSummary.alpha)}</TableCell>
+              <TableCell>{formatFloat(allFundsSummary.beta)}</TableCell>
+              <TableCell>
+                {formatPercent(allFundsSummary.tracking_error)}
+              </TableCell>
+              <TableCell>
+                {formatFloat(allFundsSummary.information_ratio)}
+              </TableCell>
+            </>
+          )}
         </TableRow>
         <TableRow>
           <TableCell>Benchmark</TableCell>
-          <TableCell>
-            {formatCurrency(benchmarkSummary?.adjusted_close)}
-          </TableCell>
-          <TableCell>{formatPercent(benchmarkSummary.total_return)}</TableCell>
-          <TableCell>{formatPercent(benchmarkSummary.volatility)}</TableCell>
-          <TableCell>{formatFloat(benchmarkSummary.sharpe_ratio)}</TableCell>
-          <TableCell>
-            {formatCurrency(benchmarkSummary.dividends_per_share)}
-          </TableCell>
-          <TableCell>
-            {formatPercent(benchmarkSummary.dividend_yield)}
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
+          {benchmarkSummary && (
+            <>
+              <TableCell>
+                {formatCurrency(benchmarkSummary?.adjusted_close)}
+              </TableCell>
+              <TableCell>
+                {formatPercent(benchmarkSummary.total_return)}
+              </TableCell>
+              <TableCell>
+                {formatPercent(benchmarkSummary.volatility)}
+              </TableCell>
+              <TableCell>
+                {formatFloat(benchmarkSummary.sharpe_ratio)}
+              </TableCell>
+              <TableCell>
+                {formatCurrency(benchmarkSummary.dividends_per_share)}
+              </TableCell>
+              <TableCell>
+                {formatPercent(benchmarkSummary.dividend_yield)}
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </>
+          )}
         </TableRow>
-      </TableBody> */}
+      </TableBody>
     </Table>
   );
 }

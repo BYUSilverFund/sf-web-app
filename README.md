@@ -11,4 +11,4 @@ this app is deployed on AWS amplify. pushes to both dev and main will deploy to 
 
 ### Auth
 
-this app uses backend resources for authentication which are defined with terraform in the frontend_auth.tf file.
+this app uses Cognito for authentication which are defined with terraform in the frontend_auth.tf file.

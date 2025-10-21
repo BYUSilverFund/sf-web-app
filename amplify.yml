@@ -4,14 +4,14 @@ frontend:
     preBuild:
       commands:
         - npm install
+        - npm run lint
+        - npm run format
     build:
       commands:
-        # Write environment variables to a file that Next.js will read during build
-        - echo "NEXT_PUBLIC_LAMBDA_POSITIONS_ENDPOINT=$LAMBDA_POSITIONS_ENDPOINT" >> .env.production
         - echo "NEXT_PUBLIC_FASTAPI_URL=$FASTAPI_URL" >> .env.production
+        - echo "NEXT_PUBLIC_COGNITO_REGION=$COGNITO_REGION" >> .env.production
         - echo "NEXT_PUBLIC_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" >> .env.production
         - echo "NEXT_PUBLIC_COGNITO_APP_CLIENT_ID=$COGNITO_APP_CLIENT_ID" >> .env.production
-        - echo "NEXT_PUBLIC_COGNITO_AWS_REGION=$COGNITO_AWS_REGION" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next/
@@ -20,3 +20,4 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - .next/cache/**/*

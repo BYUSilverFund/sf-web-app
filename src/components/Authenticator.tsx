@@ -51,7 +51,7 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
       formFields={formFields}
       className="m-4"
     >
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <>
           <div className="text-right m-2 space-y-2">
             <p>You are signed in</p>

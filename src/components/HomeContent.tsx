@@ -54,7 +54,7 @@ const Slogan = () => {
       gsap.fromTo(
         elements,
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" },
       );
     }
   }, []);
@@ -145,12 +145,12 @@ const ScrollAnimation = () => {
   useEffect(() => {
     if (containerRef.current) {
       const elements = Array.from(
-        containerRef.current.children
+        containerRef.current.children,
       ) as HTMLElement[];
       gsap.fromTo(
         elements,
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.3, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 1, stagger: 0.3, ease: "power2.out" },
       );
     }
   }, []);
@@ -228,6 +228,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({ logo, ticker }) => {
         }`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        rel="noreferrer"
       >
         <img
           src={logo.src}
@@ -251,12 +252,12 @@ const InvContainer: React.FC<ContainerProps> = ({ children }) => {
   useEffect(() => {
     if (containerRef.current) {
       const elements = Array.from(
-        containerRef.current.children
+        containerRef.current.children,
       ) as HTMLElement[];
       gsap.fromTo(
         elements,
         { opacity: 0, x: -20 },
-        { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" }
+        { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" },
         // FIXME  - the animation is a little jumpy at the end.
       );
     }

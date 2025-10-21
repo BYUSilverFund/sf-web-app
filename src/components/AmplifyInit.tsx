@@ -4,6 +4,7 @@ import { Amplify } from "aws-amplify";
 
 export default function AmplifyInit(): null {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cfg: any = {
       API: {
         GraphQL: {
@@ -27,6 +28,7 @@ export default function AmplifyInit(): null {
     };
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       Amplify.configure(cfg as any);
     } catch (err) {
       console.error("Amplify.configure error:", err);

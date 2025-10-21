@@ -2,17 +2,14 @@ import { AllHoldingsRequest, AllHoldingsSummaryResponse } from "../types";
 import { API_BASE_URL } from "../variables";
 
 export async function getAllHoldingsSummary(
-  request: AllHoldingsRequest
+  request: AllHoldingsRequest,
 ): Promise<AllHoldingsSummaryResponse> {
   try {
-    const response = await fetch(
-      API_BASE_URL + "all-holdings/summary",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request),
-      }
-    );
+    const response = await fetch(API_BASE_URL + "all-holdings/summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
