@@ -29,6 +29,7 @@ export function formatPortfolio(name: string): string | undefined {
     undergrad: "Undergrad",
     quant: "Quant",
     brigham_capital: "Brigham Capital",
+    quant_paper: "Quant Paper",
   }[name];
 }
 
