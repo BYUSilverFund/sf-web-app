@@ -125,7 +125,7 @@ export default function Page() {
               label={params.holding}
             />
           </Card>
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-4 w-2/3">
             <Card className="flex flex-col w-full">
               <div className="text-center py-4 border-b border-solid">
                 Dividends
