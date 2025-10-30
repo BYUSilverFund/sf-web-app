@@ -122,9 +122,13 @@ function DateButton({
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+        <PopoverContent
+          className="bg-redd-500 w-auto overflow-hidden p-0"
+          align="start"
+        >
           <Calendar
             mode="single"
+            defaultMonth={date}
             selected={date}
             captionLayout="dropdown"
             onSelect={(date) => {
