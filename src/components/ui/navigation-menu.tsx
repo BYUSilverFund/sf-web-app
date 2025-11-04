@@ -46,12 +46,19 @@ const navigationMenuTriggerStyle = cva(
 
 const NavigationMenuTrigger = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger> & {
+    triggerMode?: "click" | "hover";
+  }
+>(({ className, children, triggerMode = 'hover', ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
     ref={ref}
     className={cn(navigationMenuTriggerStyle(), "group", className)}
     {...props}
+    {...(triggerMode === "click" && {
+      onPointerEnter: (event) => event.preventDefault(),
+      onPointerMove: (event) => event.preventDefault(),
+      onPointerLeave: (event) => event.preventDefault(),
+    })}
   >
     {children}{" "}
     <ChevronDown
