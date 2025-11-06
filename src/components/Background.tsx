@@ -7,8 +7,8 @@ const tailwindStyle = `
     top-0
     left-0
     w-full
-    h-[8vh]
-    sm:h-[10vh]
+    h-[9vh]
+    sm:h-[11vh]
     bg-bottom
     flex
     flex-col
