@@ -14,7 +14,7 @@ export function formatCurrency(value: number): string {
 
 export function formatPercent(
   value: number,
-  fractionDigits: number = 2,
+  fractionDigits: number = 2
 ): string {
   return `${value.toFixed(fractionDigits)}%`;
 }
@@ -40,7 +40,7 @@ export function formatDate(dateStr: string): string {
   const day = parseInt(dayStr, 10);
 
   const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-    new Date(year, monthIndex, 1), // only use for month name
+    new Date(year, monthIndex, 1) // only use for month name
   );
 
   const getOrdinal = (n: number): string => {
@@ -61,7 +61,15 @@ export function defaultEnd(view: string): Date {
   return getDateFromView(view)[1];
 }
 
-export function getDateFromView(view: string): [Date, Date] {
+export function getDateFromView(view: string, fund: string = ""): [Date, Date] {
+  const fund_start_date_map: { [key: string]: Date } = {
+    // dates are when the fund started trading (not when money was first deposited)
+    undergrad: new Date(2020, 10, 17), // 2020-11-17
+    grad: new Date(2023, 10, 10), // 2023-11-10
+    brigham_capital: new Date(2023, 9, 11), // 2023-10-11
+    quant: new Date(2024, 3, 2), // 2024-04-02
+    quant_paper: new Date(2025, 9, 22), // 2025-10-22
+  };
   const today = new Date();
 
   const yesterday = new Date(today);
@@ -87,7 +95,8 @@ export function getDateFromView(view: string): [Date, Date] {
     }
 
     case "max":
-      return [new Date(2020, 1, 1), yesterday];
+      const startDate = fund_start_date_map[fund];
+      return [startDate, yesterday];
 
     case "1year":
       return [yesterdayLastYear, yesterday];

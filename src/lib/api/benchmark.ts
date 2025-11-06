@@ -2,7 +2,7 @@ import { BenchmarkRequest, BenchmarkSummaryResponse } from "../types";
 import { API_BASE_URL } from "../variables";
 
 export async function getBenchmarkSummary(
-  request: BenchmarkRequest,
+  request: BenchmarkRequest
 ): Promise<BenchmarkSummaryResponse> {
   try {
     const response = await fetch(API_BASE_URL + "benchmark/summary", {
