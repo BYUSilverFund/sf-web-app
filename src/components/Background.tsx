@@ -3,6 +3,10 @@ import AtriumPic from "@/images/atrium.png";
 
 // styling for the background
 const tailwindStyle = `
+    fixed
+    top-0
+    left-0
+    w-full
     h-[8vh]
     sm:h-[10vh]
     bg-bottom
@@ -11,6 +15,7 @@ const tailwindStyle = `
     bg-no-repeat
     bg-cover
     px-5 md:px-6 pt-3
+    z-50
 `;
 
 interface BackgroundProps {
