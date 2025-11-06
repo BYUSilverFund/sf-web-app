@@ -22,7 +22,7 @@ const ToolLink: React.FC<ToolLinkProps> = ({ href, text, newTab }) => {
 
 const Tools: React.FC = () => {
   return (
-    <div className="mx-auto p-6 bg-inherit relative overflow-hidden">
+    <div className="mx-auto p-6 bg-inherit relative overflow-hidden pt-[14vh] min-h-screen flex flex-col">
       <SquareSvgTl className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgBr className="absolute bottom-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <h3 className="text-center title mt-4 mb-20">Student Tools</h3>

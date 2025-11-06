@@ -166,7 +166,7 @@ const TeamContainer: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Grad Fund");
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden pt-[8vh] min-h-screen flex flex-col">
       <SquareSvgTl className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgBr className="absolute bottom-0 right-0 w-full h-auto z-0 pointer-events-none" />
       <div className="flex flex-col flex-wrap justify-center p-5 md:p-10 lg:p-20 text-black">

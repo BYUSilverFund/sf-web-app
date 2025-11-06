@@ -106,7 +106,7 @@ export default function Page() {
 
   return (
     <Authenticator>
-      <div className="flex flex-col px-24 py-4 min-h-[80vh]">
+      <div className="flex flex-col px-24 py-4 pt-[14vh] min-h-screen">
         <div className="text-lg font-semibold">
           Covariance Matrix Downloader
         </div>

@@ -69,7 +69,7 @@ export default function Page() {
   }, [start, end]);
 
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6">
+    <div className="lg:px-24 md:px-12 sm:px-6 pt-[14vh] min-h-screen flex flex-col">
       <div className="space-y-4 p-4">
         {/* Row 1 */}
         <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">

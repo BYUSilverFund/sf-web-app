@@ -93,7 +93,7 @@ export default function Page() {
       : Math.min(trades?.trades?.length ?? 5, 5);
 
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6">
+    <div className="lg:px-24 md:px-12 sm:px-6 pt-[14vh] min-h-screen flex flex-col">
       {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
       <div className="space-y-4 p-4">
         <Breadcrumbs pages={pages} currentPage={params.holding} />

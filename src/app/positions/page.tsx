@@ -206,7 +206,7 @@ const Home: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex flex-col justify-center items-center h-screen pt-[14vh] min-h-screen">
         <div className="title mt-10 mb-4">Top Holdings</div>
         <p className="text-center mt-4 mb-8">
           Below is a list of the top 10 current positions held by the Silver
@@ -221,7 +221,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="pt-[14vh] min-h-screen flex flex-col">
       <div className="title mt-10 mb-20">Top Holdings</div>
       <p className="text-center mt-4">
         Below is a list of the top 10 current positions held by the Silver Fund

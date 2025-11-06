@@ -66,7 +66,7 @@ const Alumni: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 bg-gray-50">
+      <div className="p-8 bg-gray-50 pt-[14vh] min-h-screen flex flex-col">
         <h3 className="text-3xl font-bold text-center text-gray-800">
           Alumni List
         </h3>
@@ -101,7 +101,7 @@ const Alumni: React.FC = () => {
 
   return (
     <div>
-      <div className="p-8 bg-gray-50">
+      <div className="p-8 bg-gray-50 pt-[18vh] min-h-screen flex flex-col">
         <h3 className="text-3xl font-bold text-center text-gray-800">
           Alumni List
         </h3>

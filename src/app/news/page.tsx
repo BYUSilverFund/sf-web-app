@@ -48,7 +48,7 @@ const Events: React.FC = () => {
   ];
 
   return (
-    <div className="bg-gray-50 relative overflow-hidden">
+    <div className="bg-gray-50 relative overflow-hidden pt-[14vh] min-h-screen flex flex-col">
       <SquareSvgTl className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgTr className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgBr className="absolute bottom-0 left-0 w-full h-auto z-0 pointer-events-none" />

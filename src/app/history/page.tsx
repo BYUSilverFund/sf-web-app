@@ -5,7 +5,7 @@ import Harold from "@/images/HaroldSilver.png";
 
 const History: React.FC = () => {
   return (
-    <div className="bg-inherit relative p-4">
+    <div className="bg-inherit relative p-4 pt-[14vh] min-h-screen flex flex-col">
       <SquareSvgTl className="absolute top-0 right-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgBl className="absolute bottom-0 right-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgTr className="absolute top-0 right-0 w-full h-auto z-0 pointer-events-none" />

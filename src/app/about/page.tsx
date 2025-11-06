@@ -5,7 +5,7 @@ import GradFund from "@/images/headshots/Silver Fund-1-sm.jpg";
 
 const About: React.FC = () => {
   return (
-    <div className="container mx-auto p-6 mb-6 bg-inherit">
+    <div className="container mx-auto p-6 mb-6 bg-inherit pt-[14vh] min-h-screen flex flex-col">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
         <div
           id="student-placements"
