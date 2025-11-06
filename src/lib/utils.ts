@@ -14,7 +14,7 @@ export function formatCurrency(value: number): string {
 
 export function formatPercent(
   value: number,
-  fractionDigits: number = 2
+  fractionDigits: number = 2,
 ): string {
   return `${value.toFixed(fractionDigits)}%`;
 }
@@ -40,7 +40,7 @@ export function formatDate(dateStr: string): string {
   const day = parseInt(dayStr, 10);
 
   const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-    new Date(year, monthIndex, 1) // only use for month name
+    new Date(year, monthIndex, 1), // only use for month name
   );
 
   const getOrdinal = (n: number): string => {
@@ -95,8 +95,7 @@ export function getDateFromView(view: string, fund: string = ""): [Date, Date] {
     }
 
     case "max":
-      const startDate = fund_start_date_map[fund];
-      return [startDate, yesterday];
+      return [fund_start_date_map[fund], yesterday];
 
     case "1year":
       return [yesterdayLastYear, yesterday];
