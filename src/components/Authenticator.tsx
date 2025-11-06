@@ -49,7 +49,7 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
     <AmplifyAuthenticator
       services={services}
       formFields={formFields}
-      className="m-4"
+      className="m-4 pt-[14vh] min-h-screen flex flex-col"
     >
       {({ signOut }) => (
         <>
