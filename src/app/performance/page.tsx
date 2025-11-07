@@ -29,7 +29,7 @@ import { formatDate } from "@/lib/utils";
 export default function Page() {
   const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date | undefined>(
-    getDateFromView(view)[0]
+    getDateFromView(view)[0],
   );
   const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();

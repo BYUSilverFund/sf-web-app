@@ -15,7 +15,7 @@ export default function Page() {
   const [active, setActive] = useState(true);
   const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date | undefined>(
-    getDateFromView(view)[0]
+    getDateFromView(view)[0],
   );
   const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
   const [allHoldingsSummary, setAllHoldingsSummary] = useState<
