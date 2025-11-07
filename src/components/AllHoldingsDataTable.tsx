@@ -35,6 +35,7 @@ import { AllHoldingsRecord } from "@/lib/types";
 
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<AllHoldingsRecord>[] = [
   {
@@ -206,6 +207,7 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     },
     cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
   },
+  /*
   {
     accessorKey: "page",
     header: () => {
@@ -217,6 +219,7 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
       </Link>
     ),
   },
+  */
 ];
 
 export function AllHoldingsDataTable({
@@ -224,6 +227,7 @@ export function AllHoldingsDataTable({
 }: {
   data: AllHoldingsRecord[] | undefined;
 }) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -318,6 +322,8 @@ export function AllHoldingsDataTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => router.push(`${row.getValue("ticker")}`)}
+                  className="cursor-pointer hover:bg-muted transition"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
