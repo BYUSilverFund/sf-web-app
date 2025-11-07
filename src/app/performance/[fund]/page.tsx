@@ -29,8 +29,8 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();
   const [view, setView] = useState("cohort");
-  const [start, setStart] = useState<Date>();
-  const [end, setEnd] = useState<Date>();
+  const [start, setStart] = useState<Date | undefined>();
+  const [end, setEnd] = useState<Date | undefined>();
   const [portfolioSummary, setPortfolioSummary] =
     useState<PortfolioSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =
