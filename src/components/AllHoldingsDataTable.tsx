@@ -34,7 +34,6 @@ import {
 import { AllHoldingsRecord } from "@/lib/types";
 
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<AllHoldingsRecord>[] = [
@@ -207,19 +206,6 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     },
     cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
   },
-  /*
-  {
-    accessorKey: "page",
-    header: () => {
-      return <></>;
-    },
-    cell: ({ row }) => (
-      <Link href={`${row.getValue("ticker")}`}>
-        <Button>View</Button>
-      </Link>
-    ),
-  },
-  */
 ];
 
 export function AllHoldingsDataTable({

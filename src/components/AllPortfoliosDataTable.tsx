@@ -39,7 +39,6 @@ import {
   formatPortfolio,
   formatFloat,
 } from "@/lib/utils";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<AllPortfoliosRecord>[] = [
@@ -214,18 +213,6 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
       <div>{formatFloat(row.getValue("information_ratio"))}</div>
     ),
   },
-  /*{
-    accessorKey: "page",
-    header: () => {
-      return <></>;
-    },
-    cell: ({ row }) => (
-      <Link href={`${row.getValue("portfolio")}`}>
-        <Button>View</Button>
-      </Link>
-    ),
-  },
-  */
 ];
 
 export function AllPortfoliosDataTable({
