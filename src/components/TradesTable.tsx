@@ -1,4 +1,8 @@
+"use client";
+import { useParams } from "next/navigation";
 import { TradesResponse } from "@/lib/types";
+import Link from "next/link";
+import { ChevronsRight } from "lucide-react";
 
 import {
   Table,
@@ -7,6 +11,7 @@ import {
   TableBody,
   TableHead,
   TableRow,
+  TableFooter,
 } from "./ui/table";
 import { formatCurrency } from "@/lib/utils";
 
@@ -15,6 +20,9 @@ export function TradesTable({
 }: {
   trades: TradesResponse | undefined;
 }) {
+  const params = useParams();
+  const fund = params?.fund as string | undefined;
+  const holding = params?.holding as string | undefined;
   if (!trades || trades.trades.length === 0)
     return <div className="text-center py-2 text-muted-foreground">None</div>;
 
@@ -40,6 +48,18 @@ export function TradesTable({
           </TableRow>
         ))}
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={5}>
+            <Link href={`/performance/${fund}/${holding}/trades`}>
+              <div className="text-center py-4 bg-secondary flex items-center justify-center gap-2">
+                <span className="underline">View All</span>
+                <ChevronsRight size={18} />
+              </div>
+            </Link>
+          </TableCell>
+        </TableRow>
+      </TableFooter>
     </Table>
   );
 }
