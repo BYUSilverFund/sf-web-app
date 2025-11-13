@@ -25,6 +25,7 @@ import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { DashboardHeight } from "@/components/DashboardHeight";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
@@ -77,6 +78,7 @@ export default function Page() {
   ];
 
   return (
+  <DashboardHeight>
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)} />
@@ -119,5 +121,6 @@ export default function Page() {
         </div>
       </div>
     </div>
+  </DashboardHeight>
   );
 }
