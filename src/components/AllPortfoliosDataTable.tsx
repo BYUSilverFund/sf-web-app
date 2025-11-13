@@ -39,7 +39,7 @@ import {
   formatPortfolio,
   formatFloat,
 } from "@/lib/utils";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<AllPortfoliosRecord>[] = [
   {
@@ -213,17 +213,6 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
       <div>{formatFloat(row.getValue("information_ratio"))}</div>
     ),
   },
-  {
-    accessorKey: "page",
-    header: () => {
-      return <></>;
-    },
-    cell: ({ row }) => (
-      <Link href={`${row.getValue("portfolio")}`}>
-        <Button>View</Button>
-      </Link>
-    ),
-  },
 ];
 
 export function AllPortfoliosDataTable({
@@ -233,6 +222,7 @@ export function AllPortfoliosDataTable({
 }: {
   data?: AllPortfoliosRecord[] | undefined;
 }) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -328,6 +318,8 @@ export function AllPortfoliosDataTable({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={() => router.push(`${row.getValue("portfolio")}`)}
+                    className="cursor-pointer hover:bg-muted transition"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
