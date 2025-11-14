@@ -21,10 +21,10 @@ import {
 import { getDateFromView } from "@/lib/utils";
 
 type ViewButtonProps = {
-  start: Date;
-  end: Date;
-  setStart: React.Dispatch<React.SetStateAction<Date>>;
-  setEnd: React.Dispatch<React.SetStateAction<Date>>;
+  start: Date | undefined;
+  end: Date | undefined;
+  setStart: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  setEnd: React.Dispatch<React.SetStateAction<Date | undefined>>;
   view: string;
   setView: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -105,8 +105,8 @@ function DateButton({
   date,
   setDate,
 }: {
-  date: Date;
-  setDate: React.Dispatch<React.SetStateAction<Date>>;
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }) {
   const [open, setOpen] = useState(false);
   return (

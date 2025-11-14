@@ -11,8 +11,8 @@ import { useEffect, useState } from "react";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
-  const [start, setStart] = useState<Date>(defaultStart(view));
-  const [end, setEnd] = useState<Date>(defaultEnd(view));
+  const [start, setStart] = useState<Date | undefined>(defaultStart(view));
+  const [end, setEnd] = useState<Date | undefined>(defaultEnd(view));
   const [allPortfoliosSummary, setAllPortfoliosSummary] =
     useState<AllPortfoliosSummaryResponse>();
 

@@ -36,8 +36,12 @@ import { TradesTable } from "@/components/TradesTable";
 
 export default function Page() {
   const [view, setView] = useState("max");
-  const [start, setStart] = useState<Date>(defaultStart(view));
-  const [end, setEnd] = useState<Date>(defaultEnd(view));
+  const [start, setStart] = useState<Date | undefined>(
+    defaultStart(view) ?? new Date(2020, 0, 1),
+  );
+  const [end, setEnd] = useState<Date | undefined>(
+    defaultEnd(view) ?? Date.now(),
+  );
   const [holdingSummary, setHoldingSummary] =
     useState<HoldingSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =
