@@ -13,8 +13,8 @@ import { useEffect, useState, useMemo } from "react";
 
 export default function Page() {
   const [view, setView] = useState("max");
-  const [start, setStart] = useState<Date>(new Date("2000-01-01"));
-  const [end, setEnd] = useState<Date>(new Date());
+  const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
+  const [end, setEnd] = useState<Date | undefined>(new Date());
   const [allTrades, setAllTrades] = useState<TradesResponse | undefined>();
 
   const params = useParams<{ fund: string; holding: string }>();
