@@ -94,10 +94,10 @@ export default function Page() {
       : Math.min(trades?.trades?.length ?? 5, 5);
 
   return (
-    <DashboardHeight>
-      <div className="lg:px-24 md:px-12 sm:px-6">
-        {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
-        <div className="space-y-4 p-4">
+    <div className="lg:px-24 md:px-12 sm:px-6">
+      {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
+      <div className="space-y-4 p-4">
+        <DashboardHeight>
           <Breadcrumbs pages={pages} currentPage={params.holding} />
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
@@ -120,21 +120,21 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-          <div className="lg:flex gap-4 space-y-4 lg:space-y-0">
-            <Card className="px-4 w-full">
+          <div className="flex flex-1 min-h-0 gap-4 pb-5">
+            <Card className="flex-1 min-h-0 flex flex-col md:w-3/4">
               <ReturnsChart
                 data={holdingTimeSeries?.records}
                 label={params.holding}
               />
             </Card>
-            <div className="flex flex-col gap-4 w-full">
-              <Card className="flex flex-col w-full">
+            <div className="flex-1 min-h-0 flex flex-col md:w-1/4 gap-4">
+              <Card className="flex-1 min-h-0 flex flex-col overflow-y-auto w-full">
                 <div className="text-center py-4 border-b border-solid">
                   Dividends
                 </div>
                 <DividendsTable dividends={dividends} />
               </Card>
-              <Card className="flex flex-col w-full">
+              <Card className="flex-1 min-h-0 flex flex-col overflow-y-auto w-full">
                 <div className="text-center py-4 border-b border-solid">
                   {tradeDisplayCount === null
                     ? null
@@ -145,9 +145,9 @@ export default function Page() {
               </Card>
             </div>
           </div>
-        </div>
-        {/* )} */}
+        </DashboardHeight>
       </div>
-    </DashboardHeight>
+      {/* )} */}
+    </div>
   );
 }

@@ -78,49 +78,49 @@ export default function Page() {
   ];
 
   return (
-  <DashboardHeight>
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)} />
-        {/* Row 1 */}
-        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <ViewButton
-            start={start}
-            end={end}
-            setStart={setStart}
-            setEnd={setEnd}
-            view={view}
-            setView={setView}
-          />
-          {portfolioSummary && (
-            <div>As of {formatDate(portfolioSummary.end)}</div>
-          )}
-        </Card>
-        {/* Row 2 */}
-        <Card className="flex flex-col h-fit">
-          <PortfolioSummaryTable
-            portfolio={params.fund}
-            portfolioSummary={portfolioSummary}
-            benchmarkSummary={benchmarkSummary}
-          />
-        </Card>
-        {/* Row 3 */}
-        <div className="md:flex md:space-y-0 space-y-2 gap-4">
-          <Card className="px-4 w-full">
-            <ReturnsChart
-              data={portfolioTimeSeries && portfolioTimeSeries["records"]}
-              label={formatPortfolio(params.fund)}
+        <DashboardHeight>
+          <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)} />
+          {/* Row 1 */}
+          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+            <ViewButton
+              start={start}
+              end={end}
+              setStart={setStart}
+              setEnd={setEnd}
+              view={view}
+              setView={setView}
+            />
+            {portfolioSummary && (
+              <div>As of {formatDate(portfolioSummary.end)}</div>
+            )}
+          </Card>
+          {/* Row 2 */}
+          <Card className="flex flex-col h-fit">
+            <PortfolioSummaryTable
+              portfolio={params.fund}
+              portfolioSummary={portfolioSummary}
+              benchmarkSummary={benchmarkSummary}
             />
           </Card>
-          <Card className="h-fit md:w-2/6 w-full">
-            <AllHoldingsSummaryTable
-              fund={params.fund}
-              allHoldingsSummary={allHoldingsSummary}
-            />
-          </Card>
-        </div>
+          {/* Row 3 */}
+          <div className="flex flex-1 min-h-0 gap-4 pb-5">
+            <Card className="flex-1 min-h-0 flex flex-col md:w-2/3">
+              <ReturnsChart
+                data={portfolioTimeSeries && portfolioTimeSeries["records"]}
+                label={formatPortfolio(params.fund)}
+              />
+            </Card>
+            <Card className="flex-1 min-h-0 flex flex-col p-0 overflow-auto md:w-1/3">
+              <AllHoldingsSummaryTable
+                fund={params.fund}
+                allHoldingsSummary={allHoldingsSummary}
+              />
+            </Card>
+          </div>
+        </DashboardHeight>
       </div>
     </div>
-  </DashboardHeight>
   );
 }

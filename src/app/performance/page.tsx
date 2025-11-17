@@ -70,9 +70,9 @@ export default function Page() {
   }, [start, end]);
 
   return (
-    <DashboardHeight>
-      <div className="lg:px-24 md:px-12 sm:px-6">
-        <div className="space-y-4 p-4">
+    <div className="lg:px-24 md:px-12 sm:px-6">
+      <div className="space-y-4 p-4">
+        <DashboardHeight>
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             <ViewButton
@@ -93,21 +93,21 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-          <div className="md:flex space-y-2 md:space-y-0 gap-4">
-            <Card className="px-4 w-full">
+         <div className="flex flex-1 min-h-0 gap-4 pb-5">
+            <Card className="flex-1 min-h-0 flex flex-col md:w-3/4">
               <ReturnsChart
                 data={fundTimeSeries && fundTimeSeries["records"]}
                 label="All Funds"
               />
             </Card>
-            <Card className="h-fit md:w-2/6 w-full">
+            <Card className="flex-1 min-h-0 flex flex-col p-0 overflow-auto md:w-1/4">
               <AllPortfoliosSummaryTable
                 allPortfoliosSummary={allPortfoliosSummary}
               />
             </Card>
           </div>
-        </div>
+        </DashboardHeight>
       </div>
-    </DashboardHeight>
+    </div>
   );
 }
