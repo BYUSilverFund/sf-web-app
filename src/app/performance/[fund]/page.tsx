@@ -106,13 +106,13 @@ export default function Page() {
           </Card>
           {/* Row 3 */}
           <div className="flex flex-1 min-h-0 gap-4 pb-5">
-            <Card className="flex-1 min-h-0 flex flex-col md:w-2/3">
+            <Card className="min-h-0 flex flex-col md:w-2/3">
               <ReturnsChart
                 data={portfolioTimeSeries && portfolioTimeSeries["records"]}
                 label={formatPortfolio(params.fund)}
               />
             </Card>
-            <Card className="flex-1 min-h-0 flex flex-col p-0 overflow-auto md:w-1/3">
+            <Card className="h-fit md:w-2/6 w-full">
               <AllHoldingsSummaryTable
                 fund={params.fund}
                 allHoldingsSummary={allHoldingsSummary}

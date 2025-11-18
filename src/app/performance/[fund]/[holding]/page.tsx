@@ -120,22 +120,22 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-          <div className="flex flex-1 min-h-0 gap-4 pb-5">
-            <Card className="flex-1 min-h-0 flex flex-col md:w-3/4">
+          <div className="flex min-h-0 gap-4 pb-5">
+            <Card className=" min-h-0 flex flex-col w-full">
               <ReturnsChart
                 data={holdingTimeSeries?.records}
                 label={params.holding}
               />
             </Card>
-            <div className="flex-1 min-h-0 flex flex-col md:w-1/4 gap-4">
-              <Card className="flex-1 min-h-0 flex flex-col overflow-y-auto w-full">
-                <div className="text-center py-4 border-b border-solid">
+            <div className=" min-h-0 flex flex-col w-2/3 gap-4">
+              <Card className=" min-h-0 flex flex-col overflow-y-auto w-full">
+                <div className="text-center border-b-2 border-solid">
                   Dividends
                 </div>
                 <DividendsTable dividends={dividends} />
               </Card>
-              <Card className="flex-1 min-h-0 flex flex-col overflow-y-auto w-full">
-                <div className="text-center py-4 border-b border-solid">
+              <Card className=" min-h-0 flex flex-col overflow-y-auto w-full">
+                <div className="text-center border-b-2 border-solid">
                   {tradeDisplayCount === null
                     ? null
                     : "Last " + tradeDisplayCount}{" "}
