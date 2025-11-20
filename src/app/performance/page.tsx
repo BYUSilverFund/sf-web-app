@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import { FundSummaryTable } from "@/components/FundSummaryTable";
-import { DashboardHeight } from "@/components/DashboardHeight";
+import { DashboardWrapper } from "@/components/DashboardWrapper";
 import {
   AllPortfoliosRequest,
   AllPortfoliosSummaryResponse,
@@ -72,7 +72,7 @@ export default function Page() {
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <DashboardHeight>
+        <DashboardWrapper>
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             <ViewButton
@@ -106,7 +106,7 @@ export default function Page() {
               />
             </Card>
           </div>
-        </DashboardHeight>
+        </DashboardWrapper>
       </div>
     </div>
   );

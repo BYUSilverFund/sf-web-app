@@ -33,7 +33,7 @@ import {
 } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TradesTable } from "@/components/TradesTable";
-import { DashboardHeight } from "@/components/DashboardHeight";
+import { DashboardWrapper } from "@/components/DashboardWrapper";
 
 export default function Page() {
   const [view, setView] = useState("max");
@@ -97,7 +97,7 @@ export default function Page() {
     <div className="lg:px-24 md:px-12 sm:px-6">
       {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
       <div className="space-y-4 p-4">
-        <DashboardHeight>
+        <DashboardWrapper>
           <Breadcrumbs pages={pages} currentPage={params.holding} />
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
@@ -145,7 +145,7 @@ export default function Page() {
               </Card>
             </div>
           </div>
-        </DashboardHeight>
+        </DashboardWrapper>
       </div>
       {/* )} */}
     </div>

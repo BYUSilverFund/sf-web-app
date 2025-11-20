@@ -6,7 +6,7 @@ type DashboardHeightProps = {
 
 const HEADER_HEIGHT = 100; // add your header height here
 
-export function DashboardHeight({ children }: DashboardHeightProps) {
+export function DashboardWrapper({ children }: DashboardHeightProps) {
   return (
     <div
       className="w-full flex flex-col overflow-y-auto"
