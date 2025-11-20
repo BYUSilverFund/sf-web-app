@@ -12,9 +12,7 @@ export function DashboardWrapper({ children }: DashboardHeightProps) {
       className="w-full flex flex-col overflow-y-auto"
       style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}
     >
-      <div className="flex-1 min-h-0 flex flex-col gap-4">
-        {children}
-      </div>
+      <div className="flex-1 min-h-0 flex flex-col gap-4">{children}</div>
     </div>
   );
 }

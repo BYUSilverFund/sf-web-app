@@ -81,7 +81,10 @@ export default function Page() {
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         <DashboardWrapper>
-          <Breadcrumbs pages={pages} currentPage={formatPortfolio(params.fund)} />
+          <Breadcrumbs
+            pages={pages}
+            currentPage={formatPortfolio(params.fund)}
+          />
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             <ViewButton

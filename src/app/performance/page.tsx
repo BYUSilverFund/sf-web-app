@@ -93,7 +93,7 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-         <div className="flex flex-1 min-h-0 gap-4 pb-5">
+          <div className="flex flex-1 min-h-0 gap-4 pb-5">
             <Card className="flex-1 min-h-0 flex flex-col md:w-3/4">
               <ReturnsChart
                 data={fundTimeSeries && fundTimeSeries["records"]}

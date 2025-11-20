@@ -109,7 +109,9 @@ export default function Page() {
               view={view}
               setView={setView}
             />
-            {holdingSummary && <div>As of {formatDate(holdingSummary.end)}</div>}
+            {holdingSummary && (
+              <div>As of {formatDate(holdingSummary.end)}</div>
+            )}
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">
