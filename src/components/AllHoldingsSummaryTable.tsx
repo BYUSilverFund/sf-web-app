@@ -20,7 +20,7 @@ export function AllHoldingsSummaryTable({
 
   return (
     <div className="flex flex-col">
-      <div className="text-center py-4 border-b border-solid">
+      <div className="text-center border-b-2 border-solid">
         Top {displayCount} by Value
       </div>
 
