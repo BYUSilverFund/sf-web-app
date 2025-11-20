@@ -93,14 +93,14 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-          <div className="flex flex-1 min-h-0 gap-4 pb-5">
-            <Card className="flex-1 min-h-0 flex flex-col md:w-3/4">
+          <div className="md:flex flex-1 min-h-0 gap-4 pb-5 space-y-4 md:space-y-0">
+            <Card className="min-h-0 flex flex-col md:w-2/3">
               <ReturnsChart
                 data={fundTimeSeries && fundTimeSeries["records"]}
                 label="All Funds"
               />
             </Card>
-            <Card className="flex-1 min-h-0 flex flex-col p-0 overflow-auto md:w-1/4">
+            <Card className="overflow-y-auto md:w-1/3 w-full">
               <AllPortfoliosSummaryTable
                 allPortfoliosSummary={allPortfoliosSummary}
               />

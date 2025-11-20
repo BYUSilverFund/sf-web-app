@@ -122,14 +122,14 @@ export default function Page() {
             />
           </Card>
           {/* Row 3 */}
-          <div className="flex min-h-0 gap-4 pb-5">
-            <Card className=" min-h-0 flex flex-col w-full">
+          <div className="md:flex md:space-y-0 space-y-4 min-h-0 gap-4 pb-5">
+            <Card className=" min-h-0 flex flex-col md:w-2/3">
               <ReturnsChart
                 data={holdingTimeSeries?.records}
                 label={params.holding}
               />
             </Card>
-            <div className=" min-h-0 flex flex-col w-2/3 gap-4">
+            <div className=" min-h-0 flex flex-col w-full md:w-1/3 gap-4">
               <Card className=" min-h-0 flex flex-col overflow-y-auto w-full">
                 <div className="text-center border-b-2 border-solid">
                   Dividends
