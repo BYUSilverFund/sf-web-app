@@ -12,9 +12,7 @@ export function AllPortfoliosSummaryTable({
     <div className="flex flex-col">
       {allPortfoliosSummary && (
         <>
-          <div className="text-center py-4 border-b border-solid">
-            Portfolios
-          </div>
+          <div className="text-center border-b-2 border-solid">Portfolios</div>
 
           {allPortfoliosSummary.portfolios.map((portfolio, index) => (
             <Link

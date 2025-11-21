@@ -25,6 +25,7 @@ import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { DashboardWrapper } from "@/components/DashboardWrapper";
 
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();
@@ -92,44 +93,46 @@ export default function Page() {
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
-        {/* Row 1 */}
-        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <ViewButton
-            start={start}
-            end={end}
-            setStart={setStart}
-            setEnd={setEnd}
-            view={view}
-            setView={setView}
-          />
-          {portfolioSummary && (
-            <div>As of {formatDate(portfolioSummary.end)}</div>
-          )}
-        </Card>
-        {/* Row 2 */}
-        <Card className="flex flex-col h-fit">
-          <PortfolioSummaryTable
-            portfolio={fund}
-            portfolioSummary={portfolioSummary}
-            benchmarkSummary={benchmarkSummary}
-          />
-        </Card>
-        {/* Row 3 */}
-        <div className="md:flex md:space-y-0 space-y-2 gap-4">
-          <Card className="px-4 w-full">
-            <ReturnsChart
-              data={portfolioTimeSeries && portfolioTimeSeries["records"]}
-              label={formatPortfolio(fund)}
+        <DashboardWrapper>
+          <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
+          {/* Row 1 */}
+          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+            <ViewButton
+              start={start}
+              end={end}
+              setStart={setStart}
+              setEnd={setEnd}
+              view={view}
+              setView={setView}
+            />
+            {portfolioSummary && (
+              <div>As of {formatDate(portfolioSummary.end)}</div>
+            )}
+          </Card>
+          {/* Row 2 */}
+          <Card className="flex flex-col h-fit">
+            <PortfolioSummaryTable
+              portfolio={fund}
+              portfolioSummary={portfolioSummary}
+              benchmarkSummary={benchmarkSummary}
             />
           </Card>
-          <Card className="h-fit md:w-2/6 w-full">
-            <AllHoldingsSummaryTable
-              fund={fund}
-              allHoldingsSummary={allHoldingsSummary}
-            />
-          </Card>
-        </div>
+          {/* Row 3 */}
+          <div className="md:flex md:space-y-0 space-y-4 min-h-0 gap-4 pb-5">
+            <Card className="min-h-0 flex flex-col md:w-2/3">
+              <ReturnsChart
+                data={portfolioTimeSeries && portfolioTimeSeries["records"]}
+                label={formatPortfolio(fund)}
+              />
+            </Card>
+            <Card className="md:w-2/6 flex flex-col w-full overflow-y-auto">
+              <AllHoldingsSummaryTable
+                fund={fund}
+                allHoldingsSummary={allHoldingsSummary}
+              />
+            </Card>
+          </div>
+        </DashboardWrapper>
       </div>
     </div>
   );
