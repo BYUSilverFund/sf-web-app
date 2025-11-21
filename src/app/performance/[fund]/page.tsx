@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, startTransition } from "react";
 import {
   AllHoldingsSummaryResponse,
   BenchmarkRequest,
@@ -28,9 +28,10 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DashboardWrapper } from "@/components/DashboardWrapper";
 
 export default function Page() {
+  const { fund } = useParams<{ fund: string }>();
   const [view, setView] = useState("cohort");
-  const [start, setStart] = useState<Date>(getDateFromView(view)[0]);
-  const [end, setEnd] = useState<Date>(getDateFromView(view)[1]);
+  const [start, setStart] = useState<Date | undefined>();
+  const [end, setEnd] = useState<Date | undefined>();
   const [portfolioSummary, setPortfolioSummary] =
     useState<PortfolioSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =
@@ -40,12 +41,24 @@ export default function Page() {
   const [allHoldingsSummary, setAllHoldingsSummary] =
     useState<AllHoldingsSummaryResponse>();
 
-  const params = useParams<{ fund: string }>();
+  // Memoized dates based on view and fund
+  const dates = useMemo(() => {
+    if (!fund) return undefined;
+    return getDateFromView(view, fund);
+  }, [view, fund]);
 
   useEffect(() => {
-    if (start && end) {
+    if (!dates) return;
+    startTransition(() => {
+      setStart(dates[0]);
+      setEnd(dates[1]);
+    });
+  }, [dates]);
+
+  useEffect(() => {
+    if (start && end && fund) {
       const portfolioRequest: PortfolioRequest = {
-        fund: params.fund,
+        fund: fund,
         start: format(start, "yyyy-MM-dd"),
         end: format(end, "yyyy-MM-dd"),
       };
@@ -68,7 +81,7 @@ export default function Page() {
         .then(setAllHoldingsSummary)
         .catch(console.error);
     }
-  }, [start, end, params.fund]);
+  }, [start, end]);
 
   const pages = [
     {
@@ -81,10 +94,7 @@ export default function Page() {
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         <DashboardWrapper>
-          <Breadcrumbs
-            pages={pages}
-            currentPage={formatPortfolio(params.fund)}
-          />
+          <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             <ViewButton
@@ -102,7 +112,7 @@ export default function Page() {
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">
             <PortfolioSummaryTable
-              portfolio={params.fund}
+              portfolio={fund}
               portfolioSummary={portfolioSummary}
               benchmarkSummary={benchmarkSummary}
             />
@@ -112,12 +122,12 @@ export default function Page() {
             <Card className="min-h-0 flex flex-col md:w-2/3">
               <ReturnsChart
                 data={portfolioTimeSeries && portfolioTimeSeries["records"]}
-                label={formatPortfolio(params.fund)}
+                label={formatPortfolio(fund)}
               />
             </Card>
             <Card className="md:w-2/6 flex flex-col w-full overflow-y-auto">
               <AllHoldingsSummaryTable
-                fund={params.fund}
+                fund={fund}
                 allHoldingsSummary={allHoldingsSummary}
               />
             </Card>

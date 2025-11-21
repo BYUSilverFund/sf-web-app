@@ -71,7 +71,7 @@ function NavbarNav({ className }: NavbarProps) {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-white">
+          <NavigationMenuTrigger triggerMode="click" className="text-white">
             People
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -86,7 +86,7 @@ function NavbarNav({ className }: NavbarProps) {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-white">
+          <NavigationMenuTrigger triggerMode="click" className="text-white">
             Resources
           </NavigationMenuTrigger>
           <NavigationMenuContent>

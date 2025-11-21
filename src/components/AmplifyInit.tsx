@@ -10,12 +10,9 @@ export default function AmplifyInit(): null {
         GraphQL: {
           endpoint:
             "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
-          defaultAuthMode: "apiKey",
-          apiKey: "da2-udsupx5mc5atlhdbwa35uckq6a",
           region: "us-west-2",
-          customEndpoint:
-            "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
-          customEndpointRegion: "us-west-2",
+          defaultAuthMode: "apiKey",
+          apiKey: "da2-4bh5iavtrjfahcveiktvesgmnm",
         },
       },
       Auth: {
