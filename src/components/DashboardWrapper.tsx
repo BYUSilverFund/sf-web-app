@@ -4,14 +4,9 @@ type DashboardHeightProps = {
   children: ReactNode;
 };
 
-const HEADER_HEIGHT = 100; // add your header height here
-
 export function DashboardWrapper({ children }: DashboardHeightProps) {
   return (
-    <div
-      className="w-full flex flex-col overflow-y-auto"
-      style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}
-    >
+    <div className="w-full flex flex-col md:h-[calc(100vh-100px)]">
       <div className="flex-1 min-h-0 flex flex-col gap-4">{children}</div>
     </div>
   );
