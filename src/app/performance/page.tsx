@@ -84,6 +84,40 @@ export default function Page() {
             setView={setView}
           />
           {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
+          {/* --- DOWNLOAD CSV BUTTON */}
+          <button
+            className="ml-auto px-3 py-1.5 border border-gray-300 text-gray-700 rounded-md
+              hover:bg-gray-100 transition"
+            onClick={async () => {
+              if (!start || !end) return;
+
+              const body = {
+                start: format(start, "yyyy-MM-dd"),
+                end: format(end, "yyyy-MM-dd"),
+              };
+
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_FASTAPI_URL}/report/all-funds/csv`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(body),
+                },
+              );
+
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `all_funds_${body.start}_to_${body.end}.csv`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+            }}
+          >
+            Download CSV
+          </button>
         </Card>
         {/* Row 2 */}
         <Card className="flex flex-col h-fit">
