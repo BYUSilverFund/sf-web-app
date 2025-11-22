@@ -3,8 +3,7 @@ import AtriumPic from "@/images/atrium.png";
 
 // styling for the background
 const tailwindStyle = `
-    h-[8vh]
-    sm:h-[10vh]
+    h-[75px]
     bg-bottom
     flex
     flex-col
