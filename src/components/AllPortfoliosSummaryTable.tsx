@@ -28,7 +28,7 @@ export function AllPortfoliosSummaryTable({
             </Link>
           ))}
           <Link href="/performance/all-portfolios">
-            <div className="text-center flex items-center justify-center gap-1">
+            <div className="text-center flex items-center justify-center gap-1 hover:underline mt-2">
               <span> View All</span>
               <ChevronsRight size={18} />
             </div>

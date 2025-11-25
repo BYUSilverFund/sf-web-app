@@ -41,7 +41,7 @@ export function AllHoldingsSummaryTable({
           </Link>
         ))}
       <Link href={`${fund}/all-holdings`}>
-        <div className="text-center flex items-center justify-center gap-1">
+        <div className="text-center flex items-center justify-center gap-1 hover:bg-secondary mb-2">
           <span>View All</span>
           <ChevronsRight size={18} />
         </div>
