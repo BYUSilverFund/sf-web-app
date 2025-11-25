@@ -25,7 +25,7 @@ export function AllHoldingsSummaryTable({
       </div>
 
       {allHoldingsSummary.holdings
-        // .filter((a) => a.active) # TODO: fix
+        .filter((a) => a.active)
         .slice(0, 8)
         .map((holding, index) => (
           <Link
@@ -41,7 +41,7 @@ export function AllHoldingsSummaryTable({
           </Link>
         ))}
       <Link href={`${fund}/all-holdings`}>
-        <div className="text-center flex items-center justify-center gap-1">
+        <div className="text-center flex items-center justify-center gap-1 hover:bg-secondary py-2 border-t">
           <span>View All</span>
           <ChevronsRight size={18} />
         </div>
