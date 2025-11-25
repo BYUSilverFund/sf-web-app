@@ -50,10 +50,14 @@ export function TradesTable({
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={5}>
+          <TableCell
+            colSpan={5}
+            data-state="last"
+            className="border-none bg-background py-0 px-0"
+          >
             <Link href={`/performance/${fund}/${holding}/trades`}>
-              <div className="text-center py-4 bg-secondary flex items-center justify-center gap-2">
-                <span className="underline">View All</span>
+              <div className="text-center flex items-center justify-center gap-1 hover:bg-secondary py-2">
+                <span>View All</span>
                 <ChevronsRight size={18} />
               </div>
             </Link>

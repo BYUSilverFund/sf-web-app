@@ -33,6 +33,7 @@ import {
 } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TradesTable } from "@/components/TradesTable";
+import { DashboardWrapper } from "@/components/DashboardWrapper";
 
 export default function Page() {
   const [view, setView] = useState("max");
@@ -100,53 +101,57 @@ export default function Page() {
     <div className="lg:px-24 md:px-12 sm:px-6">
       {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage={params.holding} />
-        {/* Row 1 */}
-        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <ViewButton
-            start={start}
-            end={end}
-            setStart={setStart}
-            setEnd={setEnd}
-            view={view}
-            setView={setView}
-          />
-          {holdingSummary && <div>As of {formatDate(holdingSummary.end)}</div>}
-        </Card>
-        {/* Row 2 */}
-        <Card className="flex flex-col h-fit">
-          <HoldingSummaryTable
-            ticker={params.holding}
-            holdingSummary={holdingSummary}
-            benchmarkSummary={benchmarkSummary}
-          />
-        </Card>
-        {/* Row 3 */}
-        <div className="lg:flex gap-4 space-y-4 lg:space-y-0">
-          <Card className="px-4 w-full">
-            <ReturnsChart
-              data={holdingTimeSeries?.records}
-              label={params.holding}
+        <DashboardWrapper>
+          <Breadcrumbs pages={pages} currentPage={params.holding} />
+          {/* Row 1 */}
+          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+            <ViewButton
+              start={start}
+              end={end}
+              setStart={setStart}
+              setEnd={setEnd}
+              view={view}
+              setView={setView}
+            />
+            {holdingSummary && (
+              <div>As of {formatDate(holdingSummary.end)}</div>
+            )}
+          </Card>
+          {/* Row 2 */}
+          <Card className="flex flex-col h-fit">
+            <HoldingSummaryTable
+              ticker={params.holding}
+              holdingSummary={holdingSummary}
+              benchmarkSummary={benchmarkSummary}
             />
           </Card>
-          <div className="flex flex-col gap-4 w-2/3">
-            <Card className="flex flex-col w-full">
-              <div className="text-center py-4 border-b border-solid">
-                Dividends
-              </div>
-              <DividendsTable dividends={dividends} />
+          {/* Row 3 */}
+          <div className="md:flex md:space-y-0 space-y-4 min-h-0 gap-4 pb-5">
+            <Card className=" min-h-0 flex flex-col md:w-2/3">
+              <ReturnsChart
+                data={holdingTimeSeries?.records}
+                label={params.holding}
+              />
             </Card>
-            <Card className="flex flex-col w-full">
-              <div className="text-center py-4 border-b border-solid">
-                {tradeDisplayCount === null
-                  ? null
-                  : "Last " + tradeDisplayCount}{" "}
-                Trades
-              </div>
-              <TradesTable trades={trades} />
-            </Card>
+            <div className=" min-h-0 flex flex-col w-full md:w-1/3 gap-4">
+              <Card className=" min-h-0 flex flex-1 flex-col overflow-y-auto w-full">
+                <div className="text-center border-b-2 border-solid">
+                  Dividends
+                </div>
+                <DividendsTable dividends={dividends} />
+              </Card>
+              <Card className=" min-h-0 flex flex-1 flex-col overflow-y-auto w-full">
+                <div className="text-center border-b-2 border-solid">
+                  {tradeDisplayCount === null
+                    ? null
+                    : "Last " + tradeDisplayCount}{" "}
+                  Trades
+                </div>
+                <TradesTable trades={trades} />
+              </Card>
+            </div>
           </div>
-        </div>
+        </DashboardWrapper>
       </div>
       {/* )} */}
     </div>

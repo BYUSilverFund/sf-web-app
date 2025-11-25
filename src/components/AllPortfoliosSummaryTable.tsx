@@ -12,9 +12,7 @@ export function AllPortfoliosSummaryTable({
     <div className="flex flex-col">
       {allPortfoliosSummary && (
         <>
-          <div className="text-center py-4 border-b border-solid">
-            Portfolios
-          </div>
+          <div className="text-center border-b-2 border-solid">Portfolios</div>
 
           {allPortfoliosSummary.portfolios.map((portfolio, index) => (
             <Link
@@ -30,8 +28,8 @@ export function AllPortfoliosSummaryTable({
             </Link>
           ))}
           <Link href="/performance/all-portfolios">
-            <div className="text-center py-4 bg-secondary flex items-center justify-center gap-2">
-              <span className="underline">View All</span>
+            <div className="text-center flex items-center justify-center gap-1 hover:bg-secondary py-2 border-t">
+              <span> View All</span>
               <ChevronsRight size={18} />
             </div>
           </Link>
