@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { downloadAllFundsCSV } from "@/lib/api/reports";
+import { Button } from "@/components/ui/button";
 
 interface DownloadCSVButtonProps {
   start: Date | undefined;
@@ -38,11 +39,8 @@ export function DownloadCSVButton({ start, end }: DownloadCSVButtonProps) {
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100"
-    >
+    <Button variant="outline" size="sm" onClick={handleDownload}>
       Download CSV
-    </button>
+    </Button>
   );
 }
