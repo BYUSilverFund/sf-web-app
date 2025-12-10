@@ -63,16 +63,18 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      const benchmarkRequest: BenchmarkRequest = {
-        start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),
-      };
-
       getHoldingSummary(holdingRequest)
-        .then(setHoldingSummary)
-        .catch(console.error);
-      getBenchmarkSummary(benchmarkRequest)
-        .then(setBenchmarkSummary)
+        .then((summary) => {
+          setHoldingSummary(summary);
+          // Use the actual start and end dates from the holding summary response
+          const benchmarkRequest: BenchmarkRequest = {
+            start: summary.start,
+            end: summary.end,
+          };
+          getBenchmarkSummary(benchmarkRequest)
+            .then(setBenchmarkSummary)
+            .catch(console.error);
+        })
         .catch(console.error);
       getHoldingTimeSeries(holdingRequest)
         .then(setHoldingTimeSeries)

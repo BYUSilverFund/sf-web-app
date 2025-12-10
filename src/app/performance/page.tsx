@@ -26,6 +26,7 @@ import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
+import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
@@ -48,19 +49,23 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      const benchmarkRequest: BenchmarkRequest = {
-        start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),
-      };
-
       const allPortfoliosRequest: AllPortfoliosRequest = {
         start: format(start, "yyyy-MM-dd"),
         end: format(end, "yyyy-MM-dd"),
       };
 
-      getFundSummary(fundRequest).then(setFundSummary).catch(console.error);
-      getBenchmarkSummary(benchmarkRequest)
-        .then(setBenchmarkSummary)
+      getFundSummary(fundRequest)
+        .then((summary) => {
+          setFundSummary(summary);
+          // Use the actual start and end dates from the fund summary response
+          const benchmarkRequest: BenchmarkRequest = {
+            start: summary.start,
+            end: summary.end,
+          };
+          getBenchmarkSummary(benchmarkRequest)
+            .then(setBenchmarkSummary)
+            .catch(console.error);
+        })
         .catch(console.error);
       getFundTimeSeries(fundRequest)
         .then(setFundTimeSeries)
@@ -85,7 +90,10 @@ export default function Page() {
               view={view}
               setView={setView}
             />
-            {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
+            <div className="ml-auto flex flex-wrap items-center gap-3">
+              {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
+              <DownloadCSVButton start={start} end={end} />
+            </div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">
