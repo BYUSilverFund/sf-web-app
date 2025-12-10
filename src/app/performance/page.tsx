@@ -49,19 +49,23 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      const benchmarkRequest: BenchmarkRequest = {
-        start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),
-      };
-
       const allPortfoliosRequest: AllPortfoliosRequest = {
         start: format(start, "yyyy-MM-dd"),
         end: format(end, "yyyy-MM-dd"),
       };
 
-      getFundSummary(fundRequest).then(setFundSummary).catch(console.error);
-      getBenchmarkSummary(benchmarkRequest)
-        .then(setBenchmarkSummary)
+      getFundSummary(fundRequest)
+        .then((summary) => {
+          setFundSummary(summary);
+          // Use the actual start and end dates from the fund summary response
+          const benchmarkRequest: BenchmarkRequest = {
+            start: summary.start,
+            end: summary.end,
+          };
+          getBenchmarkSummary(benchmarkRequest)
+            .then(setBenchmarkSummary)
+            .catch(console.error);
+        })
         .catch(console.error);
       getFundTimeSeries(fundRequest)
         .then(setFundTimeSeries)
