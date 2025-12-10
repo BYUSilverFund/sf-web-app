@@ -15,7 +15,9 @@ export default function Page() {
   const [view, setView] = useState("max");
   const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
   const [end, setEnd] = useState<Date | undefined>(new Date());
-  const [allDividends, setAllDividends] = useState<DividendsResponse | undefined>();
+  const [allDividends, setAllDividends] = useState<
+    DividendsResponse | undefined
+  >();
 
   const params = useParams<{ fund: string; holding: string }>();
 

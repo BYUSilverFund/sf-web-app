@@ -11,7 +11,7 @@ import {
   TableBody,
   TableHead,
   TableRow,
-  TableFooter
+  TableFooter,
 } from "./ui/table";
 import { formatCurrency } from "@/lib/utils";
 
