@@ -13,7 +13,7 @@ This is a simple test to verify that the cloud agent can:
 
 ## Repository Overview
 
-- **Project**: BYU Silver Fund Web Application
+- **Project**: Silver Fund Website (new-silver-fund-full-stack v3.0)
 - **Framework**: Next.js v15.5.2
 - **Language**: TypeScript
 - **UI Library**: Radix UI with Tailwind CSS
