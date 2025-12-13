@@ -14,7 +14,6 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AllHoldingsRecord } from "@/lib/types";
+import { AllHoldingsRecord, PortfolioSummaryResponse } from "@/lib/types";
 
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -98,6 +97,21 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
       );
     },
     cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
+  },
+  {
+    accessorKey: "percent_fund",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          % of Fund
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{formatPercent(row.getValue("percent_fund"))}</div>,
   },
   {
     accessorKey: "value",
@@ -210,8 +224,10 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
 
 export function AllHoldingsDataTable({
   data,
+  portfolioSummary,
 }: {
   data: AllHoldingsRecord[] | undefined;
+  portfolioSummary: PortfolioSummaryResponse | undefined;
 }) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -222,8 +238,16 @@ export function AllHoldingsDataTable({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const processedData = React.useMemo(() => {
+    if (!data || !portfolioSummary) return data;
+    return data.map((item) => ({
+      ...item,
+      percent_fund: (item.value / portfolioSummary.value) * 100,
+    }));
+  }, [data, portfolioSummary]);
+
   const table = useReactTable({
-    data: data ?? [],
+    data: processedData || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

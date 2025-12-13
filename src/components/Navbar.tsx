@@ -232,13 +232,13 @@ const BurgerMenu: React.FC = () => {
           {[
             { href: "/", label: "Home" },
             { href: "/positions", label: "Portfolio" },
+            { href: "/performance", label: "Performance" },
             { href: "/team", label: "Team" },
             { href: "/alumni", label: "Alumni" },
             { href: "/news", label: "News" },
             { href: "/about", label: "About" },
             { href: "/history", label: "History" },
             { href: "/tools", label: "Tools" },
-            { href: "https://47fund.byu.edu/signin", label: "Login" },
           ].map((link) => (
             <Link
               key={link.href}

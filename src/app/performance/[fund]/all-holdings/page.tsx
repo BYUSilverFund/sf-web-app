@@ -1,4 +1,5 @@
 "use client";
+import { PortfolioSummaryResponse } from "@/lib/types";
 import { AllHoldingsDataTable } from "@/components/AllHoldingsDataTable";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { ActiveSwitch } from "@/components/ActiveSwitch";
+import { getPortfolioSummary } from "@/lib/api/portfolio";
 
 export default function Page() {
   const [active, setActive] = useState(true);
@@ -17,11 +19,12 @@ export default function Page() {
   const [start, setStart] = useState<Date | undefined>(
     getDateFromView(view)[0],
   );
+  const [portfolioSummary, setPortfolioSummary] =
+    useState<PortfolioSummaryResponse>();
   const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
   const [allHoldingsSummary, setAllHoldingsSummary] = useState<
     AllHoldingsSummaryResponse | undefined
   >();
-
   const params = useParams<{ fund: string }>();
 
   useEffect(() => {
@@ -58,6 +61,20 @@ export default function Page() {
     return allHoldingsSummary.holdings;
   }, [allHoldingsSummary?.holdings, active]);
 
+  useEffect(() => {
+    if (start && end) {
+      const portfolioRequest: PortfolioRequest = {
+        fund: params.fund,
+        start: format(start, "yyyy-MM-dd"),
+        end: format(end, "yyyy-MM-dd"),
+      };
+
+      getPortfolioSummary(portfolioRequest).then((data) => {
+        setPortfolioSummary(data);
+      });
+    }
+  }, []);
+
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
@@ -83,7 +100,10 @@ export default function Page() {
         </Card>
         {/* Row 2 */}
         <Card>
-          <AllHoldingsDataTable data={holdings} />
+          <AllHoldingsDataTable
+            data={holdings}
+            portfolioSummary={portfolioSummary}
+          />
         </Card>
       </div>
     </div>
