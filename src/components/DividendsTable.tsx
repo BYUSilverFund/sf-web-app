@@ -37,7 +37,7 @@ export function DividendsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {dividends.dividends.map((dividend, index) => (
+        {dividends.dividends.slice(0, 5).map((dividend, index) => (
           <TableRow key={index}>
             <TableCell>{dividend.date}</TableCell>
             <TableCell>{dividend.shares}</TableCell>
@@ -57,7 +57,7 @@ export function DividendsTable({
           >
             <Link href={`/performance/${fund}/${holding}/dividends`}>
               <div className="text-center flex items-center justify-center gap-1 hover:bg-secondary py-2">
-                <span> View All </span>
+                <span>View All</span>
                 <ChevronsRight size={18} />
               </div>
             </Link>
