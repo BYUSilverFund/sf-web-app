@@ -138,6 +138,9 @@ export default function Page() {
             <div className=" min-h-0 flex flex-col w-full md:w-1/3 gap-4">
               <Card className=" min-h-0 flex flex-1 flex-col overflow-y-auto w-full">
                 <div className="text-center border-b-2 border-solid">
+                  {tradeDisplayCount === null
+                    ? null
+                    : "Last " + tradeDisplayCount}{" "}
                   Dividends
                 </div>
                 <DividendsTable dividends={dividends} />
