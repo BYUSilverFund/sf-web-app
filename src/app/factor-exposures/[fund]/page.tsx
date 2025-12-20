@@ -35,7 +35,11 @@ export default function FactorExposures() {
 
   return (
     <div>
-      <FactorsBarChart fund={fund} chartData={exposures} />
+      <FactorsBarChart
+        fund={fund}
+        chartData={exposures}
+        excludedHoldings={excludedHoldings}
+      />
     </div>
   );
 }

@@ -28,14 +28,7 @@ import {
 
 import { formatPortfolio } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FundSelector, TopNSelector } from "./ChartControls";
 
 export const description = "A bar chart with a custom label";
 
@@ -78,10 +71,12 @@ export function FactorsBarChart({
   fund,
   chartData,
   funds,
+  excludedHoldings,
 }: {
   fund: string;
   chartData: { factor: string; exposure: number }[];
   funds?: string[];
+  excludedHoldings?: string[];
 }) {
   const router = useRouter();
   const [topN, setTopN] = useState<string>("20");
@@ -102,54 +97,23 @@ export function FactorsBarChart({
     "quant_paper",
   ];
   return (
-    <Card className="background-muted h-[600px]">
+    <Card className="background-muted h-[700px]">
       <CardHeader className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
         <div className="flex items-center justify-between w-full">
           <div>
             <CardTitle>
               <div className="flex items-center gap-3">
                 <span>Factor Exposures for</span>
-                <Select
-                  defaultValue={fund}
+                <FundSelector
+                  fund={fund}
+                  funds={funds}
                   onValueChange={(v) => router.push(`/factor-exposures/${v}`)}
-                >
-                  <SelectTrigger className="w-[180px] gap-1">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {funds
-                        ? funds.map((f) => (
-                            <SelectItem key={f} value={f}>
-                              {formatPortfolio(f) ?? f}
-                            </SelectItem>
-                          ))
-                        : fundKeys.map((key) => (
-                            <SelectItem key={key} value={key}>
-                              {formatPortfolio(key) ?? key}
-                            </SelectItem>
-                          ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                />
               </div>
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Select defaultValue={topN} onValueChange={(v) => setTopN(v)}>
-              <SelectTrigger className="w-full gap-1">
-                Show top
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="all">All</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <TopNSelector topN={topN} onValueChange={(v) => setTopN(v)} />
           </div>
         </div>
       </CardHeader>
@@ -199,6 +163,18 @@ export function FactorsBarChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex flex-col gap-2">
+        {excludedHoldings && excludedHoldings.length > 0 ? (
+          <div className="text-sm">
+            <strong>Excluded holdings ({excludedHoldings.length}):</strong>{" "}
+            {excludedHoldings.join(", ")}
+          </div>
+        ) : (
+          <div className="text-sm text-muted-foreground">
+            All holdings included
+          </div>
+        )}
+      </CardFooter>
     </Card>
   );
 }
