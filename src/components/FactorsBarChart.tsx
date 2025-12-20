@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/chart";
 
 import { formatPortfolio } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -76,10 +77,13 @@ function formatFactors(factor: string) {
 export function FactorsBarChart({
   fund,
   chartData,
+  funds,
 }: {
   fund: string;
   chartData: { factor: string; exposure: number }[];
+  funds?: string[];
 }) {
+  const router = useRouter();
   const [topN, setTopN] = useState<string>("20");
   const displayNum = topN === "all" ? chartData.length : Number(topN ?? 20);
   const displayedData = chartData.slice(0, displayNum).map((d) => ({
@@ -89,13 +93,47 @@ export function FactorsBarChart({
   const chartHeight = 450;
   const chartBarWidth = 60;
   const chartWidth = Math.max(800, displayedData.length * chartBarWidth);
+  const fundKeys = [
+    "all_funds",
+    "grad",
+    "undergrad",
+    "quant",
+    "brigham_capital",
+    "quant_paper",
+  ];
   return (
     <Card className="background-muted h-[600px]">
       <CardHeader className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
         <div className="flex items-center justify-between w-full">
           <div>
-            <CardTitle>Factor Exposures for {formatPortfolio(fund)}</CardTitle>
-            <CardDescription>{new Date().toLocaleDateString()}</CardDescription>
+            <CardTitle>
+              <div className="flex items-center gap-3">
+                <span>Factor Exposures for</span>
+                <Select
+                  defaultValue={fund}
+                  onValueChange={(v) => router.push(`/factor-exposures/${v}`)}
+                >
+                  <SelectTrigger className="w-[180px] gap-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {funds
+                        ? funds.map((f) => (
+                            <SelectItem key={f} value={f}>
+                              {formatPortfolio(f) ?? f}
+                            </SelectItem>
+                          ))
+                        : fundKeys.map((key) => (
+                            <SelectItem key={key} value={key}>
+                              {formatPortfolio(key) ?? key}
+                            </SelectItem>
+                          ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardTitle>
           </div>
           <div className="flex items-center gap-2">
             <Select defaultValue={topN} onValueChange={(v) => setTopN(v)}>
