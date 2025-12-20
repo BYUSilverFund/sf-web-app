@@ -27,6 +27,7 @@ import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTabl
 import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
+import { FactorExposuresButton } from "@/components/FactorExposuresButton";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
@@ -90,8 +91,9 @@ export default function Page() {
               view={view}
               setView={setView}
             />
+            {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
             <div className="ml-auto flex flex-wrap items-center gap-3">
-              {fundSummary && <div>As of {formatDate(fundSummary.end)}</div>}
+              <FactorExposuresButton />
               <DownloadCSVButton start={start} end={end} />
             </div>
           </Card>
