@@ -1,34 +1,17 @@
 "use client";
-import { useState } from "react";
-import { TrendingUp } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { useState, useEffect } from "react";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-import { formatPortfolio } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { FundSelector, TopNSelector } from "./ChartControls";
+import { TopNSelector } from "./ChartControls";
+import { FactorData } from "@/app/factor-exposures/[fund]/page";
+import { formatExposures, formatFactors } from "./FactorsDataTable";
 
 export const description = "A bar chart with a custom label";
 
@@ -47,81 +30,45 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function formatExposures(n: number, decimals = 3) {
-  if (n === 0) return "0";
-  if (n === 1) return "1";
-  const s = n.toFixed(decimals).replace(/\.?0+$/, "");
-  return Math.abs(n) < 1 ? s.replace(/^(-?)0\./, "$1.") : s;
-}
-
-function formatFactors(factor: string) {
-  return (
-    factor
-      .replace(/^USSLOWL_/, "")
-      .charAt(0)
-      .toUpperCase() +
-    factor
-      .replace(/^USSLOWL_/, "")
-      .slice(1)
-      .toLowerCase()
-  );
-}
-
 export function FactorsBarChart({
-  fund,
   chartData,
-  funds,
-  excludedHoldings,
+  showTop,
+  setShowTop,
 }: {
-  fund: string;
-  chartData: { factor: string; exposure: number }[];
-  funds?: string[];
-  excludedHoldings?: string[];
+  chartData: FactorData[];
+  showTop?: number;
+  setShowTop?: (v: number) => void;
 }) {
-  const router = useRouter();
-  const [topN, setTopN] = useState<string>("20");
-  const displayNum = topN === "all" ? chartData.length : Number(topN ?? 20);
+  const [internalTopN, setInternalTopN] = useState<number>(showTop ?? 20);
+  // keep internal in sync if parent-controlled value changes
+  useEffect(() => {
+    if (typeof showTop === "number") setInternalTopN(showTop);
+  }, [showTop]);
+  const displayTop = typeof showTop === "number" ? showTop : internalTopN;
+  const displayNum = displayTop === 0 ? chartData.length : displayTop;
   const displayedData = chartData.slice(0, displayNum).map((d) => ({
     ...d,
     absExposure: Math.abs(d.exposure),
   }));
-  const chartHeight = 450;
-  const chartBarWidth = 60;
-  const chartWidth = Math.max(800, displayedData.length * chartBarWidth);
-  const fundKeys = [
-    "all_funds",
-    "grad",
-    "undergrad",
-    "quant",
-    "brigham_capital",
-    "quant_paper",
-  ];
+  const handleTopChange = (v: number) => {
+    if (setShowTop) setShowTop(v);
+    else setInternalTopN(v);
+  };
+
   return (
     <Card className="background-muted h-[700px]">
-      <CardHeader className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-        <div className="flex items-center justify-between w-full">
-          <div>
-            <CardTitle>
-              <div className="flex items-center gap-3">
-                <span>Factor Exposures for</span>
-                <FundSelector
-                  fund={fund}
-                  funds={funds}
-                  onValueChange={(v) => router.push(`/factor-exposures/${v}`)}
-                />
-              </div>
-            </CardTitle>
-          </div>
+      <CardHeader>
+        <div className="flex w-full justify-end">
           <div className="flex items-center gap-2">
-            <TopNSelector topN={topN} onValueChange={(v) => setTopN(v)} />
+            <TopNSelector
+              topN={displayTop}
+              onValueChange={(v) => handleTopChange(v)}
+            />
           </div>
         </div>
       </CardHeader>
       <CardContent className="h-5/6">
-        <ChartContainer
-          config={chartConfig}
-          className=" h-full w-full rounded-xl border bg-card text-card-foreground shadow sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center"
-        >
+        <ChartContainer config={chartConfig} className=" h-full w-full ">
           <BarChart
             accessibilityLayer
             data={displayedData}
@@ -163,18 +110,6 @@ export function FactorsBarChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex flex-col gap-2">
-        {excludedHoldings && excludedHoldings.length > 0 ? (
-          <div className="text-sm">
-            <strong>Excluded holdings ({excludedHoldings.length}):</strong>{" "}
-            {excludedHoldings.join(", ")}
-          </div>
-        ) : (
-          <div className="text-sm text-muted-foreground">
-            All holdings included
-          </div>
-        )}
-      </CardFooter>
     </Card>
   );
 }
