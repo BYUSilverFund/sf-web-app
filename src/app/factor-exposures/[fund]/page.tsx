@@ -6,6 +6,8 @@ import { FactorsBarChart } from "@/components/FactorsBarChart";
 import { useParams, useSearchParams } from "next/navigation";
 import { FundSelector, ViewSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { formatPortfolio } from "@/lib/utils";
 
 export interface FactorData {
   factor: string;
@@ -71,53 +73,65 @@ export default function FactorExposures() {
     router.push(`/factor-exposures/${fund}?view=${view}&show_top=${v}`);
   }
 
+  const pages = [
+    { name: "All Funds", href: "/performance" },
+    ...(fund !== "all_funds"
+      ? [{ name: formatPortfolio(fund), href: `/performance/${fund}` }]
+      : []),
+  ];
+
   return (
-    <div className="space-y-1">
-      <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-        <div className="sm:flex  items-center justify-between w-full">
-          <div className="flex items-center gap-3">
-            <span>Factor Exposures for</span>
-            <FundSelector
-              fund={fund}
-              funds={fundKeys}
-              onValueChange={(v) => updateURLForFund(v)}
-            />
-          </div>
-          <div className="flex items-center gap-3">
-            <span>Display</span>
-            <ViewSelector
-              view={view}
-              onValueChange={(v) => updateURLForView(v)}
-            />
+    <div className="lg:px-12 md:px-6 sm:px-0">
+      <div className="space-y-4 sm:px-4 py-4">
+        <div className="ml-5">
+          <Breadcrumbs pages={pages} currentPage="Factor Exposures" />
+        </div>
+        <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+          <div className="sm:flex  items-center justify-between w-full">
+            <div className="flex items-center gap-3">
+              <span>Factor Exposures for</span>
+              <FundSelector
+                fund={fund}
+                funds={fundKeys}
+                onValueChange={(v) => updateURLForFund(v)}
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <span>Display</span>
+              <ViewSelector
+                view={view}
+                onValueChange={(v) => updateURLForView(v)}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="sm:mx-2">
-        {view === "table" ? (
-          <FactorsDataTable
-            data={exposures}
-            showTop={showTop}
-            setShowTop={(v) => updateURLForShowTop(v)}
-          />
-        ) : (
-          <FactorsBarChart
-            chartData={exposures}
-            showTop={showTop}
-            setShowTop={(v) => updateURLForShowTop(v)}
-          />
-        )}
-      </div>
-      <div className="flex flex-col gap-2 items-center m-2 p-2">
-        {excludedHoldings && excludedHoldings.length > 0 ? (
-          <div className="text-sm">
-            <strong>Excluded holdings ({excludedHoldings.length}):</strong>{" "}
-            {excludedHoldings.join(", ")}
-          </div>
-        ) : (
-          <div className="text-sm text-muted-foreground">
-            All holdings included
-          </div>
-        )}
+        <div className="sm:mx-2">
+          {view === "table" ? (
+            <FactorsDataTable
+              data={exposures}
+              showTop={showTop}
+              setShowTop={(v) => updateURLForShowTop(v)}
+            />
+          ) : (
+            <FactorsBarChart
+              chartData={exposures}
+              showTop={showTop}
+              setShowTop={(v) => updateURLForShowTop(v)}
+            />
+          )}
+        </div>
+        <div className="flex flex-col gap-2 items-center m-2 p-2">
+          {excludedHoldings && excludedHoldings.length > 0 ? (
+            <div className="text-sm">
+              <strong>Excluded holdings ({excludedHoldings.length}):</strong>{" "}
+              {excludedHoldings.join(", ")}
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              All holdings included
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
