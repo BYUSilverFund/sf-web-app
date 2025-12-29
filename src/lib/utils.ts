@@ -25,6 +25,7 @@ export function formatFloat(value: number, fractionDigits: number = 2): string {
 
 export function formatPortfolio(name: string): string | undefined {
   return {
+    all_funds: "All Funds",
     grad: "Grad",
     undergrad: "Undergrad",
     quant: "Quant",

@@ -26,6 +26,7 @@ import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DashboardWrapper } from "@/components/DashboardWrapper";
+import { FactorExposuresButton } from "@/components/FactorExposuresButton";
 
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();
@@ -110,6 +111,9 @@ export default function Page() {
             {portfolioSummary && (
               <div>As of {formatDate(portfolioSummary.end)}</div>
             )}
+            <div className="ml-auto flex flex-wrap items-center gap-3">
+              <FactorExposuresButton fund={fund} />
+            </div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">
