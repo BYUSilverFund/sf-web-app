@@ -12,7 +12,7 @@ export default function AmplifyInit(): null {
             "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
           region: "us-west-2",
           defaultAuthMode: "apiKey",
-          apiKey: "da2-4bh5iavtrjfahcveiktvesgmnm",
+          apiKey: "da2-utguyxkzzfblbn77ugtwmmesg4",
         },
       },
       Auth: {
