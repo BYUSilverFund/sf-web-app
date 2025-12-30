@@ -16,6 +16,8 @@ import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import {
   getDividends,
@@ -118,6 +120,15 @@ export default function Page() {
             {holdingSummary && (
               <div>As of {formatDate(holdingSummary.end)}</div>
             )}
+            <div className="ml-2">
+              <Button asChild variant="outline" size="sm">
+                <Link
+                  href={`/factor-exposures/${params.fund}?holding=${params.holding}`}
+                >
+                  Factor Exposures
+                </Link>
+              </Button>
+            </div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">

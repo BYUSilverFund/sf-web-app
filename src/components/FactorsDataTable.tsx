@@ -52,56 +52,62 @@ const absValueSortingFn = (
   return 0;
 };
 
-export const columns: ColumnDef<FactorData>[] = [
-  {
-    accessorKey: "factor",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Factor
-          <ArrowUpDown />
-        </Button>
-      );
+function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
+  return [
+    {
+      accessorKey: "factor",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {contributionMode ? "Holding" : "Factor"}
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const factor = row.getValue("factor") as string;
+        const formatted = contributionMode ? factor : formatFactors(factor);
+        return <div className="">{formatted}</div>;
+      },
     },
-    cell: ({ row }) => {
-      const factor = row.getValue("factor") as string;
-      const formatted = formatFactors(factor);
-      return <div className="">{formatted}</div>;
+    {
+      accessorKey: "exposure",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {contributionMode ? "Contribution" : "Exposure"}
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const exposure = parseFloat(row.getValue("exposure"));
+        const formatted = formatExposures(exposure);
+        return <div className="font-medium text-left">{formatted}</div>;
+      },
+      sortingFn: absValueSortingFn,
     },
-  },
-  {
-    accessorKey: "exposure",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Exposure
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const exposure = parseFloat(row.getValue("exposure"));
-      const formatted = formatExposures(exposure);
-      return <div className="font-medium text-left">{formatted}</div>;
-    },
-    sortingFn: absValueSortingFn,
-  },
-];
+  ];
+}
 
 export function FactorsDataTable({
   data,
   showTop,
   setShowTop,
+  onFactorClick,
+  contributionMode,
 }: {
   data: FactorData[];
   showTop?: number;
   setShowTop?: (v: number) => void;
+  onFactorClick?: (factor: string) => void;
+  contributionMode?: boolean;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -114,9 +120,11 @@ export function FactorsDataTable({
     setNumRow(showTop ?? 10);
   }, [showTop]);
 
+  const cols = buildColumns(contributionMode);
+
   const table = useReactTable({
     data,
-    columns,
+    columns: cols,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -141,7 +149,9 @@ export function FactorsDataTable({
       <CardHeader className="">
         <div className="flex justify-between py-4">
           <Input
-            placeholder="Filter factors..."
+            placeholder={
+              contributionMode ? "Filter holdings..." : "Filter factors..."
+            }
             value={
               (table.getColumn("factor")?.getFilterValue() as string) ?? ""
             }
@@ -185,7 +195,14 @@ export function FactorsDataTable({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    className={onFactorClick ? "cursor-pointer" : ""}
+                    onClick={() =>
+                      onFactorClick &&
+                      onFactorClick(String(row.getValue("factor")))
+                    }
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(
@@ -198,10 +215,7 @@ export function FactorsDataTable({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={cols.length} className="h-24 text-center">
                     No results.
                   </TableCell>
                 </TableRow>
