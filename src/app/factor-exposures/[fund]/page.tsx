@@ -62,14 +62,27 @@ export default function FactorExposures() {
             data?.positions ?? data?.holdings ?? data?.exposures ?? data;
           let arr: FactorData[] = [];
           if (Array.isArray(src)) {
-            arr = src.map((item: any) => ({
-              factor: item.name ?? item.holding ?? String(item[0] ?? ""),
-              exposure: Number(item.exposure ?? item.value ?? item[1] ?? 0),
-            }));
+            arr = src.map((item: unknown) => {
+              if (Array.isArray(item)) {
+                const name = item[0];
+                const val = item[1];
+                return {
+                  factor: String(name ?? ""),
+                  exposure: Number(val ?? 0),
+                };
+              }
+              if (item && typeof item === "object") {
+                const it = item as Record<string, unknown>;
+                const name = it.name ?? it.holding ?? it.factor ?? "";
+                const exposure = it.exposure ?? it.value ?? 0;
+                return { factor: String(name), exposure: Number(exposure) };
+              }
+              return { factor: String(item ?? ""), exposure: 0 };
+            });
           } else if (src && typeof src === "object") {
             arr = Object.entries(src).map(([k, v]) => ({
               factor: String(k),
-              exposure: Number(v),
+              exposure: Number(v as unknown as number | string),
             }));
           }
           arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
@@ -90,14 +103,27 @@ export default function FactorExposures() {
           const src = data?.exposures ?? data?.factors ?? data;
           let arr: FactorData[] = [];
           if (Array.isArray(src)) {
-            arr = src.map((item: any) => ({
-              factor: item.name ?? item.factor ?? String(item[0] ?? ""),
-              exposure: Number(item.exposure ?? item.value ?? item[1] ?? 0),
-            }));
+            arr = src.map((item: unknown) => {
+              if (Array.isArray(item)) {
+                const name = item[0];
+                const val = item[1];
+                return {
+                  factor: String(name ?? ""),
+                  exposure: Number(val ?? 0),
+                };
+              }
+              if (item && typeof item === "object") {
+                const it = item as Record<string, unknown>;
+                const name = it.name ?? it.factor ?? it.holding ?? "";
+                const exposure = it.exposure ?? it.value ?? 0;
+                return { factor: String(name), exposure: Number(exposure) };
+              }
+              return { factor: String(item ?? ""), exposure: 0 };
+            });
           } else if (src && typeof src === "object") {
             arr = Object.entries(src).map(([k, v]) => ({
               factor: String(k),
-              exposure: Number(v),
+              exposure: Number(v as unknown as number | string),
             }));
           }
           arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
