@@ -8,6 +8,8 @@ import { FundSelector, ViewSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatFactors } from "@/components/FactorsDataTable";
+
+type DetailRow = { factor: string; exposure: number };
 import { formatPortfolio } from "@/lib/utils";
 
 export default function FactorDetailPage() {
@@ -21,7 +23,7 @@ export default function FactorDetailPage() {
   const fund = params.fund as string;
   const factor = params.factor as string;
   const router = useRouter();
-  const [detailData, setDetailData] = useState<[]>([]);
+  const [detailData, setDetailData] = useState<DetailRow[]>([]);
 
   useEffect(() => {
     fetch(
@@ -31,16 +33,26 @@ export default function FactorDetailPage() {
       .then((data) => {
         const src =
           data?.positions ?? data?.holdings ?? data?.exposures ?? data;
-        let arr: any[] = [];
+        let arr: DetailRow[] = [];
         if (Array.isArray(src)) {
-          arr = src.map((item: any) => ({
-            factor: item.name ?? item.holding ?? String(item[0] ?? ""),
-            exposure: Number(item.exposure ?? item.value ?? item[1] ?? 0),
-          }));
+          arr = src.map((item: unknown) => {
+            if (Array.isArray(item)) {
+              const name = item[0];
+              const val = item[1];
+              return { factor: String(name ?? ""), exposure: Number(val ?? 0) };
+            }
+            if (item && typeof item === "object") {
+              const it = item as Record<string, unknown>;
+              const name = it.name ?? it.holding ?? it.factor ?? "";
+              const exposure = it.exposure ?? it.value ?? 0;
+              return { factor: String(name), exposure: Number(exposure) };
+            }
+            return { factor: String(item ?? ""), exposure: 0 };
+          });
         } else if (src && typeof src === "object") {
           arr = Object.entries(src).map(([k, v]) => ({
             factor: String(k),
-            exposure: Number(v),
+            exposure: Number(v as unknown as number | string),
           }));
         }
         arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
