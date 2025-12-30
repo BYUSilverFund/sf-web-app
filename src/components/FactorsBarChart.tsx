@@ -16,10 +16,6 @@ import { formatExposures, formatFactors } from "./FactorsDataTable";
 export const description = "A bar chart with a custom label";
 
 const chartConfig = {
-  absExposure: {
-    label: "exposure",
-    color: "#002E5D",
-  },
   factor: {
     label: "factor",
     color: "#0047BA",
@@ -34,10 +30,14 @@ export function FactorsBarChart({
   chartData,
   showTop,
   setShowTop,
+  onFactorClick,
+  contributionMode,
 }: {
   chartData: FactorData[];
   showTop?: number;
   setShowTop?: (v: number) => void;
+  onFactorClick?: (factor: string) => void;
+  contributionMode?: boolean;
 }) {
   const [internalTopN, setInternalTopN] = useState<number>(showTop ?? 20);
   // keep internal in sync if parent-controlled value changes
@@ -55,6 +55,13 @@ export function FactorsBarChart({
     else setInternalTopN(v);
   };
 
+  const chartConfigEffective = contributionMode
+    ? {
+        factor: { label: "holding", color: "#0047BA" },
+        exposure: { label: "contribution", color: "#002E5D" },
+      }
+    : chartConfig;
+
   return (
     <Card className="background-muted h-[700px]">
       <CardHeader>
@@ -68,7 +75,10 @@ export function FactorsBarChart({
         </div>
       </CardHeader>
       <CardContent className="h-5/6">
-        <ChartContainer config={chartConfig} className=" h-full w-full ">
+        <ChartContainer
+          config={chartConfigEffective}
+          className=" h-full w-full "
+        >
           <BarChart
             accessibilityLayer
             data={displayedData}
@@ -79,7 +89,9 @@ export function FactorsBarChart({
             <ChartTooltip
               cursor={true}
               content={<ChartTooltipContent />}
-              labelFormatter={(v: string) => formatFactors(v)}
+              labelFormatter={(v: string) =>
+                contributionMode ? String(v) : formatFactors(String(v))
+              }
             />
             <Bar
               dataKey="exposure"
@@ -87,10 +99,20 @@ export function FactorsBarChart({
               barSize={100}
               label="position-top"
               fill="var(--color-exposure)"
+              onClick={(data) => {
+                const payload = data?.payload ?? data;
+                const factor = payload?.factor ?? payload?.name;
+                if (factor && typeof onFactorClick === "function")
+                  onFactorClick(String(factor));
+              }}
             >
               <LabelList
                 dataKey="exposure"
-                position="bottom"
+                position={
+                  Math.min(...displayedData.map((d) => d.exposure)) < 0
+                    ? "bottom"
+                    : "top"
+                }
                 offset={6}
                 className="font-bold fill-foreground"
                 fontSize={10}
@@ -103,7 +125,9 @@ export function FactorsBarChart({
               angle={-90}
               tick={{ textAnchor: "end" }}
               height={60}
-              tickFormatter={(v: string) => formatFactors(v)}
+              tickFormatter={(v: string) =>
+                contributionMode ? String(v) : formatFactors(String(v))
+              }
               interval={0}
               fontSize={10}
             />
