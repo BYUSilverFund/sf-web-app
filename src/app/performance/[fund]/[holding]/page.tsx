@@ -108,18 +108,20 @@ export default function Page() {
         <DashboardWrapper>
           <Breadcrumbs pages={pages} currentPage={params.holding} />
           {/* Row 1 */}
-          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-            <ViewButton
-              start={start}
-              end={end}
-              setStart={setStart}
-              setEnd={setEnd}
-              view={view}
-              setView={setView}
-            />
-            {holdingSummary && (
-              <div>As of {formatDate(holdingSummary.end)}</div>
-            )}
+          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center justify-between">
+            <div className="flex space-y-2 sm:space-y-0 gap-2 items-center">
+              <ViewButton
+                start={start}
+                end={end}
+                setStart={setStart}
+                setEnd={setEnd}
+                view={view}
+                setView={setView}
+              />
+              {holdingSummary && (
+                <div>As of {formatDate(holdingSummary.end)}</div>
+              )}
+            </div>
             <div className="ml-2">
               <Button asChild variant="outline" size="sm">
                 <Link
