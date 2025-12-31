@@ -16,6 +16,8 @@ import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import {
   getDividends,
@@ -106,18 +108,29 @@ export default function Page() {
         <DashboardWrapper>
           <Breadcrumbs pages={pages} currentPage={params.holding} />
           {/* Row 1 */}
-          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-            <ViewButton
-              start={start}
-              end={end}
-              setStart={setStart}
-              setEnd={setEnd}
-              view={view}
-              setView={setView}
-            />
-            {holdingSummary && (
-              <div>As of {formatDate(holdingSummary.end)}</div>
-            )}
+          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center justify-between">
+            <div className="flex space-y-2 sm:space-y-0 gap-2 items-center">
+              <ViewButton
+                start={start}
+                end={end}
+                setStart={setStart}
+                setEnd={setEnd}
+                view={view}
+                setView={setView}
+              />
+              {holdingSummary && (
+                <div>As of {formatDate(holdingSummary.end)}</div>
+              )}
+            </div>
+            <div className="ml-2">
+              <Button asChild variant="outline" size="sm">
+                <Link
+                  href={`/factor-exposures/${params.fund}?holding=${params.holding}`}
+                >
+                  Factor Exposures
+                </Link>
+              </Button>
+            </div>
           </Card>
           {/* Row 2 */}
           <Card className="flex flex-col h-fit">

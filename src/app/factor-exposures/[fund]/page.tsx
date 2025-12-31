@@ -21,11 +21,16 @@ export default function FactorExposures() {
     parseInt(searchParams.get("show_top") || "10", 10) || 10;
   const [showTop, setShowTop] = useState<number>(initialShowTop);
   const [exposures, setExposures] = useState<FactorData[]>([]);
+  const [detailData, setDetailData] = useState<FactorData[] | null>(null);
+  const [detailLabel, setDetailLabel] = useState<string | null>(null);
   const viewValue = searchParams.get("view") || "table";
   const [view, setView] = useState<string>(viewValue ?? "table");
   const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
   const fund = params.fund as string;
   const router = useRouter();
+
+  const factorParam = searchParams.get("factor");
+  const holdingParam = searchParams.get("holding");
 
   useEffect(() => {
     fetch(`${API_BASE_URL}factor-exposures/${fund}`)
@@ -46,6 +51,93 @@ export default function FactorExposures() {
       });
   }, [fund]);
 
+  useEffect(() => {
+    // if a factor query param is present, fetch holdings contributing to that factor
+    if (factorParam) {
+      const f = factorParam;
+      fetch(`${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(f)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const src =
+            data?.positions ?? data?.holdings ?? data?.exposures ?? data;
+          let arr: FactorData[] = [];
+          if (Array.isArray(src)) {
+            arr = src.map((item: unknown) => {
+              if (Array.isArray(item)) {
+                const name = item[0];
+                const val = item[1];
+                return {
+                  factor: String(name ?? ""),
+                  exposure: Number(val ?? 0),
+                };
+              }
+              if (item && typeof item === "object") {
+                const it = item as Record<string, unknown>;
+                const name = it.name ?? it.holding ?? it.factor ?? "";
+                const exposure = it.exposure ?? it.value ?? 0;
+                return { factor: String(name), exposure: Number(exposure) };
+              }
+              return { factor: String(item ?? ""), exposure: 0 };
+            });
+          } else if (src && typeof src === "object") {
+            arr = Object.entries(src).map(([k, v]) => ({
+              factor: String(k),
+              exposure: Number(v as unknown as number | string),
+            }));
+          }
+          arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
+          setDetailData(arr);
+          setDetailLabel(f);
+        })
+        .catch((err) => console.error("Failed fetching factor details:", err));
+      return;
+    }
+
+    // if a holding query param is present, fetch factor exposures for that holding
+    if (holdingParam) {
+      const h = holdingParam;
+      // holdings endpoint lives under factor-exposures router
+      fetch(`${API_BASE_URL}factor-exposures/holdings/${encodeURIComponent(h)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const src = data?.exposures ?? data?.factors ?? data;
+          let arr: FactorData[] = [];
+          if (Array.isArray(src)) {
+            arr = src.map((item: unknown) => {
+              if (Array.isArray(item)) {
+                const name = item[0];
+                const val = item[1];
+                return {
+                  factor: String(name ?? ""),
+                  exposure: Number(val ?? 0),
+                };
+              }
+              if (item && typeof item === "object") {
+                const it = item as Record<string, unknown>;
+                const name = it.name ?? it.factor ?? it.holding ?? "";
+                const exposure = it.exposure ?? it.value ?? 0;
+                return { factor: String(name), exposure: Number(exposure) };
+              }
+              return { factor: String(item ?? ""), exposure: 0 };
+            });
+          } else if (src && typeof src === "object") {
+            arr = Object.entries(src).map(([k, v]) => ({
+              factor: String(k),
+              exposure: Number(v as unknown as number | string),
+            }));
+          }
+          arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
+          setDetailData(arr);
+          setDetailLabel(h);
+        })
+        .catch((err) => console.error("Failed fetching holding factors:", err));
+      return;
+    }
+
+    // otherwise clear detail view
+    setDetailData(null);
+    setDetailLabel(null);
+  }, [factorParam, holdingParam, fund]);
   const fundKeys = [
     "all_funds",
     "grad",
@@ -63,14 +155,34 @@ export default function FactorExposures() {
 
   function updateURLForView(viewVal: string) {
     setView(viewVal);
+    // preserve factor or holding params when switching view
+    const f = factorParam ? `&factor=${encodeURIComponent(factorParam)}` : "";
+    const h = holdingParam
+      ? `&holding=${encodeURIComponent(holdingParam)}`
+      : "";
     router.push(
-      `/factor-exposures/${fund}?view=${viewVal}&show_top=${showTop}`,
+      `/factor-exposures/${fund}?view=${viewVal}&show_top=${showTop}${f}${h}`,
     );
   }
 
   function updateURLForShowTop(v: number) {
     setShowTop(v);
-    router.push(`/factor-exposures/${fund}?view=${view}&show_top=${v}`);
+    // preserve factor or holding params when changing top
+    const f = factorParam ? `&factor=${encodeURIComponent(factorParam)}` : "";
+    const h = holdingParam
+      ? `&holding=${encodeURIComponent(holdingParam)}`
+      : "";
+    router.push(`/factor-exposures/${fund}?view=${view}&show_top=${v}${f}${h}`);
+  }
+
+  function openFactorView(factor: string) {
+    router.push(
+      `/factor-exposures/${fund}/${encodeURIComponent(factor)}?view=${view}&show_top=${showTop}`,
+    );
+  }
+
+  function openHoldingPage(holding: string) {
+    router.push(`/performance/${fund}/${encodeURIComponent(holding)}`);
   }
 
   const pages = [
@@ -79,17 +191,36 @@ export default function FactorExposures() {
       ? [{ name: formatPortfolio(fund), href: `/performance/${fund}` }]
       : []),
   ];
+  const isFactorDetail = Boolean(factorParam);
+  const isHoldingDetail = Boolean(holdingParam);
+
+  const pagesForBreadcrumbs =
+    isFactorDetail || isHoldingDetail
+      ? [
+          ...pages,
+          { name: "Factor Exposures", href: `/factor-exposures/${fund}` },
+        ]
+      : pages;
+
+  const breadcrumbTitle = isFactorDetail
+    ? `${detailLabel}`
+    : isHoldingDetail
+      ? `${detailLabel}`
+      : "Factor Exposures";
 
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
       <div className="space-y-4 sm:px-4 py-4">
         <div className="ml-5">
-          <Breadcrumbs pages={pages} currentPage="Factor Exposures" />
+          <Breadcrumbs
+            pages={pagesForBreadcrumbs}
+            currentPage={breadcrumbTitle}
+          />
         </div>
         <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
           <div className="sm:flex  items-center justify-between w-full">
             <div className="flex items-center gap-3">
-              <span>Factor Exposures for</span>
+              <span>Fund</span>
               <FundSelector
                 fund={fund}
                 funds={fundKeys}
@@ -106,18 +237,56 @@ export default function FactorExposures() {
           </div>
         </div>
         <div className="sm:mx-2">
-          {view === "table" ? (
-            <FactorsDataTable
-              data={exposures}
-              showTop={showTop}
-              setShowTop={(v) => updateURLForShowTop(v)}
-            />
+          {detailData ? (
+            <div>
+              {view === "table" ? (
+                <FactorsDataTable
+                  data={detailData}
+                  showTop={showTop}
+                  setShowTop={(v) => updateURLForShowTop(v)}
+                  onFactorClick={
+                    isFactorDetail
+                      ? fund !== "all_funds"
+                        ? (s) => openHoldingPage(s)
+                        : undefined
+                      : (s) => openFactorView(s)
+                  }
+                  contributionMode={isFactorDetail}
+                />
+              ) : (
+                <FactorsBarChart
+                  chartData={detailData}
+                  showTop={showTop}
+                  setShowTop={(v) => updateURLForShowTop(v)}
+                  onFactorClick={
+                    isFactorDetail
+                      ? fund !== "all_funds"
+                        ? (s) => openHoldingPage(s)
+                        : undefined
+                      : (s) => openFactorView(s)
+                  }
+                  contributionMode={isFactorDetail}
+                />
+              )}
+            </div>
           ) : (
-            <FactorsBarChart
-              chartData={exposures}
-              showTop={showTop}
-              setShowTop={(v) => updateURLForShowTop(v)}
-            />
+            <>
+              {view === "table" ? (
+                <FactorsDataTable
+                  data={exposures}
+                  showTop={showTop}
+                  setShowTop={(v) => updateURLForShowTop(v)}
+                  onFactorClick={(s) => openFactorView(s)}
+                />
+              ) : (
+                <FactorsBarChart
+                  chartData={exposures}
+                  showTop={showTop}
+                  setShowTop={(v) => updateURLForShowTop(v)}
+                  onFactorClick={(s) => openFactorView(s)}
+                />
+              )}
+            </>
           )}
         </div>
         <div className="flex flex-col gap-2 items-center m-2 p-2">
