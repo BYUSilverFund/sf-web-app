@@ -8,6 +8,8 @@ import { AllPortfoliosSummaryResponse, FundRequest } from "@/lib/types";
 import { defaultEnd, defaultStart, formatDate } from "@/lib/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { downloadAllFundsCSV } from "@/lib/api/csvDownloads";
+import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
@@ -53,6 +55,14 @@ export default function Page() {
           {allPortfoliosSummary && (
             <div>As of {formatDate(allPortfoliosSummary.end)}</div>
           )}
+          <div className="ml-auto flex flex-wrap items-center gap-3">
+            <DownloadCSVButton
+              start={start}
+              end={end}
+              filenamePrefix="all_funds"
+              onDownload={downloadAllFundsCSV}
+            />
+          </div>
         </Card>
         {/* Row 2 */}
         <Card>

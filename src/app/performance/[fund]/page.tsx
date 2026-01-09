@@ -26,6 +26,8 @@ import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DashboardWrapper } from "@/components/DashboardWrapper";
+import { downloadPortfolioCSV } from "@/lib/api/csvDownloads";
+import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 import { FactorExposuresButton } from "@/components/FactorExposuresButton";
 
 export default function Page() {
@@ -114,6 +116,17 @@ export default function Page() {
             )}
             <div className="ml-auto flex flex-wrap items-center gap-3">
               <FactorExposuresButton fund={fund} />
+              <DownloadCSVButton
+                start={start}
+                end={end}
+                filenamePrefix={`portfolio_${fund}`}
+                onDownload={(req) =>
+                  downloadPortfolioCSV({
+                    ...req,
+                    fund: fund,
+                  })
+                }
+              />
             </div>
           </Card>
           {/* Row 2 */}

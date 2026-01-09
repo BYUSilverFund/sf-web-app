@@ -1,36 +1,52 @@
 "use client";
 
 import { format } from "date-fns";
-import { downloadAllFundsCSV } from "@/lib/api/reports";
 import { Button } from "@/components/ui/button";
 
 interface DownloadCSVButtonProps {
   start: Date | undefined;
   end: Date | undefined;
+
+  /**
+   * Function from lib/api that returns a CSV Blob
+   * Example: downloadAllPortfoliosCSV, downloadPortfolioCSV, etc.
+   */
+  onDownload: (request: { start: string; end: string }) => Promise<Blob>;
+
+  /**
+   * Used to build the filename
+   * Example: "all_portfolios", "portfolio_tech", "all_funds"
+   */
+  filenamePrefix: string;
 }
 
-export function DownloadCSVButton({ start, end }: DownloadCSVButtonProps) {
+export function DownloadCSVButton({
+  start,
+  end,
+  onDownload,
+  filenamePrefix,
+}: DownloadCSVButtonProps) {
   const handleDownload = async () => {
     if (!start || !end) return;
 
     const startStr = format(start, "yyyy-MM-dd");
     const endStr = format(end, "yyyy-MM-dd");
 
-    const request = {
-      start: startStr,
-      end: endStr,
-    };
-
     try {
-      const blob = await downloadAllFundsCSV(request);
+      const blob = await onDownload({
+        start: startStr,
+        end: endStr,
+      });
 
       const url = window.URL.createObjectURL(blob);
-      const filename = `timeseries_performance_all_funds_${startStr}_to_${endStr}.csv`;
+      const filename = `${filenamePrefix}_${startStr}_to_${endStr}.csv`;
 
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
 
       window.URL.revokeObjectURL(url);
     } catch (err) {
@@ -39,7 +55,12 @@ export function DownloadCSVButton({ start, end }: DownloadCSVButtonProps) {
   };
 
   return (
-    <Button variant="outline" size="sm" onClick={handleDownload}>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={handleDownload}
+      disabled={!start || !end}
+    >
       Download CSV
     </Button>
   );
