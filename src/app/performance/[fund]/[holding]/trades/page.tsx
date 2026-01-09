@@ -73,6 +73,7 @@ export default function Page() {
             setEnd={setEnd}
             view={view}
             setView={setView}
+            fund={params.fund}
           />
           {allTrades && <div>As of {formatDate(allTrades.end)}</div>}
         </Card>
