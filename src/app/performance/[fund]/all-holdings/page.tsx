@@ -14,18 +14,20 @@ import { ActiveSwitch } from "@/components/ActiveSwitch";
 import { getPortfolioSummary } from "@/lib/api/portfolio";
 
 export default function Page() {
+  const params = useParams<{ fund: string }>();
   const [active, setActive] = useState(true);
   const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date | undefined>(
-    getDateFromView(view)[0],
+    getDateFromView(view, params.fund)[0],
   );
   const [portfolioSummary, setPortfolioSummary] =
     useState<PortfolioSummaryResponse>();
-  const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
   const [allHoldingsSummary, setAllHoldingsSummary] = useState<
     AllHoldingsSummaryResponse | undefined
   >();
-  const params = useParams<{ fund: string }>();
+  const [end, setEnd] = useState<Date | undefined>(
+    getDateFromView(view, params.fund)[1],
+  );
 
   useEffect(() => {
     if (start && end) {
@@ -91,6 +93,7 @@ export default function Page() {
                   setEnd={setEnd}
                   view={view}
                   setView={setView}
+                  fund={params.fund}
                 />
                 <div>As of {formatDate(allHoldingsSummary.end)}</div>
               </>

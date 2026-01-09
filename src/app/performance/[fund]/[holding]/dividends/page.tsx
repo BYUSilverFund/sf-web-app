@@ -75,6 +75,7 @@ export default function Page() {
             setEnd={setEnd}
             view={view}
             setView={setView}
+            fund={params.fund}
           />
           {allDividends && <div>As of {formatDate(allDividends.end)}</div>}
         </Card>
