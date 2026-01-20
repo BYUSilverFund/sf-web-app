@@ -27,6 +27,7 @@ type ViewButtonProps = {
   setEnd: React.Dispatch<React.SetStateAction<Date | undefined>>;
   view: string;
   setView: React.Dispatch<React.SetStateAction<string>>;
+  fund?: string;
 };
 
 export function ViewButton({
@@ -36,10 +37,11 @@ export function ViewButton({
   setEnd,
   view,
   setView,
+  fund,
 }: ViewButtonProps) {
   const handleView = (view: string) => {
     setView(view);
-    const dates = getDateFromView(view);
+    const dates = getDateFromView(view, fund);
     setStart(dates[0]);
     setEnd(dates[1]);
   };

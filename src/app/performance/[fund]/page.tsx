@@ -109,6 +109,7 @@ export default function Page() {
               setEnd={setEnd}
               view={view}
               setView={setView}
+              fund={fund}
             />
             {portfolioSummary && (
               <div>As of {formatDate(portfolioSummary.end)}</div>

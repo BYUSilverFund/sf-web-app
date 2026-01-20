@@ -70,6 +70,7 @@ export function getDateFromView(view: string, fund: string = ""): [Date, Date] {
     brigham_capital: new Date(2023, 9, 11), // 2023-10-11
     quant: new Date(2024, 3, 2), // 2024-04-02
     quant_paper: new Date(2025, 9, 22), // 2025-10-22
+    "": new Date(2020, 10, 17), // default to undergrad start date
   };
   const today = new Date();
 
