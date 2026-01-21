@@ -1,11 +1,22 @@
 import { TickerList, Fund } from "../types";
 import { API_BASE_URL } from "../variables";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export async function getCovarianceMatrix(request: TickerList) {
   try {
+    const session = await fetchAuthSession();
+    const accessToken = session.tokens?.accessToken?.toString();
+
+    if (!accessToken) {
+      throw new Error("User is not authenticated.");
+    }
+
     const response = await fetch(API_BASE_URL + "covariance-matrix/latest", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify(request),
     });
 
