@@ -36,6 +36,8 @@ import {
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TradesTable } from "@/components/TradesTable";
 import { DashboardWrapper } from "@/components/DashboardWrapper";
+import { downloadHoldingCSV } from "@/lib/api/csvDownloads";
+import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
 export default function Page() {
   const [view, setView] = useState("max");
@@ -130,6 +132,19 @@ export default function Page() {
                   Factor Exposures
                 </Link>
               </Button>
+              <DownloadCSVButton
+                key={`holding-csv-${params.fund}-${params.holding}-${start}-${end}`}
+                start={start}
+                end={end}
+                filenamePrefix={`${params.fund}_${params.holding}`}
+                onDownload={(req) =>
+                  downloadHoldingCSV({
+                    ...req,
+                    fund: params.fund,
+                    ticker: params.holding,
+                  })
+                }
+              />
             </div>
           </Card>
           {/* Row 2 */}

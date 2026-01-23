@@ -26,7 +26,7 @@ import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryTable } from "@/components/AllPortfoliosSummaryTable";
 import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
-import { downloadAllPortfoliosCSV } from "@/lib/api/csvDownloads";
+import { downloadAllFundsCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 import { FactorExposuresButton } from "@/components/FactorExposuresButton";
 
@@ -98,8 +98,8 @@ export default function Page() {
               <DownloadCSVButton
                 start={start}
                 end={end}
-                filenamePrefix="all_portfolios"
-                onDownload={downloadAllPortfoliosCSV}
+                filenamePrefix="all_funds"
+                onDownload={downloadAllFundsCSV}
               />
             </div>
           </Card>

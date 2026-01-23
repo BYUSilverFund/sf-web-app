@@ -8,7 +8,7 @@ import { AllPortfoliosSummaryResponse, FundRequest } from "@/lib/types";
 import { defaultEnd, defaultStart, formatDate } from "@/lib/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { downloadAllFundsCSV } from "@/lib/api/csvDownloads";
+import { downloadAllPortfoliosCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
 export default function Page() {
@@ -59,8 +59,8 @@ export default function Page() {
             <DownloadCSVButton
               start={start}
               end={end}
-              filenamePrefix="all_funds"
-              onDownload={downloadAllFundsCSV}
+              filenamePrefix="all_portfolios"
+              onDownload={downloadAllPortfoliosCSV}
             />
           </div>
         </Card>
