@@ -12,6 +12,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { ActiveSwitch } from "@/components/ActiveSwitch";
 import { getPortfolioSummary } from "@/lib/api/portfolio";
+import { downloadAllHoldingsCSV } from "@/lib/api/csvDownloads";
+import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
 export default function Page() {
   const params = useParams<{ fund: string }>();
@@ -99,7 +101,21 @@ export default function Page() {
               </>
             )}
           </div>
-          <ActiveSwitch active={active} setActive={setActive} />
+          <div className="ml-auto flex flex-wrap items-center gap-3">
+            <ActiveSwitch active={active} setActive={setActive} />
+            <DownloadCSVButton
+              key={`all-holdings-csv-${params.fund}-${start}-${end}`}
+              start={start}
+              end={end}
+              filenamePrefix={`all_holdings_${params.fund}`}
+              onDownload={(req) =>
+                downloadAllHoldingsCSV({
+                  ...req,
+                  fund: params.fund,
+                })
+              }
+            />
+          </div>
         </Card>
         {/* Row 2 */}
         <Card>
