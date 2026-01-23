@@ -98,7 +98,7 @@ export default function Page() {
               <DownloadCSVButton
                 start={start}
                 end={end}
-                filenamePrefix="all_fun"
+                filenamePrefix="all_funds"
                 onDownload={downloadAllFundsCSV}
               />
             </div>
