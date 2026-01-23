@@ -8,6 +8,7 @@ import { FundSelector, ViewSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatPortfolio } from "@/lib/utils";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export interface FactorData {
   factor: string;
@@ -33,9 +34,19 @@ export default function FactorExposures() {
   const holdingParam = searchParams.get("holding");
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}factor-exposures/${fund}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const session = await fetchAuthSession();
+        const token = session.tokens?.accessToken?.toString();
+        const response = await fetch(
+          `${API_BASE_URL}factor-exposures/${fund}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const data = await response.json();
         const exposuresObj = data?.exposures ?? {};
         const exposureData = Object.entries(exposuresObj)
           .map(([key, value]) => ({
@@ -45,19 +56,30 @@ export default function FactorExposures() {
           .sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
         setExposures(exposureData);
         setExcludedHoldings(data?.positions_not_in_exposures ?? []);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Failed fetching exposures:", err);
-      });
+      }
+    };
+    fetchData();
   }, [fund]);
 
   useEffect(() => {
-    // if a factor query param is present, fetch holdings contributing to that factor
-    if (factorParam) {
-      const f = factorParam;
-      fetch(`${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(f)}`)
-        .then((res) => res.json())
-        .then((data) => {
+    const fetchFactorData = async () => {
+      // if a factor query param is present, fetch holdings contributing to that factor
+      if (factorParam) {
+        const f = factorParam;
+        try {
+          const session = await fetchAuthSession();
+          const token = session.tokens?.accessToken?.toString();
+          const response = await fetch(
+            `${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(f)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+          const data = await response.json();
           const src =
             data?.positions ?? data?.holdings ?? data?.exposures ?? data;
           let arr: FactorData[] = [];
@@ -88,18 +110,27 @@ export default function FactorExposures() {
           arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
           setDetailData(arr);
           setDetailLabel(f);
-        })
-        .catch((err) => console.error("Failed fetching factor details:", err));
-      return;
-    }
+        } catch (err) {
+          console.error("Failed fetching factor details:", err);
+        }
+        return;
+      }
 
-    // if a holding query param is present, fetch factor exposures for that holding
-    if (holdingParam) {
-      const h = holdingParam;
-      // holdings endpoint lives under factor-exposures router
-      fetch(`${API_BASE_URL}factor-exposures/holdings/${encodeURIComponent(h)}`)
-        .then((res) => res.json())
-        .then((data) => {
+      // if a holding query param is present, fetch factor exposures for that holding
+      if (holdingParam) {
+        const h = holdingParam;
+        try {
+          const session = await fetchAuthSession();
+          const token = session.tokens?.accessToken?.toString();
+          const response = await fetch(
+            `${API_BASE_URL}factor-exposures/holdings/${encodeURIComponent(h)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+          const data = await response.json();
           const src = data?.exposures ?? data?.factors ?? data;
           let arr: FactorData[] = [];
           if (Array.isArray(src)) {
@@ -129,14 +160,17 @@ export default function FactorExposures() {
           arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
           setDetailData(arr);
           setDetailLabel(h);
-        })
-        .catch((err) => console.error("Failed fetching holding factors:", err));
-      return;
-    }
+        } catch (err) {
+          console.error("Failed fetching holding factors:", err);
+        }
+        return;
+      }
 
-    // otherwise clear detail view
-    setDetailData(null);
-    setDetailLabel(null);
+      // otherwise clear detail view
+      setDetailData(null);
+      setDetailLabel(null);
+    };
+    fetchFactorData();
   }, [factorParam, holdingParam, fund]);
   const fundKeys = [
     "all_funds",

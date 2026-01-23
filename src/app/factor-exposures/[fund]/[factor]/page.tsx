@@ -11,6 +11,7 @@ import { formatFactors } from "@/components/FactorsDataTable";
 
 type DetailRow = { factor: string; exposure: number };
 import { formatPortfolio } from "@/lib/utils";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export default function FactorDetailPage() {
   const params = useParams() as { fund: string; factor: string };
@@ -26,11 +27,19 @@ export default function FactorDetailPage() {
   const [detailData, setDetailData] = useState<DetailRow[]>([]);
 
   useEffect(() => {
-    fetch(
-      `${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(factor)}`,
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const session = await fetchAuthSession();
+        const token = session.tokens?.accessToken?.toString();
+        const response = await fetch(
+          `${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(factor)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const data = await response.json();
         const src =
           data?.positions ?? data?.holdings ?? data?.exposures ?? data;
         let arr: DetailRow[] = [];
@@ -57,8 +66,11 @@ export default function FactorDetailPage() {
         }
         arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
         setDetailData(arr);
-      })
-      .catch((err) => console.error("Failed fetching factor details:", err));
+      } catch (err) {
+        console.error("Failed fetching factor details:", err);
+      }
+    };
+    fetchData();
   }, [fund, factor]);
 
   function updateURLForFund(fundVal: string) {
