@@ -75,14 +75,7 @@ export function FactorsBarChart({
         </div>
       </CardHeader>
       <CardContent className="h-5/6">
-        <ChartContainer
-          config={chartConfigEffective}
-          className={` h-full w-full ${
-            onFactorClick
-              ? "[&_.recharts-rectangle.recharts-tooltip-cursor]:cursor-pointer [&_.recharts-bar-rectangle]:cursor-pointer"
-              : ""
-          }`}
-        >
+        <ChartContainer config={chartConfigEffective} className="h-full w-full">
           <BarChart
             accessibilityLayer
             data={displayedData}
@@ -90,20 +83,8 @@ export function FactorsBarChart({
             barSize={60}
             onClick={(e: any) => {
               if (!onFactorClick) return;
-              // Try several possible locations for the clicked payload/label
-              const activePayload = e?.activePayload ?? e?.payload ?? null;
-              const payload =
-                Array.isArray(activePayload) && activePayload[0]
-                  ? activePayload[0].payload
-                  : (activePayload?.payload ?? activePayload);
-
-              let factor: string | undefined;
-              if (payload && typeof payload === "object") {
-                factor = (payload as any).factor ?? (payload as any).name;
-              } else if (typeof e?.activeLabel === "string") {
-                factor = e.activeLabel;
-              }
-
+              console.log("clicked", e);
+              const factor = e?.activePayload?.[0]?.payload?.factor;
               if (factor) onFactorClick(String(factor));
             }}
             style={{ cursor: onFactorClick ? "pointer" : undefined }}
