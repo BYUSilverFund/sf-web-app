@@ -8,11 +8,10 @@ export default function AmplifyInit(): null {
     const cfg: any = {
       API: {
         GraphQL: {
-          endpoint:
-            "https://aiod35xv2nccppo534hy5mnvv4.appsync-api.us-west-2.amazonaws.com/graphql",
+          endpoint: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "",
           region: "us-west-2",
           defaultAuthMode: "apiKey",
-          apiKey: "da2-utguyxkzzfblbn77ugtwmmesg4",
+          apiKey: process.env.NEXT_PUBLIC_GRAPHQL_API_KEY || "",
         },
       },
       Auth: {
