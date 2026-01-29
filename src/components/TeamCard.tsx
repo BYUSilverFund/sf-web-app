@@ -24,7 +24,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
             <a
               href={linkedIn}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noreferrer"
               className="block px-2 py-1 rounded-md"
             >
               LinkedIn

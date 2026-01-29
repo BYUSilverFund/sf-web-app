@@ -244,7 +244,7 @@ const Home: React.FC = () => {
                 href={`https://finance.yahoo.com/quote/${row.ticker}`}
                 className="text-blue-900 no-underline"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer"
               >
                 <div className="border-2 border-blue-900 p-2 rounded-xl hover:scale-95 transition-transform flex flex-col items-center">
                   <img
@@ -272,7 +272,7 @@ const Home: React.FC = () => {
                 href={`https://finance.yahoo.com/quote/${row.ticker}`}
                 className="text-blue-900 no-underline"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer"
               >
                 <div className="border-2 border-blue-900 p-2 rounded-xl hover:scale-95 transition-transform flex flex-col items-center">
                   <img
@@ -309,7 +309,7 @@ const Home: React.FC = () => {
                 }
                 className="text-blue-900 no-underline"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer"
               >
                 <div className="border-2 border-blue-900 p-2 rounded-xl hover:scale-95 transition-transform flex flex-col items-center">
                   <img
