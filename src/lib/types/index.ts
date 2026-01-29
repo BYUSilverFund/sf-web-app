@@ -5,3 +5,4 @@ export * from "./allPortfolios";
 export * from "./allHoldings";
 export * from "./holding";
 export * from "./covarianceMatrix";
+export * from "./riskForecast";
