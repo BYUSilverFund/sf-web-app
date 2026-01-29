@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatPortfolio } from "@/lib/utils";
 import { fetchAuthSession } from "aws-amplify/auth";
+import {
+  getFundRiskForecast,
+  getAllFundsRiskForecast,
+} from "@/lib/api/riskForecast";
+import { RiskForecastTable } from "@/components/RiskForecastTable";
+import { RiskForecast } from "@/lib/types";
 
 export interface FactorData {
   factor: string;
@@ -32,6 +38,9 @@ export default function FactorExposures() {
 
   const factorParam = searchParams.get("factor");
   const holdingParam = searchParams.get("holding");
+
+  //risk forecast state
+  const [riskForecast, setRiskForecast] = useState<RiskForecast | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,6 +181,27 @@ export default function FactorExposures() {
     };
     fetchFactorData();
   }, [factorParam, holdingParam, fund]);
+
+  // fetch risk forecast
+  useEffect(() => {
+    async function fetchRiskForecast() {
+      try {
+        const data =
+          fund === "all_funds"
+            ? await getAllFundsRiskForecast()
+            : await getFundRiskForecast(fund);
+
+        console.log("Risk forecast fetched:", data); // add this
+        setRiskForecast(data);
+      } catch (error) {
+        console.error("Failed fetching risk forecast:", error);
+        setRiskForecast(undefined);
+      }
+    }
+
+    fetchRiskForecast();
+  }, [fund]);
+
   const fundKeys = [
     "all_funds",
     "grad",
@@ -334,6 +364,15 @@ export default function FactorExposures() {
               All holdings included
             </div>
           )}
+        </div>
+        <div className="sm:px6 py-4 mb-10 space-y-4">
+          <RiskForecastTable
+            forecast={riskForecast}
+            fundName={
+              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
+              "All Funds"
+            }
+          />
         </div>
       </div>
     </div>
