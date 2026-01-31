@@ -112,6 +112,9 @@ export default function FactorDetailPage() {
     { name: "Factor Exposures", href: `/factor-exposures/${fund}` },
   ];
 
+  const factorLabel = formatFactors(factor ?? "");
+  const viewHeader = `Holding Contributions to ${factorLabel}`;
+
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
       <div className="space-y-4 sm:px-4 py-4">
@@ -147,6 +150,7 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
+              headerTitle={viewHeader}
             />
           ) : (
             <FactorsBarChart
@@ -157,6 +161,7 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
+              headerTitle={viewHeader}
             />
           )}
         </div>

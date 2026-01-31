@@ -32,12 +32,14 @@ export function FactorsBarChart({
   setShowTop,
   onFactorClick,
   contributionMode,
+  headerTitle,
 }: {
   chartData: FactorData[];
   showTop?: number;
   setShowTop?: (v: number) => void;
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
+  headerTitle?: string;
 }) {
   const [internalTopN, setInternalTopN] = useState<number>(showTop ?? 20);
   // keep internal in sync if parent-controlled value changes
@@ -65,7 +67,12 @@ export function FactorsBarChart({
   return (
     <Card className="background-muted h-[700px]">
       <CardHeader>
-        <div className="flex w-full justify-end">
+        <div className="flex w-full justify-between items-center">
+          <div className="flex items-center gap-4">
+            {headerTitle ? (
+              <h2 className="text-lg font-semibold">{headerTitle}</h2>
+            ) : null}
+          </div>
           <div className="flex items-center gap-2">
             <TopNSelector
               topN={displayTop}
@@ -83,7 +90,6 @@ export function FactorsBarChart({
             barSize={60}
             onClick={(e: any) => {
               if (!onFactorClick) return;
-              console.log("clicked", e);
               const factor = e?.activePayload?.[0]?.payload?.factor;
               if (factor) onFactorClick(String(factor));
             }}

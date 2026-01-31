@@ -8,6 +8,7 @@ import { FundSelector, ViewSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatPortfolio } from "@/lib/utils";
+import { formatFactors } from "@/components/FactorsDataTable";
 import { fetchAuthSession } from "aws-amplify/auth";
 import {
   getFundRiskForecast,
@@ -190,8 +191,6 @@ export default function FactorExposures() {
           fund === "all_funds"
             ? await getAllFundsRiskForecast()
             : await getFundRiskForecast(fund);
-
-        console.log("Risk forecast fetched:", data); // add this
         setRiskForecast(data);
       } catch (error) {
         console.error("Failed fetching risk forecast:", error);
@@ -265,12 +264,24 @@ export default function FactorExposures() {
           { name: "Factor Exposures", href: `/factor-exposures/${fund}` },
         ]
       : pages;
-
   const breadcrumbTitle = isFactorDetail
     ? `${detailLabel}`
     : isHoldingDetail
       ? `${detailLabel}`
       : "Factor Exposures";
+
+  const fundLabel = fund === "all_funds" ? "All Funds" : formatPortfolio(fund);
+  let viewHeader = `Factor Exposures for ${fundLabel}`;
+  if (isFactorDetail) {
+    const factorLabel = formatFactors(detailLabel ?? factorParam ?? "");
+    if (fund !== "all_funds") {
+      viewHeader = `Holding Contributions to ${factorLabel} in ${fundLabel}`;
+    } else {
+      viewHeader = `Factor Exposures for ${factorLabel}`;
+    }
+  } else if (isHoldingDetail) {
+    viewHeader = `Factor Exposures for ${detailLabel ?? holdingParam}`;
+  }
 
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
@@ -316,6 +327,7 @@ export default function FactorExposures() {
                       : (s) => openFactorView(s)
                   }
                   contributionMode={isFactorDetail}
+                  headerTitle={viewHeader}
                 />
               ) : (
                 <FactorsBarChart
@@ -330,6 +342,7 @@ export default function FactorExposures() {
                       : (s) => openFactorView(s)
                   }
                   contributionMode={isFactorDetail}
+                  headerTitle={viewHeader}
                 />
               )}
             </div>
@@ -341,6 +354,7 @@ export default function FactorExposures() {
                   showTop={showTop}
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
+                  headerTitle={viewHeader}
                 />
               ) : (
                 <FactorsBarChart
@@ -348,6 +362,7 @@ export default function FactorExposures() {
                   showTop={showTop}
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
+                  headerTitle={viewHeader}
                 />
               )}
             </>

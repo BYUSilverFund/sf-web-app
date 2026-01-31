@@ -127,12 +127,14 @@ export function FactorsDataTable({
   setShowTop,
   onFactorClick,
   contributionMode,
+  headerTitle,
 }: {
   data: FactorData[];
   showTop?: number;
   setShowTop?: (v: number) => void;
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
+  headerTitle?: string;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -210,20 +212,25 @@ export function FactorsDataTable({
       style={{ ["--int-width-px" as any]: `${intWidthPx}px` }}
     >
       <CardHeader className="">
-        <div className="flex justify-between py-4">
-          <Input
-            placeholder={
-              contributionMode ? "Filter holdings..." : "Filter factors..."
-            }
-            value={
-              (table.getColumn("factor")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("factor")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+        <div className="flex justify-between py-4 items-center">
+          <div className="flex items-center gap-4">
+            {headerTitle ? (
+              <h2 className="text-lg font-semibold">{headerTitle}</h2>
+            ) : null}
+          </div>
           <div className="flex items-center gap-2">
+            <Input
+              placeholder={
+                contributionMode ? "Filter holdings..." : "Filter factors..."
+              }
+              value={
+                (table.getColumn("factor")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("factor")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
             <NumRowSelector
               numRow={numRow}
               onValueChange={(v) => {
