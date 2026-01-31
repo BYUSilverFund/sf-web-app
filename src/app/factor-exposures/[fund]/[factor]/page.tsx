@@ -92,7 +92,12 @@ export default function FactorDetailPage() {
   }
 
   function openHoldingPage(holding: string) {
-    router.push(`/performance/${fund}/${encodeURIComponent(holding)}`);
+    // Navigate to factor-exposures view for the holding (show factor exposures for a holding)
+    router.push(
+      `/factor-exposures/${fund}?holding=${encodeURIComponent(
+        holding,
+      )}&view=${view}&show_top=${showTop}`,
+    );
   }
 
   const fundKeys = [
