@@ -121,7 +121,7 @@ export function FactorsBarChart({
                 offset={6}
                 className="font-bold fill-foreground"
                 fontSize={10}
-                formatter={(v: number) => formatExposures(v, 2)}
+                formatter={(v: number) => formatExposures(v, 2, true)}
               />
             </Bar>
             <XAxis
