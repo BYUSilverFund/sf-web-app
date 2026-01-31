@@ -30,9 +30,17 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { NumRowSelector } from "./ChartControls";
 import { FactorData } from "@/app/factor-exposures/[fund]/page";
 
-export function formatExposures(n: number, decimals = 3) {
+export function formatExposures(
+  n: number,
+  decimals = 3,
+  dropLeadingZero = false,
+) {
   const s = n.toFixed(decimals);
-  return Math.abs(n) < 1 ? s.replace(/^(-?)0\./, "$1.") : s;
+  if (dropLeadingZero) {
+    return Math.abs(n) < 1 ? s.replace(/^(-?)0\./, "$1.") : s;
+  }
+  // ensure leading zero for decimals (e.g., ".123" -> "0.123")
+  return Math.abs(n) < 1 ? s.replace(/^(-?)\./, "$10.") : s;
 }
 
 export function formatFactors(factor: string) {
@@ -52,7 +60,10 @@ const absValueSortingFn = (
   return 0;
 };
 
-function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
+function buildColumns(
+  contributionMode = false,
+  maxIntLen = 1,
+): ColumnDef<FactorData>[] {
   return [
     {
       accessorKey: "factor",
@@ -77,19 +88,33 @@ function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
       accessorKey: "exposure",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {contributionMode ? "Contribution" : "Exposure"}
-            <ArrowUpDown />
-          </Button>
+          <div className="w-[120px] flex justify-center">
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              {contributionMode ? "Contribution" : "Exposure"}
+              <ArrowUpDown />
+            </Button>
+          </div>
         );
       },
       cell: ({ row }) => {
         const exposure = parseFloat(row.getValue("exposure"));
         const formatted = formatExposures(exposure);
-        return <div className="font-medium text-left">{formatted}</div>;
+        const parts = String(formatted).split(".");
+        const intPart = parts[0] ?? "0";
+        const fracPart = parts[1] ?? "000";
+        return (
+          <div className="font-medium w-[120px] flex justify-center">
+            <span className="min-w-[var(--int-width-px)] inline-block text-right">
+              {intPart}
+            </span>
+            <span className="inline-block">.{fracPart}</span>
+          </div>
+        );
       },
       sortingFn: absValueSortingFn,
     },
@@ -102,12 +127,14 @@ export function FactorsDataTable({
   setShowTop,
   onFactorClick,
   contributionMode,
+  headerTitle,
 }: {
   data: FactorData[];
   showTop?: number;
   setShowTop?: (v: number) => void;
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
+  headerTitle?: string;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -120,7 +147,42 @@ export function FactorsDataTable({
     setNumRow(showTop ?? 10);
   }, [showTop]);
 
-  const cols = buildColumns(contributionMode);
+  const maxIntLen = React.useMemo(() => {
+    let max = 1;
+    for (const d of data) {
+      const formatted = formatExposures(d.exposure);
+      const intPart = String(formatted).split(".")[0] ?? "0";
+      if (intPart.length > max) max = intPart.length;
+    }
+    return max;
+  }, [data]);
+
+  const [intWidthPx, setIntWidthPx] = useState<number>(0);
+
+  useEffect(() => {
+    const measure = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        const docStyle = window.getComputedStyle(document.documentElement);
+        const fontSize = docStyle.getPropertyValue("font-size") || "16px";
+        const fontFamily =
+          "ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Helvetica Neue', monospace";
+        ctx.font = `${fontSize} ${fontFamily}`;
+        const text = "0".repeat(maxIntLen);
+        const w = Math.ceil(ctx.measureText(text).width) + 2; // small padding
+        setIntWidthPx(w);
+      } catch (e) {
+        // ignore
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [maxIntLen]);
+
+  const cols = buildColumns(contributionMode, maxIntLen);
 
   const table = useReactTable({
     data,
@@ -145,22 +207,30 @@ export function FactorsDataTable({
   }, [numRow, table, data.length]);
 
   return (
-    <Card className="sm:px-2">
+    <Card
+      className="sm:px-2"
+      style={{ ["--int-width-px" as any]: `${intWidthPx}px` }}
+    >
       <CardHeader className="">
-        <div className="flex justify-between py-4">
-          <Input
-            placeholder={
-              contributionMode ? "Filter holdings..." : "Filter factors..."
-            }
-            value={
-              (table.getColumn("factor")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("factor")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+        <div className="flex justify-between py-4 items-center">
+          <div className="flex items-center gap-4">
+            {headerTitle ? (
+              <h2 className="text-lg font-semibold">{headerTitle}</h2>
+            ) : null}
+          </div>
           <div className="flex items-center gap-2">
+            <Input
+              placeholder={
+                contributionMode ? "Filter holdings..." : "Filter factors..."
+              }
+              value={
+                (table.getColumn("factor")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("factor")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
             <NumRowSelector
               numRow={numRow}
               onValueChange={(v) => {
