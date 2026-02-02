@@ -304,6 +304,15 @@ export default function FactorExposures() {
             </div>
           </div>
         </div>
+        <div className="sm:px6 py-4 mb-10 space-y-4">
+          <RiskForecastTable
+            forecast={riskForecast}
+            fundName={
+              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
+              "All Funds"
+            }
+          />
+        </div>
         <div className="sm:mx-2">
           {detailData ? (
             <div>
@@ -380,15 +389,6 @@ export default function FactorExposures() {
               All holdings included
             </div>
           )}
-        </div>
-        <div className="sm:px6 py-4 mb-10 space-y-4">
-          <RiskForecastTable
-            forecast={riskForecast}
-            fundName={
-              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
-              "All Funds"
-            }
-          />
         </div>
       </div>
     </div>
