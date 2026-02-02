@@ -4,7 +4,7 @@ import { API_BASE_URL } from "@/lib/variables";
 import { FactorsDataTable } from "@/components/FactorsDataTable";
 import { FactorsBarChart } from "@/components/FactorsBarChart";
 import { useParams, useSearchParams } from "next/navigation";
-import { FundSelector, ViewSelector } from "@/components/ChartControls";
+import { FundSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatFactors } from "@/components/FactorsDataTable";
@@ -19,8 +19,8 @@ export default function FactorDetailPage() {
   const initialShowTop =
     parseInt(searchParams.get("show_top") || "10", 10) || 10;
   const [showTop, setShowTop] = useState<number>(initialShowTop);
-  const viewValue = searchParams.get("view") || "table";
-  const [view, setView] = useState<string>(viewValue ?? "table");
+  const viewValue = searchParams.get("view") || "bar-chart";
+  const [view, setView] = useState<string>(viewValue ?? "bar-chart");
   const fund = params.fund as string;
   const factor = params.factor as string;
   const router = useRouter();
@@ -74,27 +74,27 @@ export default function FactorDetailPage() {
   }, [fund, factor]);
 
   function updateURLForFund(fundVal: string) {
-    router.push(`/factor-exposures/${fundVal}`);
+    router.push(`/forecast/${fundVal}`);
   }
 
   function updateURLForView(viewVal: string) {
     setView(viewVal);
     router.push(
-      `/factor-exposures/${fund}/${encodeURIComponent(factor)}?view=${viewVal}&show_top=${showTop}`,
+      `/forecast/${fund}/${encodeURIComponent(factor)}?view=${viewVal}&show_top=${showTop}`,
     );
   }
 
   function updateURLForShowTop(v: number) {
     setShowTop(v);
     router.push(
-      `/factor-exposures/${fund}/${encodeURIComponent(factor)}?view=${view}&show_top=${v}`,
+      `/forecast/${fund}/${encodeURIComponent(factor)}?view=${view}&show_top=${v}`,
     );
   }
 
   function openHoldingPage(holding: string) {
-    // Navigate to factor-exposures view for the holding (show factor exposures for a holding)
+    // Navigate to forecast view for the holding (show factor exposures for a holding)
     router.push(
-      `/factor-exposures/${fund}?holding=${encodeURIComponent(
+      `/forecast/${fund}?holding=${encodeURIComponent(
         holding,
       )}&view=${view}&show_top=${showTop}`,
     );
@@ -114,7 +114,7 @@ export default function FactorDetailPage() {
     ...(fund !== "all_funds"
       ? [{ name: formatPortfolio(fund), href: `/performance/${fund}` }]
       : []),
-    { name: "Factor Exposures", href: `/factor-exposures/${fund}` },
+    { name: "Forecast", href: `/forecast/${fund}` },
   ];
 
   const factorLabel = formatFactors(factor ?? "");
@@ -136,13 +136,6 @@ export default function FactorDetailPage() {
                 onValueChange={(v) => updateURLForFund(v)}
               />
             </div>
-            <div className="flex items-center gap-3">
-              <span>Display</span>
-              <ViewSelector
-                view={view}
-                onValueChange={(v) => updateURLForView(v)}
-              />
-            </div>
           </div>
         </div>
         <div className="sm:mx-2">
@@ -156,6 +149,8 @@ export default function FactorDetailPage() {
               }
               contributionMode={true}
               headerTitle={viewHeader}
+              view={view}
+              onViewChange={(v) => updateURLForView(v)}
             />
           ) : (
             <FactorsBarChart
@@ -167,6 +162,8 @@ export default function FactorDetailPage() {
               }
               contributionMode={true}
               headerTitle={viewHeader}
+              view={view}
+              onViewChange={(v) => updateURLForView(v)}
             />
           )}
         </div>

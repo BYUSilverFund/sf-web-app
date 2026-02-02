@@ -127,9 +127,9 @@ export default function Page() {
             <div className="ml-2">
               <Button asChild variant="outline" size="sm">
                 <Link
-                  href={`/factor-exposures/${params.fund}?holding=${params.holding}`}
+                  href={`/forecast/${params.fund}?holding=${params.holding}`}
                 >
-                  Factor Exposures
+                  Forecast
                 </Link>
               </Button>
               <DownloadCSVButton

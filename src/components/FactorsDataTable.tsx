@@ -27,8 +27,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { NumRowSelector } from "./ChartControls";
-import { FactorData } from "@/app/factor-exposures/[fund]/page";
+import { NumRowSelector, ViewSelector } from "./ChartControls";
+import { FactorData } from "@/app/forecast/[fund]/page";
 
 export function formatExposures(
   n: number,
@@ -128,6 +128,8 @@ export function FactorsDataTable({
   onFactorClick,
   contributionMode,
   headerTitle,
+  view,
+  onViewChange,
 }: {
   data: FactorData[];
   showTop?: number;
@@ -135,6 +137,8 @@ export function FactorsDataTable({
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
   headerTitle?: string;
+  view?: string;
+  onViewChange?: (v: string) => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -231,6 +235,14 @@ export function FactorsDataTable({
               }
               className="max-w-sm"
             />
+            {view !== undefined && onViewChange ? (
+              <div className="hidden sm:block">
+                <ViewSelector
+                  view={view}
+                  onValueChange={(v) => onViewChange(v)}
+                />
+              </div>
+            ) : null}
             <NumRowSelector
               numRow={numRow}
               onValueChange={(v) => {

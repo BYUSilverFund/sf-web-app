@@ -9,8 +9,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { TopNSelector } from "./ChartControls";
-import { FactorData } from "@/app/factor-exposures/[fund]/page";
+import { TopNSelector, ViewSelector } from "./ChartControls";
+import { FactorData } from "@/app/forecast/[fund]/page";
 import { formatExposures, formatFactors } from "./FactorsDataTable";
 
 export const description = "A bar chart with a custom label";
@@ -33,6 +33,8 @@ export function FactorsBarChart({
   onFactorClick,
   contributionMode,
   headerTitle,
+  view,
+  onViewChange,
 }: {
   chartData: FactorData[];
   showTop?: number;
@@ -40,6 +42,9 @@ export function FactorsBarChart({
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
   headerTitle?: string;
+  // optional chart controls
+  view?: string;
+  onViewChange?: (v: string) => void;
 }) {
   const [internalTopN, setInternalTopN] = useState<number>(showTop ?? 20);
   // keep internal in sync if parent-controlled value changes
@@ -74,6 +79,15 @@ export function FactorsBarChart({
             ) : null}
           </div>
           <div className="flex items-center gap-2">
+            {view !== undefined && onViewChange ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:block">Display</span>
+                <ViewSelector
+                  view={view}
+                  onValueChange={(v) => onViewChange(v)}
+                />
+              </div>
+            ) : null}
             <TopNSelector
               topN={displayTop}
               onValueChange={(v) => handleTopChange(v)}
