@@ -243,7 +243,6 @@ export default function FactorExposures() {
   }
 
   function openHoldingPage(holding: string) {
-    // Navigate to forecast view for the holding (show factor exposures for a holding)
     router.push(
       `/forecast/${fund}?holding=${encodeURIComponent(
         holding,

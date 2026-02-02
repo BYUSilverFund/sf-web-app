@@ -124,7 +124,7 @@ export default function Page() {
                 <div>As of {formatDate(holdingSummary.end)}</div>
               )}
             </div>
-            <div className="ml-2">
+            <div className="ml-auto flex flex-wrap items-center gap-3">
               <Button asChild variant="outline" size="sm">
                 <Link
                   href={`/forecast/${params.fund}?holding=${params.holding}`}
