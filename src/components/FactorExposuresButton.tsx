@@ -8,7 +8,7 @@ export function FactorExposuresButton({
 }) {
   return (
     <Button asChild variant="outline" size="sm">
-      <Link href={`/factor-exposures/${fund}`}>Factor Exposures</Link>
+      <Link href={`/forecast/${fund}`}>Forecast</Link>
     </Button>
   );
 }

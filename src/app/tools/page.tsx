@@ -172,12 +172,6 @@ const Tools: React.FC = () => {
                   text="Covariance Matrix Downloader"
                 />
               </li>
-              <li>
-                <ToolLink
-                  href="/factor-exposures/all_funds"
-                  text="Fund Factor Exposures"
-                />
-              </li>
             </ul>
           </div>
         </div>

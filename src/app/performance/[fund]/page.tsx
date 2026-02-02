@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo, startTransition } from "react";
+import { useEffect, useState, useMemo, startTransition, Suspense } from "react";
 import {
   AllHoldingsSummaryResponse,
   BenchmarkRequest,
@@ -99,7 +99,9 @@ export default function Page() {
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
         <DashboardWrapper>
-          <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
+          <Suspense fallback={null}>
+            <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
+          </Suspense>
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
             <ViewButton
