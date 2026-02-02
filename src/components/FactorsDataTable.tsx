@@ -60,10 +60,7 @@ const absValueSortingFn = (
   return 0;
 };
 
-function buildColumns(
-  contributionMode = false,
-  maxIntLen = 1,
-): ColumnDef<FactorData>[] {
+function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
   return [
     {
       accessorKey: "factor",
@@ -186,7 +183,7 @@ export function FactorsDataTable({
     return () => window.removeEventListener("resize", measure);
   }, [maxIntLen]);
 
-  const cols = buildColumns(contributionMode, maxIntLen);
+  const cols = buildColumns(contributionMode);
 
   const table = useReactTable({
     data,
@@ -213,7 +210,7 @@ export function FactorsDataTable({
   return (
     <Card
       className="sm:px-2"
-      style={{ ["--int-width-px" as any]: `${intWidthPx}px` }}
+      style={{ "--int-width-px": `${intWidthPx}px` } as React.CSSProperties}
     >
       <CardHeader className="">
         <div className="flex justify-between py-4 items-center">

@@ -11,6 +11,7 @@ import {
 } from "@/lib/types";
 import { format } from "date-fns";
 import * as React from "react";
+import { Suspense } from "react";
 
 import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
@@ -108,7 +109,9 @@ export default function Page() {
       {/* {holdingSummary && holdingTimeSeries && benchmarkSummary && trades && ( */}
       <div className="space-y-4 p-4">
         <DashboardWrapper>
-          <Breadcrumbs pages={pages} currentPage={params.holding} />
+          <Suspense fallback={null}>
+            <Breadcrumbs pages={pages} currentPage={params.holding} />
+          </Suspense>
           {/* Row 1 */}
           <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center justify-between">
             <div className="flex space-y-2 sm:space-y-0 gap-2 items-center">

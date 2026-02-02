@@ -9,7 +9,7 @@ import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { ActiveSwitch } from "@/components/ActiveSwitch";
 import { getPortfolioSummary } from "@/lib/api/portfolio";
 import { downloadAllHoldingsCSV } from "@/lib/api/csvDownloads";
@@ -82,7 +82,9 @@ export default function Page() {
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage="All Holdings" />
+        <Suspense fallback={null}>
+          <Breadcrumbs pages={pages} currentPage="All Holdings" />
+        </Suspense>
         {/* Row 1 */}
         <Card className="flex p-4 justify-between">
           <div className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">

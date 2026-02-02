@@ -10,6 +10,7 @@ import { formatDate, formatPortfolio } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
+import { Suspense } from "react";
 
 export default function Page() {
   const [view, setView] = useState("max");
@@ -62,7 +63,9 @@ export default function Page() {
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage="All Trades" />
+        <Suspense fallback={null}>
+          <Breadcrumbs pages={pages} currentPage="All Trades" />
+        </Suspense>
 
         {/* Row 1 */}
         <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">

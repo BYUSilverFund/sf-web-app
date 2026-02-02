@@ -102,7 +102,7 @@ export function FactorsBarChart({
             data={displayedData}
             layout="horizontal"
             barSize={60}
-            onClick={(e: any) => {
+            onClick={(e) => {
               if (!onFactorClick) return;
               const factor = e?.activePayload?.[0]?.payload?.factor;
               if (factor) onFactorClick(String(factor));

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { API_BASE_URL } from "@/lib/variables";
 import { FactorsDataTable } from "@/components/FactorsDataTable";
 import { FactorsBarChart } from "@/components/FactorsBarChart";
@@ -286,10 +286,12 @@ export default function FactorExposures() {
     <div className="lg:px-12 md:px-6 sm:px-0">
       <div className="space-y-4 sm:px-4 py-4">
         <div className="ml-5">
-          <Breadcrumbs
-            pages={pagesForBreadcrumbs}
-            currentPage={breadcrumbTitle}
-          />
+          <Suspense fallback={null}>
+            <Breadcrumbs
+              pages={pagesForBreadcrumbs}
+              currentPage={breadcrumbTitle}
+            />
+          </Suspense>
         </div>
         <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
           <div className="sm:flex  items-center justify-between w-full">
