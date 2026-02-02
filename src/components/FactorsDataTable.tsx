@@ -236,7 +236,7 @@ export function FactorsDataTable({
               className="max-w-sm"
             />
             {view !== undefined && onViewChange ? (
-              <div className="hidden sm:block">
+              <div className="block">
                 <ViewSelector
                   view={view}
                   onValueChange={(v) => onViewChange(v)}
