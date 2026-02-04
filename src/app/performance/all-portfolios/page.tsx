@@ -7,7 +7,7 @@ import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryResponse, FundRequest } from "@/lib/types";
 import { defaultEnd, defaultStart, formatDate } from "@/lib/utils";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { downloadAllPortfoliosCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 
@@ -41,7 +41,9 @@ export default function Page() {
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
-        <Breadcrumbs pages={pages} currentPage="All Portfolios" />
+        <Suspense fallback={null}>
+          <Breadcrumbs pages={pages} currentPage="All Portfolios" />
+        </Suspense>
         {/* Row 1 */}
         <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
           <ViewButton

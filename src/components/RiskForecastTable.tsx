@@ -26,7 +26,7 @@ export function RiskForecastTable({
   return (
     <Card className="rounded-xl border bg-card text-card-foreground shadow">
       <CardHeader className="pb-0">
-        <CardTitle className="text-lg text-center border-b pb-2">
+        <CardTitle className="text-lg text-left border-b pb-2">
           Risk Forecast
         </CardTitle>
       </CardHeader>

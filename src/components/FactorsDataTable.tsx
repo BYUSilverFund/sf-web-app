@@ -27,8 +27,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { NumRowSelector } from "./ChartControls";
-import { FactorData } from "@/app/factor-exposures/[fund]/page";
+import { NumRowSelector, ViewSelector } from "./ChartControls";
+import { FactorData } from "@/app/forecast/[fund]/page";
 
 export function formatExposures(
   n: number,
@@ -60,10 +60,7 @@ const absValueSortingFn = (
   return 0;
 };
 
-function buildColumns(
-  contributionMode = false,
-  maxIntLen = 1,
-): ColumnDef<FactorData>[] {
+function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
   return [
     {
       accessorKey: "factor",
@@ -128,6 +125,8 @@ export function FactorsDataTable({
   onFactorClick,
   contributionMode,
   headerTitle,
+  view,
+  onViewChange,
 }: {
   data: FactorData[];
   showTop?: number;
@@ -135,6 +134,8 @@ export function FactorsDataTable({
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
   headerTitle?: string;
+  view?: string;
+  onViewChange?: (v: string) => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -182,7 +183,7 @@ export function FactorsDataTable({
     return () => window.removeEventListener("resize", measure);
   }, [maxIntLen]);
 
-  const cols = buildColumns(contributionMode, maxIntLen);
+  const cols = buildColumns(contributionMode);
 
   const table = useReactTable({
     data,
@@ -209,7 +210,7 @@ export function FactorsDataTable({
   return (
     <Card
       className="sm:px-2"
-      style={{ ["--int-width-px" as any]: `${intWidthPx}px` }}
+      style={{ "--int-width-px": `${intWidthPx}px` } as React.CSSProperties}
     >
       <CardHeader className="">
         <div className="flex justify-between py-4 items-center">
@@ -231,6 +232,14 @@ export function FactorsDataTable({
               }
               className="max-w-sm"
             />
+            {view !== undefined && onViewChange ? (
+              <div className="block">
+                <ViewSelector
+                  view={view}
+                  onValueChange={(v) => onViewChange(v)}
+                />
+              </div>
+            ) : null}
             <NumRowSelector
               numRow={numRow}
               onValueChange={(v) => {

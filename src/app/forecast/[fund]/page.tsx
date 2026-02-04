@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { API_BASE_URL } from "@/lib/variables";
 import { FactorsDataTable } from "@/components/FactorsDataTable";
 import { FactorsBarChart } from "@/components/FactorsBarChart";
 import { useParams, useSearchParams } from "next/navigation";
-import { FundSelector, ViewSelector } from "@/components/ChartControls";
+import { FundSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatPortfolio } from "@/lib/utils";
@@ -31,8 +31,8 @@ export default function FactorExposures() {
   const [exposures, setExposures] = useState<FactorData[]>([]);
   const [detailData, setDetailData] = useState<FactorData[] | null>(null);
   const [detailLabel, setDetailLabel] = useState<string | null>(null);
-  const viewValue = searchParams.get("view") || "table";
-  const [view, setView] = useState<string>(viewValue ?? "table");
+  const viewValue = searchParams.get("view") || "bar-chart";
+  const [view, setView] = useState<string>(viewValue ?? "bar-chart");
   const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
   const fund = params.fund as string;
   const router = useRouter();
@@ -211,9 +211,7 @@ export default function FactorExposures() {
   ];
 
   function updateURLForFund(fundVal: string) {
-    router.push(
-      `/factor-exposures/${fundVal}?view=${view}&show_top=${showTop}`,
-    );
+    router.push(`/forecast/${fundVal}?view=${view}&show_top=${showTop}`);
   }
 
   function updateURLForView(viewVal: string) {
@@ -224,7 +222,7 @@ export default function FactorExposures() {
       ? `&holding=${encodeURIComponent(holdingParam)}`
       : "";
     router.push(
-      `/factor-exposures/${fund}?view=${viewVal}&show_top=${showTop}${f}${h}`,
+      `/forecast/${fund}?view=${viewVal}&show_top=${showTop}${f}${h}`,
     );
   }
 
@@ -235,19 +233,18 @@ export default function FactorExposures() {
     const h = holdingParam
       ? `&holding=${encodeURIComponent(holdingParam)}`
       : "";
-    router.push(`/factor-exposures/${fund}?view=${view}&show_top=${v}${f}${h}`);
+    router.push(`/forecast/${fund}?view=${view}&show_top=${v}${f}${h}`);
   }
 
   function openFactorView(factor: string) {
     router.push(
-      `/factor-exposures/${fund}/${encodeURIComponent(factor)}?view=${view}&show_top=${showTop}`,
+      `/forecast/${fund}/${encodeURIComponent(factor)}?view=${view}&show_top=${showTop}`,
     );
   }
 
   function openHoldingPage(holding: string) {
-    // Navigate to factor-exposures view for the holding (show factor exposures for a holding)
     router.push(
-      `/factor-exposures/${fund}?holding=${encodeURIComponent(
+      `/forecast/${fund}?holding=${encodeURIComponent(
         holding,
       )}&view=${view}&show_top=${showTop}`,
     );
@@ -264,16 +261,13 @@ export default function FactorExposures() {
 
   const pagesForBreadcrumbs =
     isFactorDetail || isHoldingDetail
-      ? [
-          ...pages,
-          { name: "Factor Exposures", href: `/factor-exposures/${fund}` },
-        ]
+      ? [...pages, { name: "Forecast", href: `/forecast/${fund}` }]
       : pages;
   const breadcrumbTitle = isFactorDetail
     ? `${detailLabel}`
     : isHoldingDetail
       ? `${detailLabel}`
-      : "Factor Exposures";
+      : "Forecast";
 
   const fundLabel = fund === "all_funds" ? "All Funds" : formatPortfolio(fund);
   let viewHeader = `Factor Exposures for ${fundLabel}`;
@@ -292,10 +286,12 @@ export default function FactorExposures() {
     <div className="lg:px-12 md:px-6 sm:px-0">
       <div className="space-y-4 sm:px-4 py-4">
         <div className="ml-5">
-          <Breadcrumbs
-            pages={pagesForBreadcrumbs}
-            currentPage={breadcrumbTitle}
-          />
+          <Suspense fallback={null}>
+            <Breadcrumbs
+              pages={pagesForBreadcrumbs}
+              currentPage={breadcrumbTitle}
+            />
+          </Suspense>
         </div>
         <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
           <div className="sm:flex  items-center justify-between w-full">
@@ -307,14 +303,16 @@ export default function FactorExposures() {
                 onValueChange={(v) => updateURLForFund(v)}
               />
             </div>
-            <div className="flex items-center gap-3">
-              <span>Display</span>
-              <ViewSelector
-                view={view}
-                onValueChange={(v) => updateURLForView(v)}
-              />
-            </div>
           </div>
+        </div>
+        <div className="sm:px6 py-4 mb-10 space-y-4">
+          <RiskForecastTable
+            forecast={riskForecast}
+            fundName={
+              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
+              "All Funds"
+            }
+          />
         </div>
         <div className="sm:mx-2">
           {detailData ? (
@@ -333,6 +331,8 @@ export default function FactorExposures() {
                   }
                   contributionMode={isFactorDetail}
                   headerTitle={viewHeader}
+                  view={view}
+                  onViewChange={(v) => updateURLForView(v)}
                 />
               ) : (
                 <FactorsBarChart
@@ -348,6 +348,8 @@ export default function FactorExposures() {
                   }
                   contributionMode={isFactorDetail}
                   headerTitle={viewHeader}
+                  view={view}
+                  onViewChange={(v) => updateURLForView(v)}
                 />
               )}
             </div>
@@ -360,6 +362,8 @@ export default function FactorExposures() {
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
                   headerTitle={viewHeader}
+                  view={view}
+                  onViewChange={(v) => updateURLForView(v)}
                 />
               ) : (
                 <FactorsBarChart
@@ -368,6 +372,8 @@ export default function FactorExposures() {
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
                   headerTitle={viewHeader}
+                  view={view}
+                  onViewChange={(v) => updateURLForView(v)}
                 />
               )}
             </>
@@ -384,15 +390,6 @@ export default function FactorExposures() {
               All holdings included
             </div>
           )}
-        </div>
-        <div className="sm:px6 py-4 mb-10 space-y-4">
-          <RiskForecastTable
-            forecast={riskForecast}
-            fundName={
-              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
-              "All Funds"
-            }
-          />
         </div>
       </div>
     </div>

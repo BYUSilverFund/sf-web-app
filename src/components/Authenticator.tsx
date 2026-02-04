@@ -81,7 +81,7 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
               onClick={signOut}
               className="inline-flex items-center gap-2 rounded-md border border-blue-900/20 bg-blue-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900/90"
             >
-              Sign out
+              Sign out ~{" "}
             </button>
           </div>
           {children}
