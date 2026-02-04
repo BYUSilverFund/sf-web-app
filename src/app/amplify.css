@@ -1,0 +1,108 @@
+/* Kill Amplify's default teal/blue everywhere */
+:root,
+[data-amplify-theme] {
+  --amplify-colors-font-interactive: #002e5d !important;
+  --amplify-colors-border-focus: #002e5d !important;
+
+  /* Brand ramp (Amplify uses these for active states) */
+  --amplify-colors-brand-primary-10: #002e5d !important;
+  --amplify-colors-brand-primary-80: #002e5d !important;
+  --amplify-colors-brand-primary-90: #002e5d !important;
+  --amplify-colors-brand-primary-100: #002e5d !important;
+}
+
+/* Tabs + that top bar line */
+.amplify-tabs {
+  border-bottom-color: #002e5d !important;
+}
+
+.amplify-tabs__item--active,
+.amplify-tabs__item[data-state="active"] {
+  color: #002e5d !important;
+  border-color: #002e5d !important;
+}
+
+/* The big "Sign In" title (Amplify headings can inherit interactive colors) */
+.amplify-heading {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Auth-only shell styling (does not affect authenticated pages) */
+.auth-shell {
+  margin: 48px auto;
+  width: 100%;
+  max-width: 32rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.auth-shell__logo {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 16px;
+}
+
+.auth-shell__note {
+  min-height: 2rem;
+  padding: 8px 24px 24px;
+  font-size: 0.875rem;
+  color: #475569;
+  text-align: center;
+}
+
+/* Remove Amplify's inner card styling so our outer wrapper is the only border */
+.auth-shell .amplify-authenticator,
+.auth-shell .amplify-authenticator__container,
+.auth-shell .amplify-authenticator__form,
+.auth-shell .amplify-authenticator__form-container,
+.auth-shell .amplify-authenticator__form-wrapper {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.auth-shell .amplify-card {
+  border: none !important;
+  box-shadow: none !important;
+  padding-top: 0 !important;
+  background: transparent !important;
+}
+
+/* Padding inside the auth shell */
+.auth-shell .amplify-authenticator__container,
+.auth-shell .amplify-authenticator__form {
+  padding: 24px !important;
+}
+
+.auth-shell .amplify-authenticator__form {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-bottom: 24px !important;
+}
+
+/* FORCE Amplify to match site navy exactly */
+.amplify-button--primary {
+  background-color: #002e5d !important;
+  border-color: #002e5d !important;
+}
+
+.amplify-button--primary:hover,
+.amplify-button--primary:focus {
+  background-color: #002e5d !important;
+  border-color: #002e5d !important;
+  opacity: 0.95;
+}
+
+/* Tabs (Sign In / Create Account underline + text) */
+.amplify-tabs-item[data-state="active"] {
+  color: #002e5d !important;
+  border-color: #002e5d !important;
+}
+
+/* Links (Forgot password) */
+.amplify-link {
+  color: #002e5d !important;
+}
