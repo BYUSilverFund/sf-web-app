@@ -4,6 +4,8 @@ import { Authenticator as AmplifyAuthenticator } from "@aws-amplify/ui-react";
 import { signUp, SignUpInput, signIn, SignInInput } from "aws-amplify/auth";
 import "@aws-amplify/ui-react/styles.css";
 import type React from "react";
+import "@/app/amplify.css";
+import "@/images/sf-logo-blue.png";
 
 function Authenticator({ children }: { children?: React.ReactNode }) {
   // frontend email domain check
@@ -49,17 +51,37 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
     <AmplifyAuthenticator
       services={services}
       formFields={formFields}
-      className="m-4"
+      className="auth-shell"
+      components={{
+        Header() {
+          return (
+            <div className="auth-shell__logo">
+              <img
+                src="/sf-logo-blue.png"
+                alt="BYU Silver Fund"
+                className="h-20 w-auto"
+              />
+            </div>
+          );
+        },
+        Footer() {
+          return (
+            <div className="auth-shell__note">
+              This login is not connected to your BYU account <br></br>Use your
+              @byu.edu email to sign up
+            </div>
+          );
+        },
+      }}
     >
       {({ signOut }) => (
         <>
-          <div className="text-right m-2 space-y-2">
-            <p>You are signed in</p>
+          <div className="flex justify-end px-6 py-3">
             <button
               onClick={signOut}
-              className="bg-blue-900 text-white p-2 rounded"
+              className="inline-flex items-center gap-2 rounded-md border border-blue-900/20 bg-blue-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900/90"
             >
-              Sign Out
+              Sign out ~{" "}
             </button>
           </div>
           {children}
