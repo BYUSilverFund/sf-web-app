@@ -52,19 +52,11 @@ function NavbarNav({ className }: NavbarProps) {
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
-        {/* display home or positions navbutton or both depending on which page we are on*/}
-        {["/", "/positions"].map((href) => (
-          <NavigationMenuItem key={href}>
-            {pathname !== href && (
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href={href}>{href === "/" ? "Home" : "Portfolio"}</Link>
-              </NavigationMenuLink>
-            )}
-          </NavigationMenuItem>
-        ))}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/">Home</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link href="/performance">Performance</Link>
