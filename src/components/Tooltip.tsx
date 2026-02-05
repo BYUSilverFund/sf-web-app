@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 
 type Props = {
-  icon?: React.ReactNode;
+  trigger?: React.ReactNode;
   description: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function Tooltip({
-  icon,
+  trigger,
   description,
   side = "top",
   align = "center",
@@ -32,7 +32,7 @@ export default function Tooltip({
             aria-label="info"
             className="text-sm text-muted-foreground"
           >
-            {icon}
+            {trigger}
           </button>
         </TooltipTrigger>
         <TooltipContent side={side} align={align} className={className}>

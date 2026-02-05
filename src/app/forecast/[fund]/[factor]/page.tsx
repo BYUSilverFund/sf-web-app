@@ -119,11 +119,17 @@ export default function FactorDetailPage() {
   ];
 
   const factorLabel = formatFactors(factor ?? "");
-  const viewHeader = `${factorLabel} Factor Drivers: Top Holdings`;
+
+  const viewHeader = (
+    <div className="inline-flex items-center gap-2">
+      <span className="text-lg text-foreground font-bold">{`${factorLabel} Factor Drivers: Top Holdings`}</span>
+      <InfoIcon size={16} />
+    </div>
+  );
 
   const headerTooltipElement = (
     <Tooltip
-      icon={<InfoIcon size={16} />}
+      trigger={viewHeader}
       description={
         <div className="max-w-md text-sm leading-relaxed">
           <p>
@@ -168,12 +174,7 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
-              headerTitle={
-                <>
-                  {viewHeader}
-                  {headerTooltipElement}
-                </>
-              }
+              headerTitle={<>{headerTooltipElement}</>}
               view={view}
               onViewChange={(v) => updateURLForView(v)}
             />
@@ -186,12 +187,7 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
-              headerTitle={
-                <>
-                  {viewHeader}
-                  {headerTooltipElement}
-                </>
-              }
+              headerTitle={<>{headerTooltipElement}</>}
               view={view}
               onViewChange={(v) => updateURLForView(v)}
             />

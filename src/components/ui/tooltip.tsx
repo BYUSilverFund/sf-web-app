@@ -5,7 +5,29 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
 
-const Tooltip = TooltipPrimitive.Root;
+const Tooltip = ({ children, openOnClick = true, ...props }: any) => {
+  const [open, setOpen] = React.useState(false);
+
+  const childrenWithClick = React.Children.map(children, (child: any) => {
+    if (!React.isValidElement(child)) return child;
+    if (child.type === TooltipTrigger && openOnClick) {
+      const userOnClick = (child.props as any)?.onClick;
+      return React.cloneElement(child as any, {
+        onClick: (e: any) => {
+          userOnClick?.(e);
+          setOpen((o: boolean) => !o);
+        },
+      });
+    }
+    return child;
+  });
+
+  return (
+    <TooltipPrimitive.Root open={open} onOpenChange={setOpen} {...props}>
+      {childrenWithClick}
+    </TooltipPrimitive.Root>
+  );
+};
 const TooltipProvider = TooltipPrimitive.Provider;
 const TooltipTrigger = TooltipPrimitive.Trigger;
 const TooltipPortal = TooltipPrimitive.Portal;

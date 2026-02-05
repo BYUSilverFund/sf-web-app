@@ -271,16 +271,19 @@ export default function FactorExposures() {
       : "Forecast";
 
   const fundLabel = fund === "all_funds" ? "All Funds" : formatPortfolio(fund);
-  let viewHeader = `Factor Exposures for ${fundLabel}`;
 
-  if (holdingParam) {
-    viewHeader = `Factor Exposures for ${holdingParam}`;
-  }
+  const viewHeader = (
+    <div className="inline-flex items-center gap-2">
+      <span className="text-lg text-foreground font-bold">{`Factor Exposures for ${holdingParam ?? fundLabel}`}</span>
+      <InfoIcon size={16} />
+    </div>
+  );
 
-  // Prepare Tooltip element (icon + description) to embed in the headerTitle
+  // Prepare Tooltip element (title + icon + description) to embed in the headerTitle
   const headerTooltipElement = (
     <Tooltip
-      icon={<InfoIcon size={16} />}
+      side="right"
+      trigger={viewHeader}
       description={
         <div className="max-w-md text-sm leading-relaxed space-y-2">
           {isHoldingDetail ? (
@@ -357,7 +360,6 @@ export default function FactorExposures() {
                   contributionMode={isFactorDetail}
                   headerTitle={
                     <div className="inline-flex items-center gap-2">
-                      <span>{viewHeader}</span>
                       {headerTooltipElement}
                     </div>
                   }
@@ -379,7 +381,6 @@ export default function FactorExposures() {
                   contributionMode={isFactorDetail}
                   headerTitle={
                     <div className="inline-flex items-center gap-2">
-                      <span>{viewHeader}</span>
                       {headerTooltipElement}
                     </div>
                   }
@@ -398,7 +399,6 @@ export default function FactorExposures() {
                   onFactorClick={(s) => openFactorView(s)}
                   headerTitle={
                     <div className="inline-flex items-center gap-2">
-                      <span>{viewHeader}</span>
                       {headerTooltipElement}
                     </div>
                   }
@@ -413,7 +413,6 @@ export default function FactorExposures() {
                   onFactorClick={(s) => openFactorView(s)}
                   headerTitle={
                     <div className="inline-flex items-center gap-2">
-                      <span>{viewHeader}</span>
                       {headerTooltipElement}
                     </div>
                   }
