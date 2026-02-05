@@ -285,14 +285,11 @@ export default function FactorExposures() {
         <div className="max-w-md text-sm leading-relaxed space-y-2">
           {isHoldingDetail ? (
             <>
+              <p>Measures the holding&apos;s exposure to market drivers.</p>
               <p>
-                <strong>Holding exposure:</strong> The exposure value for the
-                selected holding to each factor; positive means the holding
-                moves with the factor, negative means it moves inversely.
-              </p>
-              <p>
-                Values shown here are per-holding factor scores (not weighted by
-                portfolio weights) unless in attribution mode.
+                Represented as a factor beta; positive values indicate a
+                correlation with the factor, while negative values suggest an
+                inverse relationship.
               </p>
             </>
           ) : (
