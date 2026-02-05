@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import Tooltip from "@/components/Tooltip";
+import { InfoIcon } from "lucide-react";
 import { API_BASE_URL } from "@/lib/variables";
 import { FactorsDataTable } from "@/components/FactorsDataTable";
 import { FactorsBarChart } from "@/components/FactorsBarChart";
@@ -117,7 +119,21 @@ export default function FactorDetailPage() {
   ];
 
   const factorLabel = formatFactors(factor ?? "");
-  const viewHeader = `Holding Contributions to ${factorLabel}`;
+  const viewHeader = `${factorLabel} Factor Drivers: Top Holdings`;
+
+  const headerTooltipElement = (
+    <Tooltip
+      icon={<InfoIcon size={16} />}
+      description={
+        <div className="max-w-md text-sm leading-relaxed">
+          <p>
+            Shows each holding&apos;s percent contribution to the fund&apos;s
+            total {factorLabel} exposure.
+          </p>
+        </div>
+      }
+    />
+  );
 
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
@@ -152,7 +168,12 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
-              headerTitle={viewHeader}
+              headerTitle={
+                <>
+                  {viewHeader}
+                  {headerTooltipElement}
+                </>
+              }
               view={view}
               onViewChange={(v) => updateURLForView(v)}
             />
@@ -165,7 +186,12 @@ export default function FactorDetailPage() {
                 fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
               }
               contributionMode={true}
-              headerTitle={viewHeader}
+              headerTitle={
+                <>
+                  {viewHeader}
+                  {headerTooltipElement}
+                </>
+              }
               view={view}
               onViewChange={(v) => updateURLForView(v)}
             />

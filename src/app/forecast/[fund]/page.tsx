@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import Tooltip from "@/components/Tooltip";
+import { InfoIcon } from "lucide-react";
 import { API_BASE_URL } from "@/lib/variables";
 import { FactorsDataTable } from "@/components/FactorsDataTable";
 import { FactorsBarChart } from "@/components/FactorsBarChart";
@@ -8,7 +10,6 @@ import { FundSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { formatPortfolio } from "@/lib/utils";
-import { formatFactors } from "@/components/FactorsDataTable";
 import { fetchAuthSession } from "aws-amplify/auth";
 import {
   getFundRiskForecast,
@@ -271,16 +272,43 @@ export default function FactorExposures() {
 
   const fundLabel = fund === "all_funds" ? "All Funds" : formatPortfolio(fund);
   let viewHeader = `Factor Exposures for ${fundLabel}`;
-  if (isFactorDetail) {
-    const factorLabel = formatFactors(detailLabel ?? factorParam ?? "");
-    if (fund !== "all_funds") {
-      viewHeader = `Holding Contributions to ${factorLabel} in ${fundLabel}`;
-    } else {
-      viewHeader = `Factor Exposures for ${factorLabel}`;
-    }
-  } else if (isHoldingDetail) {
-    viewHeader = `Factor Exposures for ${detailLabel ?? holdingParam}`;
+
+  if (holdingParam) {
+    viewHeader = `Factor Exposures for ${holdingParam}`;
   }
+
+  // Prepare Tooltip element (icon + description) to embed in the headerTitle
+  const headerTooltipElement = (
+    <Tooltip
+      icon={<InfoIcon size={16} />}
+      description={
+        <div className="max-w-md text-sm leading-relaxed space-y-2">
+          {isHoldingDetail ? (
+            <>
+              <p>
+                <strong>Holding exposure:</strong> The exposure value for the
+                selected holding to each factor; positive means the holding
+                moves with the factor, negative means it moves inversely.
+              </p>
+              <p>
+                Values shown here are per-holding factor scores (not weighted by
+                portfolio weights) unless in attribution mode.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>Measures the portfolio&apos;s exposure to market drivers.</p>
+              <p>
+                Represented as a factor beta; positive values indicate a
+                correlation with the factor, while negative values suggest an
+                inverse relationship.
+              </p>
+            </>
+          )}
+        </div>
+      }
+    />
+  );
 
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
@@ -330,7 +358,12 @@ export default function FactorExposures() {
                       : (s) => openFactorView(s)
                   }
                   contributionMode={isFactorDetail}
-                  headerTitle={viewHeader}
+                  headerTitle={
+                    <div className="inline-flex items-center gap-2">
+                      <span>{viewHeader}</span>
+                      {headerTooltipElement}
+                    </div>
+                  }
                   view={view}
                   onViewChange={(v) => updateURLForView(v)}
                 />
@@ -347,7 +380,12 @@ export default function FactorExposures() {
                       : (s) => openFactorView(s)
                   }
                   contributionMode={isFactorDetail}
-                  headerTitle={viewHeader}
+                  headerTitle={
+                    <div className="inline-flex items-center gap-2">
+                      <span>{viewHeader}</span>
+                      {headerTooltipElement}
+                    </div>
+                  }
                   view={view}
                   onViewChange={(v) => updateURLForView(v)}
                 />
@@ -361,7 +399,12 @@ export default function FactorExposures() {
                   showTop={showTop}
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
-                  headerTitle={viewHeader}
+                  headerTitle={
+                    <div className="inline-flex items-center gap-2">
+                      <span>{viewHeader}</span>
+                      {headerTooltipElement}
+                    </div>
+                  }
                   view={view}
                   onViewChange={(v) => updateURLForView(v)}
                 />
@@ -371,7 +414,12 @@ export default function FactorExposures() {
                   showTop={showTop}
                   setShowTop={(v) => updateURLForShowTop(v)}
                   onFactorClick={(s) => openFactorView(s)}
-                  headerTitle={viewHeader}
+                  headerTitle={
+                    <div className="inline-flex items-center gap-2">
+                      <span>{viewHeader}</span>
+                      {headerTooltipElement}
+                    </div>
+                  }
                   view={view}
                   onViewChange={(v) => updateURLForView(v)}
                 />
