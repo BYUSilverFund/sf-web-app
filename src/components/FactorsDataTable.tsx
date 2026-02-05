@@ -193,7 +193,7 @@ export function FactorsDataTable({
         const text = "0".repeat(maxIntLen);
         const w = Math.ceil(ctx.measureText(text).width) + 2; // small padding
         setIntWidthPx(w);
-      } catch (e) {
+      } catch {
         // ignore
       }
     };

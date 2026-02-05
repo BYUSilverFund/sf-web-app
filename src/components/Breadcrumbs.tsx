@@ -37,7 +37,7 @@ export function Breadcrumbs({
         if (view) url.searchParams.set("view", view);
         if (showTop) url.searchParams.set("show_top", showTop as string);
         return `${url.pathname}${url.search}${url.hash}`;
-      } catch (e) {
+      } catch {
         // fallback: try to append manually
         const parts = href.split("#");
         const pathAndQuery = parts[0];

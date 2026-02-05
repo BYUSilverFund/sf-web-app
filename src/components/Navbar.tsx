@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Background } from "@/components/Background";
 
 import { cn } from "@/lib/utils";
@@ -48,7 +47,6 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 function NavbarNav({ className }: NavbarProps) {
-  const pathname = usePathname(); // Get the current route
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>

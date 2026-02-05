@@ -116,11 +116,12 @@ export function FactorsBarChart({
               cursor={true}
               content={
                 <ChartTooltipContent
-                  formatter={(value: number) =>
-                    contributionMode
-                      ? `${formatExposures(value * 100, 2, true)}%`
-                      : formatExposures(value, 2, true)
-                  }
+                  formatter={(value) => {
+                    const num = Number(value ?? 0);
+                    return contributionMode
+                      ? `${formatExposures(num * 100, 2, true)}%`
+                      : formatExposures(num, 2, true);
+                  }}
                 />
               }
               labelFormatter={(v: string) =>
@@ -151,11 +152,12 @@ export function FactorsBarChart({
                 offset={6}
                 className="font-bold fill-foreground"
                 fontSize={10}
-                formatter={(v: number) =>
-                  contributionMode
-                    ? `${formatExposures(v * 100, 2, true)}%`
-                    : formatExposures(v, 2, true)
-                }
+                formatter={(v: string) => {
+                  const num = Number(v ?? 0);
+                  return contributionMode
+                    ? `${formatExposures(num * 100, 2, true)}%`
+                    : formatExposures(num, 2, true);
+                }}
               />
             </Bar>
             <XAxis
