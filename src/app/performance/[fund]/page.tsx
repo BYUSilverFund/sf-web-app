@@ -28,7 +28,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DashboardWrapper } from "@/components/DashboardWrapper";
 import { downloadPortfolioCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
-import { FactorExposuresButton } from "@/components/FactorExposuresButton";
+import { FactorExposuresButton } from "@/components/forecast/FactorExposuresButton";
 
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();

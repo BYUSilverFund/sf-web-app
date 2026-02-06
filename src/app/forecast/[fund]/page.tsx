@@ -1,21 +1,19 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
-import { API_BASE_URL } from "@/lib/variables";
-import { FactorsDataTable } from "@/components/FactorsDataTable";
-import { FactorsBarChart } from "@/components/FactorsBarChart";
+import React, { useState, Suspense } from "react";
+import ForecastHeader from "@/components/forecast/ForecastHeader";
+import ForecastView from "@/components/forecast/ForecastView";
+import { useExposures } from "@/components/forecast/hooks/useExposures";
+import { useDetailData } from "@/components/forecast/hooks/useDetailData";
+import { useRiskForecast } from "@/components/forecast/hooks/useRiskForecast";
 import { useParams, useSearchParams } from "next/navigation";
 import { FundSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Card } from "@/components/ui/card";
+import Tooltip from "@/components/Tooltip";
+import { InfoIcon } from "lucide-react";
 import { formatPortfolio } from "@/lib/utils";
-import { formatFactors } from "@/components/FactorsDataTable";
-import { fetchAuthSession } from "aws-amplify/auth";
-import {
-  getFundRiskForecast,
-  getAllFundsRiskForecast,
-} from "@/lib/api/riskForecast";
-import { RiskForecastTable } from "@/components/RiskForecastTable";
-import { RiskForecast } from "@/lib/types";
+import { RiskForecastTable } from "@/components/forecast/RiskForecastTable";
 
 export interface FactorData {
   factor: string;
@@ -28,178 +26,25 @@ export default function FactorExposures() {
   const initialShowTop =
     parseInt(searchParams.get("show_top") || "10", 10) || 10;
   const [showTop, setShowTop] = useState<number>(initialShowTop);
-  const [exposures, setExposures] = useState<FactorData[]>([]);
-  const [detailData, setDetailData] = useState<FactorData[] | null>(null);
-  const [detailLabel, setDetailLabel] = useState<string | null>(null);
+
   const viewValue = searchParams.get("view") || "bar-chart";
   const [view, setView] = useState<string>(viewValue ?? "bar-chart");
-  const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
+  const factorParam = searchParams.get("factor");
+  const holdingParam = searchParams.get("holding");
   const fund = params.fund as string;
   const router = useRouter();
 
-  const factorParam = searchParams.get("factor");
-  const holdingParam = searchParams.get("holding");
-
-  //risk forecast state
-  const [riskForecast, setRiskForecast] = useState<RiskForecast | undefined>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const session = await fetchAuthSession();
-        const token = session.tokens?.accessToken?.toString();
-        const response = await fetch(
-          `${API_BASE_URL}factor-exposures/${fund}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = await response.json();
-        const exposuresObj = data?.exposures ?? {};
-        const exposureData = Object.entries(exposuresObj)
-          .map(([key, value]) => ({
-            factor: String(key),
-            exposure: Number(value),
-          }))
-          .sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
-        setExposures(exposureData);
-        setExcludedHoldings(data?.positions_not_in_exposures ?? []);
-      } catch (err) {
-        console.error("Failed fetching exposures:", err);
-      }
-    };
-    fetchData();
-  }, [fund]);
-
-  useEffect(() => {
-    const fetchFactorData = async () => {
-      // if a factor query param is present, fetch holdings contributing to that factor
-      if (factorParam) {
-        const f = factorParam;
-        try {
-          const session = await fetchAuthSession();
-          const token = session.tokens?.accessToken?.toString();
-          const response = await fetch(
-            `${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(f)}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
-          const data = await response.json();
-          const src =
-            data?.positions ?? data?.holdings ?? data?.exposures ?? data;
-          let arr: FactorData[] = [];
-          if (Array.isArray(src)) {
-            arr = src.map((item: unknown) => {
-              if (Array.isArray(item)) {
-                const name = item[0];
-                const val = item[1];
-                return {
-                  factor: String(name ?? ""),
-                  exposure: Number(val ?? 0),
-                };
-              }
-              if (item && typeof item === "object") {
-                const it = item as Record<string, unknown>;
-                const name = it.name ?? it.holding ?? it.factor ?? "";
-                const exposure = it.exposure ?? it.value ?? 0;
-                return { factor: String(name), exposure: Number(exposure) };
-              }
-              return { factor: String(item ?? ""), exposure: 0 };
-            });
-          } else if (src && typeof src === "object") {
-            arr = Object.entries(src).map(([k, v]) => ({
-              factor: String(k),
-              exposure: Number(v as unknown as number | string),
-            }));
-          }
-          arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
-          setDetailData(arr);
-          setDetailLabel(f);
-        } catch (err) {
-          console.error("Failed fetching factor details:", err);
-        }
-        return;
-      }
-
-      // if a holding query param is present, fetch factor exposures for that holding
-      if (holdingParam) {
-        const h = holdingParam;
-        try {
-          const session = await fetchAuthSession();
-          const token = session.tokens?.accessToken?.toString();
-          const response = await fetch(
-            `${API_BASE_URL}factor-exposures/holdings/${encodeURIComponent(h)}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
-          const data = await response.json();
-          const src = data?.exposures ?? data?.factors ?? data;
-          let arr: FactorData[] = [];
-          if (Array.isArray(src)) {
-            arr = src.map((item: unknown) => {
-              if (Array.isArray(item)) {
-                const name = item[0];
-                const val = item[1];
-                return {
-                  factor: String(name ?? ""),
-                  exposure: Number(val ?? 0),
-                };
-              }
-              if (item && typeof item === "object") {
-                const it = item as Record<string, unknown>;
-                const name = it.name ?? it.factor ?? it.holding ?? "";
-                const exposure = it.exposure ?? it.value ?? 0;
-                return { factor: String(name), exposure: Number(exposure) };
-              }
-              return { factor: String(item ?? ""), exposure: 0 };
-            });
-          } else if (src && typeof src === "object") {
-            arr = Object.entries(src).map(([k, v]) => ({
-              factor: String(k),
-              exposure: Number(v as unknown as number | string),
-            }));
-          }
-          arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
-          setDetailData(arr);
-          setDetailLabel(h);
-        } catch (err) {
-          console.error("Failed fetching holding factors:", err);
-        }
-        return;
-      }
-
-      // otherwise clear detail view
-      setDetailData(null);
-      setDetailLabel(null);
-    };
-    fetchFactorData();
-  }, [factorParam, holdingParam, fund]);
-
-  // fetch risk forecast
-  useEffect(() => {
-    async function fetchRiskForecast() {
-      try {
-        const data =
-          fund === "all_funds"
-            ? await getAllFundsRiskForecast()
-            : await getFundRiskForecast(fund);
-        setRiskForecast(data);
-      } catch (error) {
-        console.error("Failed fetching risk forecast:", error);
-        setRiskForecast(undefined);
-      }
-    }
-
-    fetchRiskForecast();
-  }, [fund]);
+  const {
+    exposures,
+    excludedHoldings,
+    loading: exposuresLoading,
+  } = useExposures(fund);
+  const { detailData, detailLabel } = useDetailData(
+    fund,
+    factorParam,
+    holdingParam,
+  );
+  const { riskForecast } = useRiskForecast(fund);
 
   const fundKeys = [
     "all_funds",
@@ -211,7 +56,7 @@ export default function FactorExposures() {
   ];
 
   function updateURLForFund(fundVal: string) {
-    router.push(`/forecast/${fundVal}?view=${view}&show_top=${showTop}`);
+    router.push(`/forecast/${fundVal}`);
   }
 
   function updateURLForView(viewVal: string) {
@@ -270,17 +115,32 @@ export default function FactorExposures() {
       : "Forecast";
 
   const fundLabel = fund === "all_funds" ? "All Funds" : formatPortfolio(fund);
-  let viewHeader = `Factor Exposures for ${fundLabel}`;
-  if (isFactorDetail) {
-    const factorLabel = formatFactors(detailLabel ?? factorParam ?? "");
-    if (fund !== "all_funds") {
-      viewHeader = `Holding Contributions to ${factorLabel} in ${fundLabel}`;
-    } else {
-      viewHeader = `Factor Exposures for ${factorLabel}`;
-    }
-  } else if (isHoldingDetail) {
-    viewHeader = `Factor Exposures for ${detailLabel ?? holdingParam}`;
-  }
+
+  const headerTooltipElement = (
+    <ForecastHeader
+      fundLabel={fundLabel}
+      holdingParam={holdingParam}
+      isHoldingDetail={isHoldingDetail}
+      side="right"
+    />
+  );
+
+  const tooltipDescription = (
+    <div className="max-w-xs text-sm">
+      <p className="mb-1 font-semibold">Risk models coverage</p>
+      <p>
+        Our risk models contain US-based stocks. Some holdings may not have risk
+        forecasts - they are excluded from calculations.
+      </p>
+    </div>
+  );
+
+  const makeTrigger = (label: React.ReactNode) => (
+    <div className="flex items-center gap-2">
+      {label}
+      <InfoIcon size={16} />
+    </div>
+  );
 
   return (
     <div className="lg:px-12 md:px-6 sm:px-0">
@@ -305,91 +165,87 @@ export default function FactorExposures() {
             </div>
           </div>
         </div>
-        <div className="sm:px6 py-4 mb-10 space-y-4">
-          <RiskForecastTable
-            forecast={riskForecast}
-            fundName={
-              (fund === "all_funds" ? "All Funds" : formatPortfolio(fund)) ??
-              "All Funds"
-            }
-          />
-        </div>
-        <div className="sm:mx-2">
-          {detailData ? (
-            <div>
-              {view === "table" ? (
-                <FactorsDataTable
-                  data={detailData}
-                  showTop={showTop}
-                  setShowTop={(v) => updateURLForShowTop(v)}
-                  onFactorClick={
-                    isFactorDetail
-                      ? fund !== "all_funds"
-                        ? (s) => openHoldingPage(s)
-                        : undefined
-                      : (s) => openFactorView(s)
-                  }
-                  contributionMode={isFactorDetail}
-                  headerTitle={viewHeader}
-                  view={view}
-                  onViewChange={(v) => updateURLForView(v)}
+        <div className="sm:flex sm:items-start sm:gap-6">
+          <div className="sm:flex-1 sm:mx-2">
+            <Card className="p-0">
+              <div className="sm:mx-2 p-4">
+                {detailData ? (
+                  <div>
+                    <ForecastView
+                      data={detailData}
+                      showTop={showTop}
+                      setShowTop={(v) => updateURLForShowTop(v)}
+                      onFactorClick={
+                        isFactorDetail
+                          ? fund !== "all_funds"
+                            ? (s) => openHoldingPage(s)
+                            : undefined
+                          : (s) => openFactorView(s)
+                      }
+                      contributionMode={isFactorDetail}
+                      headerTitle={headerTooltipElement}
+                      view={view}
+                      onViewChange={(v) => updateURLForView(v)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {exposuresLoading ? (
+                      <div className="p-6">
+                        <div className="animate-pulse space-y-4">
+                          <div className="h-6 w-1/3 bg-muted rounded" />
+                          <div className="h-40 bg-muted rounded" />
+                        </div>
+                      </div>
+                    ) : (
+                      <ForecastView
+                        data={exposures}
+                        showTop={showTop}
+                        setShowTop={(v) => updateURLForShowTop(v)}
+                        onFactorClick={(s) => openFactorView(s)}
+                        contributionMode={isFactorDetail}
+                        headerTitle={headerTooltipElement}
+                        view={view}
+                        onViewChange={(v) => updateURLForView(v)}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            </Card>
+            <div className="flex flex-col gap-2 items-center m-2 p-2">
+              {excludedHoldings && excludedHoldings.length > 0 ? (
+                <Tooltip
+                  trigger={makeTrigger(
+                    <>
+                      <span className="text-sm">
+                        <strong>
+                          Excluded holdings ({excludedHoldings.length}):
+                        </strong>{" "}
+                        {excludedHoldings.join(", ")}
+                      </span>
+                    </>,
+                  )}
+                  description={tooltipDescription}
+                  side="top"
                 />
               ) : (
-                <FactorsBarChart
-                  chartData={detailData}
-                  showTop={showTop}
-                  setShowTop={(v) => updateURLForShowTop(v)}
-                  onFactorClick={
-                    isFactorDetail
-                      ? fund !== "all_funds"
-                        ? (s) => openHoldingPage(s)
-                        : undefined
-                      : (s) => openFactorView(s)
-                  }
-                  contributionMode={isFactorDetail}
-                  headerTitle={viewHeader}
-                  view={view}
-                  onViewChange={(v) => updateURLForView(v)}
+                <Tooltip
+                  trigger={makeTrigger(
+                    <span className="text-sm text-muted-foreground">
+                      All holdings included
+                    </span>,
+                  )}
+                  description={tooltipDescription}
+                  side="top"
                 />
               )}
             </div>
-          ) : (
-            <>
-              {view === "table" ? (
-                <FactorsDataTable
-                  data={exposures}
-                  showTop={showTop}
-                  setShowTop={(v) => updateURLForShowTop(v)}
-                  onFactorClick={(s) => openFactorView(s)}
-                  headerTitle={viewHeader}
-                  view={view}
-                  onViewChange={(v) => updateURLForView(v)}
-                />
-              ) : (
-                <FactorsBarChart
-                  chartData={exposures}
-                  showTop={showTop}
-                  setShowTop={(v) => updateURLForShowTop(v)}
-                  onFactorClick={(s) => openFactorView(s)}
-                  headerTitle={viewHeader}
-                  view={view}
-                  onViewChange={(v) => updateURLForView(v)}
-                />
-              )}
-            </>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 items-center m-2 p-2">
-          {excludedHoldings && excludedHoldings.length > 0 ? (
-            <div className="text-sm">
-              <strong>Excluded holdings ({excludedHoldings.length}):</strong>{" "}
-              {excludedHoldings.join(", ")}
-            </div>
-          ) : (
-            <div className="text-sm text-muted-foreground">
-              All holdings included
-            </div>
-          )}
+          </div>
+
+          <div className="w-72">
+            <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
+          </div>
         </div>
       </div>
     </div>

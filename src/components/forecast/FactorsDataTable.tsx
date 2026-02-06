@@ -26,9 +26,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { NumRowSelector, ViewSelector } from "./ChartControls";
+import { CardContent, CardHeader } from "@/components/ui/card";
+import { NumRowSelector, ViewSelector } from "../ChartControls";
 import { FactorData } from "@/app/forecast/[fund]/page";
+// headerTitle now accepts JSX (ReactNode) which can include a tooltip
 
 export function formatExposures(
   n: number,
@@ -92,7 +93,7 @@ function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
             >
-              {contributionMode ? "Contribution" : "Exposure"}
+              {contributionMode ? "Contribution (%)" : "Exposure"}
               <ArrowUpDown />
             </Button>
           </div>
@@ -100,6 +101,22 @@ function buildColumns(contributionMode = false): ColumnDef<FactorData>[] {
       },
       cell: ({ row }) => {
         const exposure = parseFloat(row.getValue("exposure"));
+        if (contributionMode) {
+          const percent = exposure * 100;
+          const formatted = formatExposures(percent, 2);
+          const parts = String(formatted).split(".");
+          const intPart = parts[0] ?? "0";
+          const fracPart = parts[1] ?? "00";
+          return (
+            <div className="font-medium w-[120px] flex justify-center items-center">
+              <span className="min-w-[var(--int-width-px)] inline-block text-right">
+                {intPart}
+              </span>
+              <span className="inline-block">.{fracPart}</span>
+              <span className="inline-block ml-1">%</span>
+            </div>
+          );
+        }
         const formatted = formatExposures(exposure);
         const parts = String(formatted).split(".");
         const intPart = parts[0] ?? "0";
@@ -133,7 +150,7 @@ export function FactorsDataTable({
   setShowTop?: (v: number) => void;
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
-  headerTitle?: string;
+  headerTitle?: React.ReactNode;
   view?: string;
   onViewChange?: (v: string) => void;
 }) {
@@ -151,12 +168,14 @@ export function FactorsDataTable({
   const maxIntLen = React.useMemo(() => {
     let max = 1;
     for (const d of data) {
-      const formatted = formatExposures(d.exposure);
+      const formatted = contributionMode
+        ? formatExposures(d.exposure * 100, 2)
+        : formatExposures(d.exposure);
       const intPart = String(formatted).split(".")[0] ?? "0";
       if (intPart.length > max) max = intPart.length;
     }
     return max;
-  }, [data]);
+  }, [data, contributionMode]);
 
   const [intWidthPx, setIntWidthPx] = useState<number>(0);
 
@@ -174,7 +193,7 @@ export function FactorsDataTable({
         const text = "0".repeat(maxIntLen);
         const w = Math.ceil(ctx.measureText(text).width) + 2; // small padding
         setIntWidthPx(w);
-      } catch (e) {
+      } catch {
         // ignore
       }
     };
@@ -208,7 +227,7 @@ export function FactorsDataTable({
   }, [numRow, table, data.length]);
 
   return (
-    <Card
+    <div
       className="sm:px-2"
       style={{ "--int-width-px": `${intWidthPx}px` } as React.CSSProperties}
     >
@@ -216,7 +235,9 @@ export function FactorsDataTable({
         <div className="flex justify-between py-4 items-center">
           <div className="flex items-center gap-4">
             {headerTitle ? (
-              <h2 className="text-lg font-semibold">{headerTitle}</h2>
+              <div className="inline-flex items-center gap-2 whitespace-nowrap text-lg font-semibold">
+                {headerTitle}
+              </div>
             ) : null}
           </div>
           <div className="flex items-center gap-2">
@@ -323,6 +344,6 @@ export function FactorsDataTable({
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

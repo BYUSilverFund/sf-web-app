@@ -85,7 +85,6 @@ export async function downloadHoldingCSV(
   request: HoldingDownloadRequest,
 ): Promise<Blob> {
   try {
-    const { fund, ticker, ...timeRange } = request;
     return await postCsv("holding/fund/ticker/csv", request);
   } catch (error) {
     console.error("Database Error:", error);

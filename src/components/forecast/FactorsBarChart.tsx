@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { TopNSelector, ViewSelector } from "./ChartControls";
+import { TopNSelector, ViewSelector } from "../ChartControls";
 import { FactorData } from "@/app/forecast/[fund]/page";
 import { formatExposures, formatFactors } from "./FactorsDataTable";
 
@@ -41,7 +41,7 @@ export function FactorsBarChart({
   setShowTop?: (v: number) => void;
   onFactorClick?: (factor: string) => void;
   contributionMode?: boolean;
-  headerTitle?: string;
+  headerTitle?: React.ReactNode;
   // optional chart controls
   view?: string;
   onViewChange?: (v: string) => void;
@@ -70,12 +70,14 @@ export function FactorsBarChart({
     : chartConfig;
 
   return (
-    <Card className="background-muted h-[700px]">
+    <div className="h-[700px]">
       <CardHeader>
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-4">
             {headerTitle ? (
-              <h2 className="text-lg font-semibold">{headerTitle}</h2>
+              <div className="inline-flex items-center gap-2 whitespace-nowrap text-lg font-semibold">
+                {headerTitle}
+              </div>
             ) : null}
           </div>
           <div className="flex items-center gap-2">
@@ -112,7 +114,16 @@ export function FactorsBarChart({
             <CartesianGrid vertical={true} />
             <ChartTooltip
               cursor={true}
-              content={<ChartTooltipContent />}
+              content={
+                <ChartTooltipContent
+                  formatter={(value) => {
+                    const num = Number(value ?? 0);
+                    return contributionMode
+                      ? `${formatExposures(num * 100, 2, true)}%`
+                      : formatExposures(num, 2, true);
+                  }}
+                />
+              }
               labelFormatter={(v: string) =>
                 contributionMode ? String(v) : formatFactors(String(v))
               }
@@ -141,7 +152,12 @@ export function FactorsBarChart({
                 offset={6}
                 className="font-bold fill-foreground"
                 fontSize={10}
-                formatter={(v: number) => formatExposures(v, 2, true)}
+                formatter={(v: string) => {
+                  const num = Number(v ?? 0);
+                  return contributionMode
+                    ? `${formatExposures(num * 100, 2, true)}%`
+                    : formatExposures(num, 2, true);
+                }}
               />
             </Bar>
             <XAxis
@@ -159,7 +175,7 @@ export function FactorsBarChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 

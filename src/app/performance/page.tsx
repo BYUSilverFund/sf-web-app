@@ -28,7 +28,7 @@ import { getDateFromView } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 import { downloadAllFundsCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
-import { FactorExposuresButton } from "@/components/FactorExposuresButton";
+import { FactorExposuresButton } from "@/components/forecast/FactorExposuresButton";
 
 export default function Page() {
   const [view, setView] = useState("cohort");

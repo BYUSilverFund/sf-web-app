@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Background } from "@/components/Background";
 
 import { cn } from "@/lib/utils";
@@ -48,23 +47,14 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 function NavbarNav({ className }: NavbarProps) {
-  const pathname = usePathname(); // Get the current route
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
-        {/* display home or positions navbutton or both depending on which page we are on*/}
-        {["/", "/positions"].map((href) => (
-          <NavigationMenuItem key={href}>
-            {pathname !== href && (
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href={href}>{href === "/" ? "Home" : "Portfolio"}</Link>
-              </NavigationMenuLink>
-            )}
-          </NavigationMenuItem>
-        ))}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/">Home</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link href="/performance">Performance</Link>

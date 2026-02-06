@@ -76,14 +76,14 @@ function Authenticator({ children }: { children?: React.ReactNode }) {
     >
       {({ signOut }) => (
         <>
-          <div className="flex justify-end px-6 py-3">
+          {/* <div className="flex justify-end px-6 py-3">
             <button
               onClick={signOut}
               className="inline-flex items-center gap-2 rounded-md border border-blue-900/20 bg-blue-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900/90"
             >
-              Sign out ~{" "}
+              Sign out{" "}
             </button>
-          </div>
+          </div> */}
           {children}
         </>
       )}
