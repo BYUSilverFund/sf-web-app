@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { TopNSelector, ViewSelector } from "./ChartControls";
+import { TopNSelector, ViewSelector } from "../ChartControls";
 import { FactorData } from "@/app/forecast/[fund]/page";
 import { formatExposures, formatFactors } from "./FactorsDataTable";
 
@@ -70,7 +70,7 @@ export function FactorsBarChart({
     : chartConfig;
 
   return (
-    <Card className="background-muted h-[700px]">
+    <div className="h-[700px]">
       <CardHeader>
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-4">
@@ -175,7 +175,7 @@ export function FactorsBarChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 

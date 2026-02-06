@@ -26,8 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { NumRowSelector, ViewSelector } from "./ChartControls";
+import { CardContent, CardHeader } from "@/components/ui/card";
+import { NumRowSelector, ViewSelector } from "../ChartControls";
 import { FactorData } from "@/app/forecast/[fund]/page";
 // headerTitle now accepts JSX (ReactNode) which can include a tooltip
 
@@ -227,7 +227,7 @@ export function FactorsDataTable({
   }, [numRow, table, data.length]);
 
   return (
-    <Card
+    <div
       className="sm:px-2"
       style={{ "--int-width-px": `${intWidthPx}px` } as React.CSSProperties}
     >
@@ -344,6 +344,6 @@ export function FactorsDataTable({
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

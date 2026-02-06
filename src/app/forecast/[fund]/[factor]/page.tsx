@@ -1,19 +1,18 @@
 "use client";
-import React, { useEffect, useState, Suspense } from "react";
-import Tooltip from "@/components/Tooltip";
-import { InfoIcon } from "lucide-react";
-import { API_BASE_URL } from "@/lib/variables";
-import { FactorsDataTable } from "@/components/FactorsDataTable";
-import { FactorsBarChart } from "@/components/FactorsBarChart";
+import React, { useState, Suspense } from "react";
+import ForecastHeader from "@/components/forecast/ForecastHeader";
+import ForecastView from "@/components/forecast/ForecastView";
+import { useDetailData } from "@/components/forecast/hooks/useDetailData";
+import { useRiskForecast } from "@/components/forecast/hooks/useRiskForecast";
+import { RiskForecastTable } from "@/components/forecast/RiskForecastTable";
+import { Card } from "@/components/ui/card";
 import { useParams, useSearchParams } from "next/navigation";
 import { FundSelector } from "@/components/ChartControls";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { formatFactors } from "@/components/FactorsDataTable";
+import { formatFactors } from "@/components/forecast/FactorsDataTable";
 
-type DetailRow = { factor: string; exposure: number };
 import { formatPortfolio } from "@/lib/utils";
-import { fetchAuthSession } from "aws-amplify/auth";
 
 export default function FactorDetailPage() {
   const params = useParams() as { fund: string; factor: string };
@@ -26,54 +25,9 @@ export default function FactorDetailPage() {
   const fund = params.fund as string;
   const factor = params.factor as string;
   const router = useRouter();
-  const [detailData, setDetailData] = useState<DetailRow[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const session = await fetchAuthSession();
-        const token = session.tokens?.accessToken?.toString();
-        const response = await fetch(
-          `${API_BASE_URL}factor-exposures/${fund}/${encodeURIComponent(factor)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = await response.json();
-        const src =
-          data?.positions ?? data?.holdings ?? data?.exposures ?? data;
-        let arr: DetailRow[] = [];
-        if (Array.isArray(src)) {
-          arr = src.map((item: unknown) => {
-            if (Array.isArray(item)) {
-              const name = item[0];
-              const val = item[1];
-              return { factor: String(name ?? ""), exposure: Number(val ?? 0) };
-            }
-            if (item && typeof item === "object") {
-              const it = item as Record<string, unknown>;
-              const name = it.name ?? it.holding ?? it.factor ?? "";
-              const exposure = it.exposure ?? it.value ?? 0;
-              return { factor: String(name), exposure: Number(exposure) };
-            }
-            return { factor: String(item ?? ""), exposure: 0 };
-          });
-        } else if (src && typeof src === "object") {
-          arr = Object.entries(src).map(([k, v]) => ({
-            factor: String(k),
-            exposure: Number(v as unknown as number | string),
-          }));
-        }
-        arr = arr.sort((a, b) => Math.abs(b.exposure) - Math.abs(a.exposure));
-        setDetailData(arr);
-      } catch (err) {
-        console.error("Failed fetching factor details:", err);
-      }
-    };
-    fetchData();
-  }, [fund, factor]);
+  const { detailData } = useDetailData(fund, factor, null);
+  const { riskForecast } = useRiskForecast(fund);
 
   function updateURLForFund(fundVal: string) {
     router.push(`/forecast/${fundVal}`);
@@ -120,16 +74,11 @@ export default function FactorDetailPage() {
 
   const factorLabel = formatFactors(factor ?? "");
 
-  const viewHeader = (
-    <div className="inline-flex items-center gap-2">
-      <span className="text-lg text-foreground font-bold">{`${factorLabel} Factor Drivers: Top Holdings`}</span>
-      <InfoIcon size={16} />
-    </div>
-  );
+  const fundLabel = formatPortfolio(fund);
 
   const headerTooltipElement = (
-    <Tooltip
-      trigger={viewHeader}
+    <ForecastHeader
+      title={`${factorLabel} Factor Drivers: Top Holdings`}
       description={
         <div className="max-w-md text-sm leading-relaxed">
           <p>
@@ -164,34 +113,48 @@ export default function FactorDetailPage() {
             </div>
           </div>
         </div>
-        <div className="sm:mx-2">
-          {view === "table" ? (
-            <FactorsDataTable
-              data={detailData}
-              showTop={showTop}
-              setShowTop={(v) => updateURLForShowTop(v)}
-              onFactorClick={
-                fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
-              }
-              contributionMode={true}
-              headerTitle={<>{headerTooltipElement}</>}
-              view={view}
-              onViewChange={(v) => updateURLForView(v)}
-            />
-          ) : (
-            <FactorsBarChart
-              chartData={detailData}
-              showTop={showTop}
-              setShowTop={(v) => updateURLForShowTop(v)}
-              onFactorClick={
-                fund !== "all_funds" ? (s) => openHoldingPage(s) : undefined
-              }
-              contributionMode={true}
-              headerTitle={<>{headerTooltipElement}</>}
-              view={view}
-              onViewChange={(v) => updateURLForView(v)}
-            />
-          )}
+        <div className="sm:flex sm:items-start sm:gap-6">
+          <div className="sm:flex-1 sm:mx-2">
+            <Card className="p-0">
+              <div className="sm:mx-2 p-4">
+                {view === "table" ? (
+                  <ForecastView
+                    data={detailData ?? []}
+                    showTop={showTop}
+                    setShowTop={(v) => updateURLForShowTop(v)}
+                    onFactorClick={
+                      fund !== "all_funds"
+                        ? (s) => openHoldingPage(s)
+                        : undefined
+                    }
+                    contributionMode={true}
+                    headerTitle={headerTooltipElement}
+                    view={view}
+                    onViewChange={(v) => updateURLForView(v)}
+                  />
+                ) : (
+                  <ForecastView
+                    data={detailData ?? []}
+                    showTop={showTop}
+                    setShowTop={(v) => updateURLForShowTop(v)}
+                    onFactorClick={
+                      fund !== "all_funds"
+                        ? (s) => openHoldingPage(s)
+                        : undefined
+                    }
+                    contributionMode={true}
+                    headerTitle={headerTooltipElement}
+                    view={view}
+                    onViewChange={(v) => updateURLForView(v)}
+                  />
+                )}
+              </div>
+            </Card>
+          </div>
+
+          <div className="w-72">
+            <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
+          </div>
         </div>
       </div>
     </div>
