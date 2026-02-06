@@ -70,7 +70,7 @@ export function FactorsBarChart({
     : chartConfig;
 
   return (
-    <div className="h-[700px]">
+    <div className="h-auto">
       <CardHeader>
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-4">
@@ -97,7 +97,7 @@ export function FactorsBarChart({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="h-5/6">
+      <CardContent className="h-auto">
         <ChartContainer config={chartConfigEffective} className="h-full w-full">
           <BarChart
             accessibilityLayer

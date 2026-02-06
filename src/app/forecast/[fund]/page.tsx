@@ -167,8 +167,8 @@ export default function FactorExposures() {
         </div>
         <div className="sm:flex sm:items-start sm:gap-6">
           <div className="sm:flex-1 sm:mx-2">
-            <Card className="p-0">
-              <div className="sm:mx-2 p-4">
+            <Card className="p-0 m-0">
+              <div className="">
                 {detailData ? (
                   <div>
                     <ForecastView

@@ -116,7 +116,7 @@ export default function FactorDetailPage() {
         <div className="sm:flex sm:items-start sm:gap-6">
           <div className="sm:flex-1 sm:mx-2">
             <Card className="p-0">
-              <div className="sm:mx-2 p-4">
+              <div className="sm:mx-2 p-1">
                 {view === "table" ? (
                   <ForecastView
                     data={detailData ?? []}
