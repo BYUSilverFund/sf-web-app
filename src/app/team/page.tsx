@@ -69,25 +69,25 @@ const BioTab: React.FC = () => {
         />
         <TeamBio
           name="Brandon Bates"
-          img="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=17907"
+          img="https://marriott.byu.edu/msbadmin/securefile/empphoto?pid=17907"
           bio="Brandon Bates is a seasoned portfolio manager for global macro, equity, and volatility hedge fund strategies. In his present role as Head of Systematic Macro at Magnetar Capital, he focuses on quantitative investment strategies across all asset classes that leverage fundamental economic insights and exploit persistent market frictions and behavioral biases. His efforts join data science methods with economic theory. Previously, he was a member of the hedge fund portfolio management teams at Squarepoint Capital and BlackRock (legacy Barclays Global Investors team). He is an advisor for Cambridge University's MFin Practicum on foreign-exchange and volatility investing and a frequent guest lecturer at the Yale School of Management teaching active foreign exchange investing. Brandon received AM and PhD degrees in financial economics from Harvard University."
           team="Advisor"
         />
         <TeamBio
           name="Brian Boyer"
-          img="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=5290"
+          img="https://marriott.byu.edu/msbadmin/securefile/empphoto?pid=5290"
           bio="Brian Boyer is an associate professor of finance at Brigham Young University. His research covers a broad range of topics including style investing and index effects, financial contagion, preferences for lottery-like assets in stocks and options, the performance of private equity in secondary markets, and the relative performance and estimation of factor models. His papers have appeared in leading academic journals including the Journal of Finance and the Review of Financial Studies. He helped establish and continues to organize the annual BYU Red Rock Conference, a respected academic gathering that brings together leading researchers in financial economics each year. The conference has been recognized among the top finance conferences in terms of academic quality. Brian holds a PhD in financial economics from the University of Michigan."
           team="Advisor"
         />
         <TeamBio
           name="James Fletcher"
-          img="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=90202"
+          img="https://marriott.byu.edu/msbadmin/securefile/empphoto?pid=90202"
           bio="James Fletcher is an experienced Emerging Markets portfolio manager with a strong history of top quartile fund performance. He is the founder and Chief Investment Officer of Ethos Investment Management. Previously, James was based in Hong Kong as the Director & Senior Portfolio Manager of the EM SMID Cap fund at APG Asset Management, one of the largest EM SMID cap funds in the world. James was previously the Lead Portfolio Manager at Kayne Anderson Rudnick's EM Small Cap fund and worked as a Senior Analyst at Westwood Global Investments. James is Founder and President of the Board of Directors for Young Investors Society which serves over 3000 high schools around the world. James is a frequent poster on LinkedIn with thousands of followers. He holds a BA degree in finance from Brigham Young University and is a CFA charter holder."
           team="Advisor"
         />
         <TeamBio
           name="Ian Wright"
-          img="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=24423"
+          img="https://marriott.byu.edu/msbadmin/securefile/empphoto?pid=24423"
           bio="Ian Wright is an assistant professor in the finance department at Brigham Young University where he is the undergraduate finance program director. He is also a visiting professor at the University of Chicago, where he teaches macro finance in the masters of financial math program. Prior to coming to BYU, he was a quantitative macro investor in a £20bn fund at BlackRock in London, where he invested across asset classes and regions. Preceding that he was an Executive Director in the asset allocation research group in the macro department at Goldman Sachs in London. Ian graduated with his Ph.D. from the Department of Economics at Stanford University, where he served as a research assistant to the Working Group on Economic Policy at the Hoover Institution and was a co-editor of the book Government Policies and the Delayed Economic Recovery."
           team="Advisor"
         />
