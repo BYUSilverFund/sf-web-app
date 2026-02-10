@@ -94,7 +94,7 @@ const Chip: React.FC<ChipProps> = ({ text, href }) => {
 const ChipsContainer = () => {
   return (
     <div className="flex flex-row justify-center flex-wrap my-6">
-      <Chip text="Investments" href="/positions" />
+      <Chip text="Performance" href="/performance" />
       <Chip text="How to join" href="/about" />
       <Chip text="Alumni Placements" href="/alumni" />
     </div>
@@ -171,7 +171,7 @@ const ScrollAnimation = () => {
         className="flex flex-col text-center h-full text-blue-900  w-full"
         style={{ transform: `translateY(${scrollY * -0.05}px)` }}
       >
-        <span className="sm:title text-3xl">$4.5M</span>
+        <span className="sm:title text-3xl">$5M</span>
         <span className="lg:pl-10 pl-5 text">Portfolio</span>
       </div>
       <div
