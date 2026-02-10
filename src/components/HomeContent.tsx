@@ -94,7 +94,7 @@ const Chip: React.FC<ChipProps> = ({ text, href }) => {
 const ChipsContainer = () => {
   return (
     <div className="flex flex-row justify-center flex-wrap my-6">
-      <Chip text="Performance" href="/performance" />
+      <Chip text="Fund Performance" href="/performance" />
       <Chip text="How to join" href="/about" />
       <Chip text="Alumni Placements" href="/alumni" />
     </div>

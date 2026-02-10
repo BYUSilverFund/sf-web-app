@@ -11,6 +11,11 @@ import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
 // Undergraduate images
 import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
 import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
+// fund advisor images
+import BrandonBates from "@/images/fund-advisors/brandon-bates.jpg";
+import BrianBoyer from "@/images/fund-advisors/brian-boyer.jpg";
+import JamesFletcher from "@/images/fund-advisors/james-fletcher.jpg";
+import IanWright from "@/images/fund-advisors/ian-wright.jpg";
 
 const TeamContainer: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Presidents");
@@ -90,22 +95,10 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
       )}
       {activeTab === "Advisors" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3vw] md:gap-[2vw] mb-16">
-          <TeamCard
-            headShot="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=17907"
-            name="Brandon Bates"
-          />
-          <TeamCard
-            headShot="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=5290"
-            name="Brian Boyer"
-          />
-          <TeamCard
-            headShot="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=90202"
-            name="James Fletcher"
-          />
-          <TeamCard
-            headShot="https://marriott.byu.edu/msmadmin/securefile/empphoto?pid=24423"
-            name="Ian Wright"
-          />
+          <TeamCard headShot={BrandonBates.src} name="Brandon Bates" />
+          <TeamCard headShot={BrianBoyer.src} name="Brian Boyer" />
+          <TeamCard headShot={JamesFletcher.src} name="James Fletcher" />
+          <TeamCard headShot={IanWright.src} name="Ian Wright" />
         </div>
       )}
     </div>
