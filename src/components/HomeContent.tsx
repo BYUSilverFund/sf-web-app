@@ -8,14 +8,14 @@ import { SquareSvgBr, SquareSvgTl, SquareSvgTr } from "./SquareSvg";
 // import packages
 import gsap from "gsap"; // for animations
 // images import for the positions
-import CCCSLogo from "@logo/CCCS.png";
+import GOOGLogo from "@logo/GOOG.png";
+import COKELogo from "@logo/COKE.png";
+import AAPLLogo from "@logo/AAPL.png";
+import NVDALogo from "@logo/NVDA.png";
+import CELHLogo from "@logo/CELH.png";
 import RMDLogo from "@logo/RMD.png";
-import MODGLogo from "@logo/MODG.png";
-import CAKELogo from "@logo/CAKE.png";
-import RSGLogo from "@logo/RSG.png";
-import NFLXLogo from "@logo/NFLX.png";
-import MELILogo from "@logo/MELI.png";
-import VIKLogo from "@logo/VIK.png";
+import MALogo from "@logo/MA.png";
+import APHLogo from "@logo/APH.png";
 
 export default function HomeContent() {
   return (
@@ -94,7 +94,7 @@ const Chip: React.FC<ChipProps> = ({ text, href }) => {
 const ChipsContainer = () => {
   return (
     <div className="flex flex-row justify-center flex-wrap my-6">
-      <Chip text="Investments" href="/positions" />
+      <Chip text="Fund Performance" href="/performance" />
       <Chip text="How to join" href="/about" />
       <Chip text="Alumni Placements" href="/alumni" />
     </div>
@@ -171,7 +171,7 @@ const ScrollAnimation = () => {
         className="flex flex-col text-center h-full text-blue-900  w-full"
         style={{ transform: `translateY(${scrollY * -0.05}px)` }}
       >
-        <span className="sm:title text-3xl">$4.5M</span>
+        <span className="sm:title text-3xl">$5M</span>
         <span className="lg:pl-10 pl-5 text">Portfolio</span>
       </div>
       <div
@@ -189,14 +189,14 @@ const Investments = () => {
   return (
     <div className="flex flex-wrap w-[80%] justify-center m-8">
       <InvContainer>
-        <InvestmentCard logo={CCCSLogo} ticker="CCCS" />
-        <InvestmentCard logo={MODGLogo} ticker="MODG" />
+        <InvestmentCard logo={GOOGLogo} ticker="GOOG" />
+        <InvestmentCard logo={COKELogo} ticker="COKE" />
+        <InvestmentCard logo={AAPLLogo} ticker="AAPL" />
+        <InvestmentCard logo={NVDALogo} ticker="NVDA" />
+        <InvestmentCard logo={CELHLogo} ticker="CELH" />
         <InvestmentCard logo={RMDLogo} ticker="RMD" />
-        <InvestmentCard logo={CAKELogo} ticker="CAKE" />
-        <InvestmentCard logo={RSGLogo} ticker="RSG" />
-        <InvestmentCard logo={MELILogo} ticker="MELI" />
-        <InvestmentCard logo={VIKLogo} ticker="VIK" />
-        <InvestmentCard logo={NFLXLogo} ticker="NFLX" />
+        <InvestmentCard logo={MALogo} ticker="MA" />
+        <InvestmentCard logo={APHLogo} ticker="APH" />
       </InvContainer>
     </div>
   );
