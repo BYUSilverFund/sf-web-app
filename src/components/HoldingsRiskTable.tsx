@@ -5,7 +5,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  getPaginationRowModel, // 👈 add
+  getPaginationRowModel,
   useReactTable,
   type ColumnDef,
   type SortingState,
@@ -105,10 +105,10 @@ export function HoldingsRiskTable({ holdings }: { holdings: HoldingRisk[] }) {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(), // 👈 pagination
+    getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 10, // show 10 per page
+        pageSize: 10,
       },
     },
   });
