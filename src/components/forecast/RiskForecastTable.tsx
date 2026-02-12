@@ -46,7 +46,11 @@ export function RiskForecastTable({
     <Card className="bg-gray border-none shadow-none text-card-foreground">
       <CardHeader className="pb-0">
         <CardTitle className="text-lg text-left border-b pb-2">
-          {fundName ? `${fundName} Risk Forecast` : "Risk Forecast"}
+          {forecast?.ticker
+            ? `${forecast.ticker} Risk Forecast`
+            : fundName
+              ? `${fundName} Risk Forecast`
+              : "Risk Forecast"}
         </CardTitle>
       </CardHeader>
 
@@ -58,19 +62,23 @@ export function RiskForecastTable({
             value={forecast ? forecast.beta.toFixed(2) : undefined}
           />
           <MetricCard
-            title="Variance"
-            loading={loading}
-            value={
-              forecast ? `${(forecast.variance * 100).toFixed(2)}%` : undefined
-            }
-          />
-          <MetricCard
             title="Volatility"
             loading={loading}
             value={
               forecast
                 ? `${(forecast.volatility * 100).toFixed(2)}%`
                 : undefined
+            }
+          />
+          <MetricCard
+            title={forecast?.ticker ? "Portfolio Weight" : "Tracking Error"}
+            loading={loading}
+            value={
+              !forecast
+                ? undefined
+                : forecast.ticker
+                  ? `${(forecast.fund_weight! * 100).toFixed(2)}%`
+                  : `${(forecast.tracking_error * 100).toFixed(2)}%`
             }
           />
         </div>
