@@ -25,10 +25,10 @@ export default function ForecastHeader({
     title ?? `Factor Exposures for ${holdingParam ?? fundLabel ?? ""}`;
 
   const trigger = (
-    <div className="inline-flex items-center gap-2">
+    <>
       <span className="text-lg text-foreground font-bold">{computedTitle}</span>
       <InfoIcon size={16} />
-    </div>
+    </>
   );
 
   const defaultDescription = (

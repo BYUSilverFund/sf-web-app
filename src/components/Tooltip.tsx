@@ -30,7 +30,7 @@ export default function Tooltip({
           <button
             type="button"
             aria-label="info"
-            className="text-sm text-muted-foreground"
+            className="text-sm text-muted-foreground inline-flex items-center gap-1 cursor-help whitespace-nowrap"
           >
             {trigger}
           </button>

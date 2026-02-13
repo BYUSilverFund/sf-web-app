@@ -41,10 +41,10 @@ export function PortfolioSummaryTable({
     return (
       <Tooltip
         trigger={
-          <span className="inline-flex items-center gap-1 cursor-help whitespace-nowrap">
+          <>
             {label}
             <InfoIcon size={14} className="text-muted-foreground" />
-          </span>
+          </>
         }
         description={description}
         side="top"
