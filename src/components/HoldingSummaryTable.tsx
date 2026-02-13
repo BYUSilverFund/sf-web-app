@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/table";
 
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
+import Tooltip from "./Tooltip";
+import { InfoIcon } from "lucide-react";
+import * as React from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
+import { calculateSummaryMetrics } from "@/lib/RealizedVsAnnualizedCalculations";
 
 export function HoldingSummaryTable({
   ticker,
@@ -20,18 +27,65 @@ export function HoldingSummaryTable({
   holdingSummary: HoldingSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
 }) {
+  const makeHeader = (label: string, description?: React.ReactNode) => {
+    if (description === undefined) return <span>{label}</span>;
+    return (
+      <Tooltip
+        trigger={
+          <>
+            {label}
+            <InfoIcon size={14} className="text-muted-foreground" />
+          </>
+        }
+        description={description}
+        side="top"
+      />
+    );
+  };
+  // false = Realized, true = Annualized
+  const [annualized, setAnnualized] = React.useState(false);
+  const { fundVol, fundAlpha, benchVol } = calculateSummaryMetrics(
+    annualized,
+    holdingSummary,
+    benchmarkSummary,
+  );
+  const columns = [
+    "Value",
+    "Total Return",
+    "Volatility",
+    "Dividends",
+    "Dividend Yield",
+    "Alpha",
+    "Beta",
+  ] as const;
+  const headerTooltips = getHeaderTooltips(annualized, columns);
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead></TableHead>
-          <TableHead>Value</TableHead>
-          <TableHead>Total Return</TableHead>
-          <TableHead>Volatility</TableHead>
-          <TableHead>Dividends</TableHead>
-          <TableHead>Dividend Yield</TableHead>
-          <TableHead>Alpha</TableHead>
-          <TableHead>Beta</TableHead>
+          <TableHead className="align-middle whitespace-nowrap">
+            <div className="flex items-center gap-2">
+              <Label
+                htmlFor="annualized-toggle-holding"
+                className="text-xs text-muted-foreground"
+              >
+                Realized
+              </Label>
+              <Switch
+                id="annualized-toggle-holding"
+                checked={annualized}
+                onCheckedChange={setAnnualized}
+              />
+              <Label htmlFor="annualized-toggle-holding" className="text-xs">
+                Annualized
+              </Label>
+            </div>
+          </TableHead>
+          {columns.map((label) => (
+            <TableHead key={label} className="whitespace-nowrap align-middle">
+              {makeHeader(label, headerTooltips[label])}
+            </TableHead>
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,24 +97,28 @@ export function HoldingSummaryTable({
               <TableCell>
                 {formatPercent(holdingSummary.total_return)}
               </TableCell>
-              <TableCell>{formatPercent(holdingSummary.volatility)}</TableCell>
+              <TableCell>
+                {formatPercent(fundVol ?? holdingSummary.volatility)}
+              </TableCell>
               <TableCell>{formatCurrency(holdingSummary.dividends)}</TableCell>
               <TableCell>
                 {formatPercent(holdingSummary.dividend_yield)}
               </TableCell>
-              <TableCell>{formatPercent(holdingSummary.alpha)}</TableCell>
+              <TableCell>
+                {formatPercent(fundAlpha ?? holdingSummary.alpha)}
+              </TableCell>
               <TableCell>{formatFloat(holdingSummary.beta)}</TableCell>
             </>
           ) : (
             <>
               <TableCell>{ticker}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
             </>
           )}
         </TableRow>
@@ -75,7 +133,7 @@ export function HoldingSummaryTable({
                 {formatPercent(benchmarkSummary.total_return)}
               </TableCell>
               <TableCell>
-                {formatPercent(benchmarkSummary.volatility)}
+                {formatPercent(benchVol ?? benchmarkSummary.volatility)}
               </TableCell>
               <TableCell>
                 {formatCurrency(benchmarkSummary.dividends_per_share)}
@@ -83,8 +141,8 @@ export function HoldingSummaryTable({
               <TableCell>
                 {formatPercent(benchmarkSummary.dividend_yield)}
               </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell />
+              <TableCell />
             </>
           ) : (
             <>

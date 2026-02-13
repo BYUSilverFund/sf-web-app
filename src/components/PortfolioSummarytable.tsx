@@ -19,6 +19,14 @@ import {
   formatPortfolio,
 } from "@/lib/utils";
 
+import Tooltip from "./Tooltip";
+import { InfoIcon } from "lucide-react";
+import * as React from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
+import { calculateSummaryMetrics } from "@/lib/RealizedVsAnnualizedCalculations";
+
 export function PortfolioSummaryTable({
   portfolio,
   portfolioSummary,
@@ -28,21 +36,75 @@ export function PortfolioSummaryTable({
   portfolioSummary: PortfolioSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
 }) {
+  const makeHeader = (label: string, description?: React.ReactNode) => {
+    if (description === undefined) return <span>{label}</span>;
+    return (
+      <Tooltip
+        trigger={
+          <>
+            {label}
+            <InfoIcon size={14} className="text-muted-foreground" />
+          </>
+        }
+        description={description}
+        side="top"
+      />
+    );
+  };
+  // false = Realized, true = Annualized
+  const [annualized, setAnnualized] = React.useState(false);
+
+  const columns = [
+    "Value",
+    "Total Return",
+    "Volatility",
+    "Sharpe Ratio",
+    "Dividends",
+    "Dividend Yield",
+    "Alpha",
+    "Beta",
+    "Tracking Error",
+    "Information Ratio",
+  ] as const;
+
+  const headerTooltips = getHeaderTooltips(annualized, columns);
+  const {
+    fundVol,
+    fundSharpe,
+    fundAlpha,
+    fundTE,
+    fundIR,
+    benchVol,
+    benchSharpe,
+  } = calculateSummaryMetrics(annualized, portfolioSummary, benchmarkSummary);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead></TableHead>
-          <TableHead>Value</TableHead>
-          <TableHead>Total Return</TableHead>
-          <TableHead>Volatility</TableHead>
-          <TableHead>Sharpe Ratio</TableHead>
-          <TableHead>Dividends</TableHead>
-          <TableHead>Dividend Yield</TableHead>
-          <TableHead>Alpha</TableHead>
-          <TableHead>Beta</TableHead>
-          <TableHead>Tracking Error</TableHead>
-          <TableHead>Information Ratio</TableHead>
+          <TableHead className="align-middle whitespace-nowrap">
+            <div className="flex items-center gap-2">
+              <Label
+                htmlFor="annualized-toggle-portfolio"
+                className="text-xs text-muted-foreground"
+              >
+                Realized
+              </Label>
+              <Switch
+                id="annualized-toggle-portfolio"
+                checked={annualized}
+                onCheckedChange={setAnnualized}
+              />
+              <Label htmlFor="annualized-toggle-portfolio" className="text-xs">
+                Annualized
+              </Label>
+            </div>
+          </TableHead>
+          {columns.map((label) => (
+            <TableHead key={label} className="whitespace-nowrap align-middle">
+              {makeHeader(label, headerTooltips[label])}
+            </TableHead>
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -54,32 +116,26 @@ export function PortfolioSummaryTable({
               <TableCell>
                 {formatPercent(portfolioSummary.total_return)}
               </TableCell>
-              <TableCell>
-                {formatPercent(portfolioSummary.volatility)}
-              </TableCell>
-              <TableCell>
-                {formatFloat(portfolioSummary.sharpe_ratio)}
-              </TableCell>
+              <TableCell>{formatPercent(fundVol ?? 0)}</TableCell>
+              <TableCell>{formatFloat(fundSharpe ?? 0)}</TableCell>
               <TableCell>
                 {formatCurrency(portfolioSummary.dividends)}
               </TableCell>
               <TableCell>
                 {formatPercent(portfolioSummary.dividend_yield)}
               </TableCell>
-              <TableCell>{formatPercent(portfolioSummary.alpha)}</TableCell>
+              <TableCell>{formatPercent(fundAlpha ?? 0)}</TableCell>
               <TableCell>{formatFloat(portfolioSummary.beta)}</TableCell>
+              <TableCell>{formatPercent(fundTE ?? 0)}</TableCell>
               <TableCell>
-                {formatPercent(portfolioSummary.tracking_error)}
-              </TableCell>
-              <TableCell>
-                {formatFloat(portfolioSummary.information_ratio)}
+                {fundIR !== undefined ? formatFloat(fundIR) : ""}
               </TableCell>
             </>
           )}
         </TableRow>
         <TableRow>
           <TableCell>Benchmark</TableCell>
-          {benchmarkSummary && (
+          {benchmarkSummary ? (
             <>
               <TableCell>
                 {formatCurrency(benchmarkSummary.adjusted_close)}
@@ -88,10 +144,10 @@ export function PortfolioSummaryTable({
                 {formatPercent(benchmarkSummary.total_return)}
               </TableCell>
               <TableCell>
-                {formatPercent(benchmarkSummary.volatility)}
+                {formatPercent(benchVol ?? benchmarkSummary.volatility)}
               </TableCell>
               <TableCell>
-                {formatFloat(benchmarkSummary.sharpe_ratio)}
+                {formatFloat(benchSharpe ?? benchmarkSummary.sharpe_ratio)}
               </TableCell>
               <TableCell>
                 {formatCurrency(benchmarkSummary.dividends_per_share)}
@@ -99,12 +155,19 @@ export function PortfolioSummaryTable({
               <TableCell>
                 {formatPercent(benchmarkSummary.dividend_yield)}
               </TableCell>
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
+            </>
+          ) : (
+            <>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
             </>
           )}
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
         </TableRow>
       </TableBody>
     </Table>

@@ -8,7 +8,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,74 +19,73 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TradesResponse } from "@/lib/types";
-import { TradesRecord } from "@/lib/types";
+
+import Tooltip from "./Tooltip";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
+import { TradesResponse, TradesRecord } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
+
+const makeHeader = (label: string, description?: React.ReactNode) => {
+  if (description === undefined) return <span>{label}</span>;
+  return (
+    <Tooltip
+      trigger={
+        <>
+          {label}
+          <InfoIcon size={14} className="text-muted-foreground" />
+        </>
+      }
+      description={description}
+      side="top"
+    />
+  );
+};
+
+const sortableHeader = (
+  label: string,
+  description: React.ReactNode | undefined,
+  column: any,
+) => (
+  <div className="flex items-center gap-1 whitespace-nowrap">
+    {makeHeader(label, description)}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6 p-0"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      <ArrowUpDown className="h-4 w-4" />
+    </Button>
+  </div>
+);
+
+const tooltipColumns = ["Date", "Type", "Shares", "Price", "Value"] as const;
+const shared = getHeaderTooltips(true, tooltipColumns);
 
 export const tradeColumns: ColumnDef<TradesRecord>[] = [
   {
     accessorKey: "date",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Date", shared["Date"], column),
     cell: ({ row }) => <div>{row.getValue("date")}</div>,
   },
   {
     accessorKey: "type",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Type
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Type", shared["Type"], column),
     cell: ({ row }) => <div>{row.getValue("type")}</div>,
   },
   {
     accessorKey: "shares",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Shares
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Shares", shared["Shares"], column),
     cell: ({ row }) => <div>{row.getValue("shares")}</div>,
   },
   {
     accessorKey: "price",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Price
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Price", shared["Price"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
   },
   {
     accessorKey: "value",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Value
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Value", shared["Value"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
   },
 ];
@@ -160,7 +159,6 @@ export function AllTradesDataTable({
             </TableBody>
           </Table>
         </div>
-
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="text-muted-foreground flex-1 text-sm">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
