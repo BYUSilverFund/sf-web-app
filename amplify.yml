@@ -10,6 +10,8 @@ frontend:
         - echo "NEXT_PUBLIC_COGNITO_REGION=$COGNITO_REGION" >> .env.production
         - echo "NEXT_PUBLIC_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" >> .env.production
         - echo "NEXT_PUBLIC_COGNITO_APP_CLIENT_ID=$COGNITO_APP_CLIENT_ID" >> .env.production
+        - echo "NEXT_PUBLIC_GRAPHQL_ENDPOINT=$GRAPHQL_ENDPOINT" >> .env.production
+        - echo "NEXT_PUBLIC_GRAPHQL_API_KEY=$GRAPHQL_API_KEY" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next/
