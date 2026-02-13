@@ -13,7 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,194 +30,151 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AllHoldingsRecord, PortfolioSummaryResponse } from "@/lib/types";
 
+import Tooltip from "./Tooltip";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
+import { AllHoldingsRecord, PortfolioSummaryResponse } from "@/lib/types";
 import { formatPercent, formatCurrency, formatFloat } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
+const makeHeader = (label: string, description?: React.ReactNode) => {
+  if (description === undefined) return <span>{label}</span>;
+  return (
+    <Tooltip
+      trigger={
+        <span className="inline-flex items-center gap-1 cursor-help whitespace-nowrap">
+          {label}
+          <InfoIcon size={14} className="text-muted-foreground" />
+        </span>
+      }
+      description={description}
+      side="top"
+    />
+  );
+};
+const sortableHeader = (
+  label: string,
+  description: React.ReactNode | undefined,
+  column: any,
+) => (
+  <div className="flex items-center gap-1">
+    {makeHeader(label, description)}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6 p-0"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      <ArrowUpDown className="h-4 w-4" />
+    </Button>
+  </div>
+);
+const tooltipColumns = [
+  "Ticker",
+  "Shares",
+  "Price",
+  "Value",
+  "Weight",
+  "Total Return",
+  "Volatility",
+  "Alpha",
+  "Beta",
+  "Dividends",
+  "Per Share",
+  "Total",
+  "Active",
+] as const;
+
+// Realized
+const shared = getHeaderTooltips(false, tooltipColumns);
+const headerTooltips: Record<string, React.ReactNode | undefined> = {
+  Ticker: shared["Ticker"],
+  Shares: shared["Shares"],
+  Price: shared["Price"],
+  Value: shared["Value"],
+  Weight: shared["Weight"],
+  Return: shared["Total Return"],
+  Volatility: shared["Volatility"],
+  Alpha: shared["Alpha"],
+  Beta: shared["Beta"],
+  Dividends: shared["Dividends"],
+  "Per Share": shared["Per Share"],
+  Total: shared["Total"],
+  Active: shared["Active"],
+};
 export const columns: ColumnDef<AllHoldingsRecord>[] = [
   {
     accessorKey: "ticker",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Ticker
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Ticker", headerTooltips["Ticker"], column),
     cell: ({ row }) => <div>{row.getValue("ticker")}</div>,
   },
-
   {
     accessorKey: "shares",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Shares
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Shares", headerTooltips["Shares"], column),
     cell: ({ row }) => <div>{row.getValue("shares")}</div>,
   },
   {
     accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Price", headerTooltips["Price"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
   },
   {
     accessorKey: "value",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Value
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Value", headerTooltips["Value"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
   },
   {
     accessorKey: "percent_fund",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Weight
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Weight", headerTooltips["Weight"], column),
     cell: ({ row }) => <div>{formatPercent(row.getValue("percent_fund"))}</div>,
   },
   {
     accessorKey: "total_return",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Return
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Return", headerTooltips["Return"], column),
     cell: ({ row }) => <div>{formatPercent(row.getValue("total_return"))}</div>,
   },
   {
     accessorKey: "volatility",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Volatility
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Volatility", headerTooltips["Volatility"], column),
     cell: ({ row }) => <div>{formatPercent(row.getValue("volatility"))}</div>,
   },
-
   {
     accessorKey: "alpha",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Alpha
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Alpha", headerTooltips["Alpha"], column),
     cell: ({ row }) => <div>{formatPercent(row.getValue("alpha"))}</div>,
   },
   {
     accessorKey: "beta",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Beta
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Beta", headerTooltips["Beta"], column),
     cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
   },
   {
     accessorKey: "dividends",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Dividends
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Total", headerTooltips["Total"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends"))}</div>,
   },
   {
     accessorKey: "dividends_per_share",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Dividends/Share
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Per Share", headerTooltips["Per Share"], column),
     cell: ({ row }) => (
       <div>{formatCurrency(row.getValue("dividends_per_share"))}</div>
     ),
   },
   {
     accessorKey: "active",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Active
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) =>
+      sortableHeader("Active", headerTooltips["Active"], column),
     cell: ({ row }) => (
       <div>{row.getValue("active") ? "Active" : "Inactive"}</div>
     ),
@@ -270,7 +227,6 @@ export function AllHoldingsDataTable({
   return (
     <div className="w-full">
       <div className="space-y-4 p-4">
-        {/* Row 2 */}
         <div className="flex items-center py-4">
           <Input
             placeholder="Filter tickers..."

@@ -8,7 +8,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,63 +19,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DividendsResponse } from "@/lib/types";
-import { DividendsRecord } from "@/lib/types";
+
+import Tooltip from "./Tooltip";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
+import { DividendsResponse, DividendsRecord } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
-export const tradeColumns: ColumnDef<DividendsRecord>[] = [
+const makeHeader = (label: string, description?: React.ReactNode) => {
+  if (description === undefined) return <span>{label}</span>;
+  return (
+    <Tooltip
+      trigger={
+        <span className="inline-flex items-center gap-1 cursor-help whitespace-nowrap">
+          {label}
+          <InfoIcon size={14} className="text-muted-foreground" />
+        </span>
+      }
+      description={description}
+      side="top"
+    />
+  );
+};
+
+const sortableHeader = (
+  label: string,
+  description: React.ReactNode | undefined,
+  column: any,
+) => (
+  <div className="flex items-center gap-1 whitespace-nowrap">
+    {makeHeader(label, description)}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6 p-0"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      <ArrowUpDown className="h-4 w-4" />
+    </Button>
+  </div>
+);
+
+const tooltipColumns = ["Date", "Shares", "Per Share", "Total"] as const;
+const shared = getHeaderTooltips(true, tooltipColumns);
+
+export const dividendColumns: ColumnDef<DividendsRecord>[] = [
   {
     accessorKey: "date",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Date", shared["Date"], column),
     cell: ({ row }) => <div>{row.getValue("date")}</div>,
   },
   {
     accessorKey: "shares",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Shares
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Shares", shared["Shares"], column),
     cell: ({ row }) => <div>{row.getValue("shares")}</div>,
   },
   {
     accessorKey: "dividends_per_share",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Per Share
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) =>
+      sortableHeader("Per Share", shared["Per Share"], column),
     cell: ({ row }) => (
       <div>{formatCurrency(row.getValue("dividends_per_share"))}</div>
     ),
   },
   {
     accessorKey: "dividends",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Total
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => sortableHeader("Total", shared["Total"], column),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends"))}</div>,
   },
 ];
@@ -86,10 +94,9 @@ export function AllDividendsDataTable({
   dividends: DividendsResponse | undefined;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-
   const table = useReactTable({
     data: dividends?.dividends ?? [],
-    columns: tradeColumns,
+    columns: dividendColumns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
