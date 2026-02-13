@@ -77,7 +77,7 @@ export function HoldingSummaryTable({
                 onCheckedChange={setAnnualized}
               />
               <Label htmlFor="annualized-toggle-holding" className="text-xs">
-                Ann.
+                Annualized
               </Label>
             </div>
           </TableHead>

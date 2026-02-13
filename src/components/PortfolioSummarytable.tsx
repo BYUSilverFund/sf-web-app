@@ -96,7 +96,7 @@ export function PortfolioSummaryTable({
                 onCheckedChange={setAnnualized}
               />
               <Label htmlFor="annualized-toggle-portfolio" className="text-xs">
-                Ann.
+                Annualized
               </Label>
             </div>
           </TableHead>

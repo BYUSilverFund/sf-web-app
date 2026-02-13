@@ -82,7 +82,7 @@ export function FundSummaryTable({
                 onCheckedChange={setAnnualized}
               />
               <Label htmlFor="annualized-toggle" className="text-xs">
-                Ann.
+                Annualized
               </Label>
             </div>
           </TableHead>
