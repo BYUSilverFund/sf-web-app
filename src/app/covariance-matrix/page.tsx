@@ -110,7 +110,7 @@ export default function Page() {
         <div className="text-lg font-semibold">
           Covariance Matrix Downloader
         </div>
-        <Card className="flex flex-col gap-4 p-4 w-full">
+        <Card className="flex flex-col gap-6 p-6 w-full">
           <div>
             <label className="text-sm font-medium">Select Preset</label>
             <Select value={selectedPreset} onValueChange={handlePresetChange}>
@@ -175,18 +175,19 @@ export default function Page() {
           {tickers.length > 0 && (
             <div>
               <label className="text-sm font-medium">Selected Tickers</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 items-center">
                 {tickers.map((ticker) => (
                   <div
                     key={ticker}
-                    className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm"
+                    className="flex items-center gap-2 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md text-sm"
                   >
                     <span>{ticker}</span>
                     <button
                       onClick={() => removeTicker(ticker)}
-                      className="hover:text-destructive"
+                      aria-label={`Remove ${ticker}`}
+                      className="hover:text-destructive p-1 rounded-md"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
@@ -197,7 +198,7 @@ export default function Page() {
           <Button
             onClick={downloadCovarianceMatrix}
             disabled={isDownloading || tickers.length === 0}
-            className="w-fit"
+            className="self-start mt-2 w-fit"
           >
             {isDownloading ? "Downloading..." : "Download Covariance Matrix"}
           </Button>
