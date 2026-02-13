@@ -13,7 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown, InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,8 +31,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Tooltip from "./Tooltip";
+import { getHeaderTooltips } from "@/lib/tabletooltips";
 import { AllPortfoliosRecord } from "@/lib/types";
-
 import {
   formatPercent,
   formatCurrency,
@@ -41,183 +42,247 @@ import {
 } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
+const makeHeader = (label: string, description?: React.ReactNode) => {
+  if (description === undefined) return <span>{label}</span>;
+  return (
+    <Tooltip
+      trigger={
+        <>
+          {label}
+          <InfoIcon size={14} className="text-muted-foreground" />
+        </>
+      }
+      description={description}
+      side="top"
+    />
+  );
+};
+const sortableHeader = (
+  label: string,
+  description: React.ReactNode | undefined,
+  column: any,
+) => (
+  <div className="flex items-center gap-1">
+    {makeHeader(label, description)}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6 p-0"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      <ArrowUpDown className="h-4 w-4" />
+    </Button>
+  </div>
+);
+
+const tooltipColumns = [
+  "Value",
+  "Total Return",
+  "Volatility",
+  "Sharpe Ratio",
+  "Dividends",
+  "Dividend Yield",
+  "Alpha",
+  "Beta",
+  "Tracking Error",
+  "Information Ratio",
+] as const;
+
+// false = Realized
+const headerTooltips = getHeaderTooltips(false, tooltipColumns);
+
 export const columns: ColumnDef<AllPortfoliosRecord>[] = [
   {
     accessorKey: "portfolio",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Portfolio
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Portfolio
+        <ArrowUpDown />
+      </Button>
+    ),
     cell: ({ row }) => <div>{formatPortfolio(row.getValue("portfolio"))}</div>,
   },
   {
     accessorKey: "value",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Value", headerTooltips["Value"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Value
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
   },
   {
     accessorKey: "total_return",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Total Return", headerTooltips["Total Return"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Total Return
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatPercent(row.getValue("total_return"))}</div>,
   },
   {
     accessorKey: "volatility",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Volatility", headerTooltips["Volatility"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Volatility
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatPercent(row.getValue("volatility"))}</div>,
   },
   {
     accessorKey: "sharpe_ratio",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Sharpe Ratio", headerTooltips["Sharpe Ratio"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Sharpe
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatFloat(row.getValue("sharpe_ratio"))}</div>,
   },
   {
     accessorKey: "dividends",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Dividends", headerTooltips["Dividends"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Dividends
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("dividends"))}</div>,
   },
   {
     accessorKey: "dividend_yield",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Dividend Yield", headerTooltips["Dividend Yield"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Dividend Yield
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => (
       <div>{formatPercent(row.getValue("dividend_yield"))}</div>
     ),
   },
   {
     accessorKey: "alpha",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Alpha", headerTooltips["Alpha"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Alpha
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatPercent(row.getValue("alpha"))}</div>,
   },
   {
     accessorKey: "beta",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Beta", headerTooltips["Beta"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Beta
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => <div>{formatFloat(row.getValue("beta"))}</div>,
   },
   {
     accessorKey: "tracking_error",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Tracking Error", headerTooltips["Tracking Error"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tracking Error
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => (
       <div>{formatPercent(row.getValue("tracking_error"))}</div>
     ),
   },
   {
     accessorKey: "information_ratio",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex items-center gap-1">
+        {makeHeader("Information Ratio", headerTooltips["Information Ratio"])}
         <Button
           variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Information Ratio
-          <ArrowUpDown />
+          <ArrowUpDown className="h-4 w-4" />
         </Button>
-      );
-    },
+      </div>
+    ),
     cell: ({ row }) => (
       <div>{formatFloat(row.getValue("information_ratio"))}</div>
     ),
   },
 ];
-
 export function AllPortfoliosDataTable({
-  // default to empty array so the table code always receives an array
-  // (prevents runtime errors when `data` is undefined while loading)
   data = [],
 }: {
   data?: AllPortfoliosRecord[] | undefined;
@@ -253,7 +318,6 @@ export function AllPortfoliosDataTable({
   return (
     <div className="w-full">
       <div className="space-y-4 p-4">
-        {/* Row 2 */}
         <div className="flex items-center py-4">
           <Input
             placeholder="Filter portfolios..."
