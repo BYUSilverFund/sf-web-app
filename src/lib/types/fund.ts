@@ -6,6 +6,7 @@ export interface FundRequest {
 export interface FundSummaryResponse {
   start: string; // ISO date string
   end: string; // ISO date string
+  trading_days: number;
   value: number;
   total_return: number;
   sharpe_ratio: number;
