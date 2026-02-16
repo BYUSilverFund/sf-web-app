@@ -46,8 +46,6 @@ export function calculateSummaryMetrics(
 
   const days = summary?.trading_days;
   const benchDays = benchmark?.trading_days;
-  console.log("calculateSummaryMetrics days", days);
-  console.log("calculateSummaryMetrics benchDays", benchDays);
 
   const fundVol = summary
     ? toggle(summary.volatility, annSqRt(summary.volatility, days))
