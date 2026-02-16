@@ -23,5 +23,6 @@ export interface AllHoldingsSummaryResponse {
   fund: string;
   start: string;
   end: string;
+  trading_days: number;
   holdings: AllHoldingsRecord[];
 }

@@ -1,6 +1,7 @@
 type PeriodSummary = {
   start: string;
   end: string;
+  trading_days: number;
   volatility: number;
   sharpe_ratio?: number;
   alpha: number;
@@ -11,6 +12,7 @@ type PeriodSummary = {
 type BenchmarkSummary = {
   start: string;
   end: string;
+  trading_days: number;
   volatility: number;
   sharpe_ratio: number;
   dividend_yield: number;
@@ -21,59 +23,64 @@ export function calculateSummaryMetrics(
   summary?: PeriodSummary,
   benchmark?: BenchmarkSummary,
 ) {
-  const daysBetween = (start: string, end: string) =>
-    Math.max(1, (Date.parse(end) - Date.parse(start)) / 864e5);
+  // single wrapper: ensure `days` is provided and non-zero before calling
+  const withDaysCheck =
+    <T extends (v: number, d: number) => number>(fn: T) =>
+    (value: number, days?: number): number | undefined => {
+      if (!days || days === 0) return undefined;
+      return fn(value, days as number);
+    };
 
-  const annStd = (periodStd: number, days: number) =>
-    periodStd * Math.sqrt(252 / days);
+  const annSqRt = withDaysCheck(
+    (value: number, days: number) => value * Math.sqrt(252 / days),
+  );
 
-  const annReturn = (periodReturn: number, days: number) =>
-    periodReturn * (252 / days);
+  const ann = withDaysCheck(
+    (value: number, days: number) => value * (252 / days),
+  );
 
-  const toggle = (realized: number, annualizedValue: number) =>
-    annualized ? annualizedValue : realized;
+  const toggle = (
+    realized: number,
+    annualizedValue?: number,
+  ): number | undefined => (annualized ? annualizedValue : realized);
 
-  const days = summary ? daysBetween(summary.start, summary.end) : 1;
-  const benchDays = benchmark ? daysBetween(benchmark.start, benchmark.end) : 1;
+  const days = summary?.trading_days;
+  const benchDays = benchmark?.trading_days;
+  console.log("calculateSummaryMetrics days", days);
+  console.log("calculateSummaryMetrics benchDays", benchDays);
 
   const fundVol = summary
-    ? toggle(summary.volatility, annStd(summary.volatility, days))
+    ? toggle(summary.volatility, annSqRt(summary.volatility, days))
     : undefined;
 
   const fundSharpe =
     summary && summary.sharpe_ratio != null
-      ? toggle(
-          summary.sharpe_ratio,
-          summary.sharpe_ratio * Math.sqrt(252 / days),
-        )
+      ? toggle(summary.sharpe_ratio, annSqRt(summary.sharpe_ratio, days))
       : undefined;
 
   const fundAlpha = summary
-    ? toggle(summary.alpha, annReturn(summary.alpha, days))
+    ? toggle(summary.alpha, ann(summary.alpha, days))
     : undefined;
 
   const fundTE =
     summary && summary.tracking_error !== undefined
-      ? toggle(summary.tracking_error, annStd(summary.tracking_error, days))
+      ? toggle(summary.tracking_error, annSqRt(summary.tracking_error, days))
       : undefined;
 
   const fundIR =
     summary && summary.information_ratio != null
       ? toggle(
           summary.information_ratio,
-          summary.information_ratio * Math.sqrt(252 / days),
+          annSqRt(summary.information_ratio, days),
         )
       : undefined;
 
   const benchVol = benchmark
-    ? toggle(benchmark.volatility, annStd(benchmark.volatility, benchDays))
+    ? toggle(benchmark.volatility, annSqRt(benchmark.volatility, benchDays))
     : undefined;
 
   const benchSharpe = benchmark
-    ? toggle(
-        benchmark.sharpe_ratio,
-        benchmark.sharpe_ratio * Math.sqrt(252 / benchDays),
-      )
+    ? toggle(benchmark.sharpe_ratio, annSqRt(benchmark.sharpe_ratio, benchDays))
     : undefined;
 
   return {
