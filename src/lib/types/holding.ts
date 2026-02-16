@@ -10,6 +10,7 @@ export interface HoldingSummaryResponse {
   ticker: string;
   start: string;
   end: string;
+  trading_days: number;
   active: boolean;
   shares: number;
   price: number;

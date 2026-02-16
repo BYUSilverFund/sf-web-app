@@ -8,6 +8,7 @@ export interface BenchmarkRequest {
 export interface BenchmarkSummaryResponse {
   start: string;
   end: string;
+  trading_days: number;
   adjusted_close: number;
   total_return: number;
   sharpe_ratio: number;
