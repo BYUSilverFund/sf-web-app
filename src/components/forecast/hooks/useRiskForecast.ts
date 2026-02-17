@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import {
   getFundRiskForecast,
   getAllFundsRiskForecast,
+  getFundHoldingRiskForecast,
 } from "@/lib/api/riskForecast";
 
 import { RiskForecast } from "@/lib/types";
 
-export function useRiskForecast(fund?: string) {
+export function useRiskForecast(fund?: string, ticker?: string) {
   const [riskForecast, setRiskForecast] = useState<RiskForecast | undefined>(
     undefined,
   );
@@ -17,16 +18,20 @@ export function useRiskForecast(fund?: string) {
 
   useEffect(() => {
     if (!fund) return;
+    const currentFund = fund;
     let mounted = true;
     async function fetchRiskForecast() {
       setLoading(true);
       setError(undefined);
       try {
-        const f = fund as string;
-        const data =
-          f === "all_funds"
-            ? await getAllFundsRiskForecast()
-            : await getFundRiskForecast(f);
+        let data: RiskForecast;
+        if (ticker) {
+          data = await getFundHoldingRiskForecast(currentFund, ticker);
+        } else if (currentFund === "all_funds") {
+          data = await getAllFundsRiskForecast();
+        } else {
+          data = await getFundRiskForecast(currentFund);
+        }
         if (!mounted) return;
         setRiskForecast(data);
       } catch (err) {
@@ -42,7 +47,7 @@ export function useRiskForecast(fund?: string) {
     }
     fetchRiskForecast();
     return () => void (mounted = false);
-  }, [fund]);
+  }, [fund, ticker]);
 
   return { riskForecast, loading, error };
 }

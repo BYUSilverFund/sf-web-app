@@ -44,7 +44,7 @@ export default function FactorExposures() {
     factorParam,
     holdingParam,
   );
-  const { riskForecast } = useRiskForecast(fund);
+  const { riskForecast } = useRiskForecast(fund, holdingParam || undefined);
 
   const fundKeys = [
     "all_funds",
