@@ -157,9 +157,7 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
         column,
       ),
     cell: ({ row }) => (
-      <div>
-        {formatPercent((row.getValue("alpha_contribution") as number) * 100)}
-      </div>
+      <div>{formatPercent(row.getValue("alpha_contribution"))}</div>
     ),
   },
   {
