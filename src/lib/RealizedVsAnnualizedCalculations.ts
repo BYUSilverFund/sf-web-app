@@ -1,7 +1,7 @@
 type PeriodSummary = {
   start: string;
   end: string;
-  trading_days: number;
+  trading_days?: number;
   volatility: number;
   sharpe_ratio?: number;
   alpha: number;
@@ -12,7 +12,7 @@ type PeriodSummary = {
 type BenchmarkSummary = {
   start: string;
   end: string;
-  trading_days: number;
+  trading_days?: number;
   volatility: number;
   sharpe_ratio: number;
   dividend_yield: number;
