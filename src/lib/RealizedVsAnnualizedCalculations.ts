@@ -25,10 +25,10 @@ export function calculateSummaryMetrics(
     Math.max(1, (Date.parse(end) - Date.parse(start)) / 864e5);
 
   const annStd = (periodStd: number, days: number) =>
-    periodStd * Math.sqrt(252 / days);
+    periodStd * Math.sqrt(days / days);
 
   const annReturn = (periodReturn: number, days: number) =>
-    periodReturn * (252 / days);
+    periodReturn * (days / days);
 
   const toggle = (realized: number, annualizedValue: number) =>
     annualized ? annualizedValue : realized;
@@ -44,7 +44,7 @@ export function calculateSummaryMetrics(
     summary && summary.sharpe_ratio != null
       ? toggle(
           summary.sharpe_ratio,
-          summary.sharpe_ratio * Math.sqrt(252 / days),
+          summary.sharpe_ratio * Math.sqrt(days / days),
         )
       : undefined;
 
@@ -61,7 +61,7 @@ export function calculateSummaryMetrics(
     summary && summary.information_ratio != null
       ? toggle(
           summary.information_ratio,
-          summary.information_ratio * Math.sqrt(252 / days),
+          summary.information_ratio * Math.sqrt(days / days),
         )
       : undefined;
 
@@ -72,7 +72,7 @@ export function calculateSummaryMetrics(
   const benchSharpe = benchmark
     ? toggle(
         benchmark.sharpe_ratio,
-        benchmark.sharpe_ratio * Math.sqrt(252 / benchDays),
+        benchmark.sharpe_ratio * Math.sqrt(benchDays / benchDays),
       )
     : undefined;
 
