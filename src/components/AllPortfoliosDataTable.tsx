@@ -57,23 +57,6 @@ const makeHeader = (label: string, description?: React.ReactNode) => {
     />
   );
 };
-const sortableHeader = (
-  label: string,
-  description: React.ReactNode | undefined,
-  column: any,
-) => (
-  <div className="flex items-center gap-1">
-    {makeHeader(label, description)}
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-6 w-6 p-0"
-      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    >
-      <ArrowUpDown className="h-4 w-4" />
-    </Button>
-  </div>
-);
 
 const tooltipColumns = [
   "Value",
@@ -88,7 +71,6 @@ const tooltipColumns = [
   "Information Ratio",
 ] as const;
 
-// false = Realized
 const headerTooltips = getHeaderTooltips(false, tooltipColumns);
 
 export const columns: ColumnDef<AllPortfoliosRecord>[] = [

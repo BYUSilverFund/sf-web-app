@@ -8,6 +8,7 @@ export interface PortfolioSummaryResponse {
   fund: string;
   start: string;
   end: string;
+  trading_days: number;
   value: number;
   total_return: number;
   sharpe_ratio: number;

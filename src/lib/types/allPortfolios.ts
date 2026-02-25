@@ -20,5 +20,6 @@ export interface AllPortfoliosRecord {
 export interface AllPortfoliosSummaryResponse {
   start: string;
   end: string;
+  trading_days: number;
   portfolios: AllPortfoliosRecord[];
 }

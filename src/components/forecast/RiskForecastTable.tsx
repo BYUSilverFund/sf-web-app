@@ -36,6 +36,23 @@ function MetricCard({
   );
 }
 
+function getTitle(forecast?: RiskForecast, fundName?: string) {
+  if (forecast?.ticker) return `${forecast.ticker} Risk Forecast`;
+  if (fundName) return `${fundName} Risk Forecast`;
+  return "Risk Forecast";
+}
+
+function getPortfolioWeightOrTrackingError(
+  forecast?: RiskForecast,
+): string | undefined {
+  if (!forecast) return undefined;
+  if (forecast.ticker) {
+    if (forecast.fund_weight == null) return "-";
+    return `${(forecast.fund_weight * 100).toFixed(2)}%`;
+  }
+  return `${(forecast.tracking_error * 100).toFixed(2)}%`;
+}
+
 export function RiskForecastTable({
   forecast,
   fundName,
@@ -46,7 +63,7 @@ export function RiskForecastTable({
     <Card className="bg-gray border-none shadow-none text-card-foreground">
       <CardHeader className="pb-0">
         <CardTitle className="text-lg text-left border-b pb-2">
-          {fundName ? `${fundName} Risk Forecast` : "Risk Forecast"}
+          {getTitle(forecast, fundName)}
         </CardTitle>
       </CardHeader>
 
@@ -58,13 +75,6 @@ export function RiskForecastTable({
             value={forecast ? forecast.beta.toFixed(2) : undefined}
           />
           <MetricCard
-            title="Variance"
-            loading={loading}
-            value={
-              forecast ? `${(forecast.variance * 100).toFixed(2)}%` : undefined
-            }
-          />
-          <MetricCard
             title="Volatility"
             loading={loading}
             value={
@@ -72,6 +82,11 @@ export function RiskForecastTable({
                 ? `${(forecast.volatility * 100).toFixed(2)}%`
                 : undefined
             }
+          />
+          <MetricCard
+            title={forecast?.ticker ? "Portfolio Weight" : "Tracking Error"}
+            loading={loading}
+            value={getPortfolioWeightOrTrackingError(forecast)}
           />
         </div>
       </CardContent>
