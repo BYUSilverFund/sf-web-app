@@ -24,11 +24,15 @@ export function calculateSummaryMetrics(
   const daysBetween = (start: string, end: string) =>
     Math.max(1, (Date.parse(end) - Date.parse(start)) / 864e5);
 
+  // For 1-year periods, use actual days; otherwise use 252
+  const tradingDaysInYear = (days: number) =>
+    days >= 250 && days <= 254 ? days : 252;
+
   const annStd = (periodStd: number, days: number) =>
-    periodStd * Math.sqrt(days / days);
+    periodStd * Math.sqrt(tradingDaysInYear(days) / days);
 
   const annReturn = (periodReturn: number, days: number) =>
-    periodReturn * (days / days);
+    periodReturn * (tradingDaysInYear(days) / days);
 
   const toggle = (realized: number, annualizedValue: number) =>
     annualized ? annualizedValue : realized;
@@ -44,7 +48,7 @@ export function calculateSummaryMetrics(
     summary && summary.sharpe_ratio != null
       ? toggle(
           summary.sharpe_ratio,
-          summary.sharpe_ratio * Math.sqrt(days / days),
+          summary.sharpe_ratio * Math.sqrt(tradingDaysInYear(days) / days),
         )
       : undefined;
 
@@ -61,7 +65,7 @@ export function calculateSummaryMetrics(
     summary && summary.information_ratio != null
       ? toggle(
           summary.information_ratio,
-          summary.information_ratio * Math.sqrt(days / days),
+          summary.information_ratio * Math.sqrt(tradingDaysInYear(days) / days),
         )
       : undefined;
 
@@ -72,7 +76,8 @@ export function calculateSummaryMetrics(
   const benchSharpe = benchmark
     ? toggle(
         benchmark.sharpe_ratio,
-        benchmark.sharpe_ratio * Math.sqrt(benchDays / benchDays),
+        benchmark.sharpe_ratio *
+          Math.sqrt(tradingDaysInYear(benchDays) / benchDays),
       )
     : undefined;
 
