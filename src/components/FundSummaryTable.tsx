@@ -21,9 +21,11 @@ import { calculateSummaryMetrics } from "@/lib/RealizedVsAnnualizedCalculations"
 export function FundSummaryTable({
   allFundsSummary,
   benchmarkSummary,
+  view_1yr,
 }: {
   allFundsSummary: FundSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
+  view_1yr?: boolean;
 }) {
   const makeHeader = (label: string, description?: React.ReactNode) => {
     if (description === undefined) return <span>{label}</span>;
@@ -50,7 +52,12 @@ export function FundSummaryTable({
     fundIR,
     benchVol,
     benchSharpe,
-  } = calculateSummaryMetrics(annualized, allFundsSummary, benchmarkSummary);
+  } = calculateSummaryMetrics(
+    annualized,
+    allFundsSummary,
+    benchmarkSummary,
+    view_1yr,
+  );
   const columns = [
     "Value",
     "Total Return",
