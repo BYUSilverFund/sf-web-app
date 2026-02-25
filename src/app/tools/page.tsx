@@ -172,6 +172,12 @@ const Tools: React.FC = () => {
                   text="Covariance Matrix Downloader"
                 />
               </li>
+              <li>
+                <ToolLink
+                  href="/alpha-beta-guide"
+                  text="Alpha & Beta Calculation Guide"
+                />
+              </li>
             </ul>
           </div>
         </div>
