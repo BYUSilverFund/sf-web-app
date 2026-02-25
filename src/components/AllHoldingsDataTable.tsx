@@ -78,6 +78,7 @@ const tooltipColumns = [
   "Total Return",
   "Volatility",
   "Alpha",
+  "Alpha Contribution",
   "Beta",
   "Dividends",
   "Per Share",
@@ -96,6 +97,7 @@ const headerTooltips: Record<string, React.ReactNode | undefined> = {
   Return: shared["Total Return"],
   Volatility: shared["Volatility"],
   Alpha: shared["Alpha"],
+  "Alpha Contribution": shared["Alpha Contribution"],
   Beta: shared["Beta"],
   Dividends: shared["Dividends"],
   "Per Share": shared["Per Share"],
@@ -144,6 +146,19 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
     header: ({ column }) =>
       sortableHeader("Volatility", headerTooltips["Volatility"], column),
     cell: ({ row }) => <div>{formatPercent(row.getValue("volatility"))}</div>,
+  },
+
+  {
+    accessorKey: "alpha_contribution",
+    header: ({ column }) =>
+      sortableHeader(
+        "Alpha Contribution",
+        headerTooltips["Alpha Contribution"],
+        column,
+      ),
+    cell: ({ row }) => (
+      <div>{formatPercent(row.getValue("alpha_contribution"))}</div>
+    ),
   },
   {
     accessorKey: "alpha",

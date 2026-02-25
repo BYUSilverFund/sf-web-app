@@ -137,6 +137,7 @@ export default function Page() {
               portfolio={fund}
               portfolioSummary={portfolioSummary}
               benchmarkSummary={benchmarkSummary}
+              view_1yr={view === "1year"}
             />
           </Card>
           {/* Row 3 */}
