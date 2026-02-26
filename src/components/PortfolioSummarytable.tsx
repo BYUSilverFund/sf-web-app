@@ -31,12 +31,10 @@ export function PortfolioSummaryTable({
   portfolio,
   portfolioSummary,
   benchmarkSummary,
-  view_1yr,
 }: {
   portfolio: string;
   portfolioSummary: PortfolioSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
-  view_1yr?: boolean;
 }) {
   const makeHeader = (label: string, description?: React.ReactNode) => {
     if (description === undefined) return <span>{label}</span>;
@@ -78,12 +76,7 @@ export function PortfolioSummaryTable({
     fundIR,
     benchVol,
     benchSharpe,
-  } = calculateSummaryMetrics(
-    annualized,
-    portfolioSummary,
-    benchmarkSummary,
-    view_1yr,
-  );
+  } = calculateSummaryMetrics(annualized, portfolioSummary, benchmarkSummary);
 
   return (
     <Table>

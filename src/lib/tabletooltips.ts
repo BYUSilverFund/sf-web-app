@@ -25,9 +25,6 @@ export function getHeaderTooltips<T extends readonly string[]>(
     "Dividend Yield":
       "Dividend Yield = Dividends ÷ Ending Value over the selected period.",
 
-    "Alpha Contribution":
-      "Alpha Contribution = Holding Alpha × Mean Weight over all days held.",
-
     Alpha: annualized
       ? undefined //annualized
       : undefined,

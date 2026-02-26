@@ -22,12 +22,10 @@ export function HoldingSummaryTable({
   ticker,
   holdingSummary,
   benchmarkSummary,
-  view_1yr,
 }: {
   ticker: string;
   holdingSummary: HoldingSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
-  view_1yr?: boolean;
 }) {
   const makeHeader = (label: string, description?: React.ReactNode) => {
     if (description === undefined) return <span>{label}</span>;
@@ -50,7 +48,6 @@ export function HoldingSummaryTable({
     annualized,
     holdingSummary,
     benchmarkSummary,
-    view_1yr,
   );
   const columns = [
     "Value",
