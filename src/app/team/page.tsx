@@ -13,6 +13,7 @@ import ZachMatthews from "@/images/fund-members/zachary-matthews.jpg";
 // quant fund images
 import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
 import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
+import NathanPreslar from "@/images/fund-members/nathan-preslar.jpg";
 // undergrad fund images
 import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
 import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
@@ -145,6 +146,11 @@ const QuantFundTab: React.FC = () => {
         headShot={AndrewHall.src}
         name="Andrew Hall"
         linkedIn="https://www.linkedin.com/in/andrewhall1124/"
+      />
+      <TeamCard
+        headShot={NathanPreslar.src}
+        name="Nathan Preslar"
+        linkedIn="https://www.linkedin.com/in/nathan-preslar/"
       />
     </>
   );
