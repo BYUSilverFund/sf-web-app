@@ -38,6 +38,10 @@ export function DownloadCSVButton({
         end: endStr,
       });
 
+      if (typeof window.URL?.createObjectURL !== "function") {
+        return;
+      }
+
       const url = window.URL.createObjectURL(blob);
       const filename = `${filenamePrefix}_${startStr}_to_${endStr}.csv`;
 
@@ -48,7 +52,9 @@ export function DownloadCSVButton({
       a.click();
       a.remove();
 
-      window.URL.revokeObjectURL(url);
+      if (typeof window.URL?.revokeObjectURL === "function") {
+        window.URL.revokeObjectURL(url);
+      }
     } catch (err) {
       console.error("Failed to download CSV:", err);
     }
