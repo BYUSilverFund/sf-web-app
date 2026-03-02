@@ -1,5 +1,9 @@
 module.exports = {
   eslint: {
-    dirs: ["pages", "utils"], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
+    dirs: ["src/app", "src/components", "src/lib"], // Only run ESLint on app source directories during production builds (next build)
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    tsconfigPath: "./tsconfig.json",
   },
 };
