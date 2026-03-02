@@ -6,10 +6,6 @@ on:
     branches:
       - prod
       - dev
-  # only trigger on push to dev (prod branch is push protected)
-  push:
-    branches:
-      - dev
 
 jobs:
   test:
