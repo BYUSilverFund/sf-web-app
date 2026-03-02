@@ -57,29 +57,8 @@ vi.mock("@aws-amplify/ui-react", () => {
   };
 });
 
-// Defensive pre-fetch: sanitize unexpected inputs so early callers that
-// accidentally pass `globalThis` or other non-URL values won't crash.
-const _sanitizedFetch = async (input: any, init?: any) => {
-  try {
-    if (!input || input === globalThis)
-      return { ok: true, status: 200, json: async () => ({}) };
-    const maybeUrl = typeof input === "string" ? input : (input?.url ?? null);
-    if (!maybeUrl) return { ok: true, status: 200, json: async () => ({}) };
-    // Fall through to the real fetch if available
-    const real = (globalThis as any).__realFetch;
-    if (real) return real(input, init);
-    return { ok: true, status: 200, json: async () => ({}) };
-  } catch (e) {
-    return { ok: false, status: 500, json: async () => ({}) };
-  }
-};
-
-// Install the sanitizer immediately so any imports that trigger fetch before
-// MSW is loaded will be protected. For now return a safe empty JSON for all
-// requests to avoid any real network calls during tests.
-(globalThis as any).fetch = async (input: any, init?: any) => {
-  return { ok: true, status: 200, json: async () => ({}) };
-};
+// Start MSW and mock auth session used by protected endpoints.
+import { server } from "./mocks/server";
 
 vi.mock("aws-amplify", () => ({
   Amplify: { configure: () => {} },
@@ -94,27 +73,13 @@ vi.mock("aws-amplify/api", () => ({
   }),
 }));
 
-// Mock global fetch to prevent real network requests during component mounts.
-const originalFetch = ((globalThis as any).fetch(globalThis as any).fetch =
-  async (input: any, init?: any) => {
-    try {
-      // Defensive: some code may accidentally call fetch with unexpected values
-      if (!input || input === globalThis) {
-        return { ok: true, status: 200, json: async () => ({}) };
-      }
+vi.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: async () => ({ tokens: { accessToken: "test-token" } }),
+}));
 
-      // If a Request-like object is passed, try to extract the URL
-      const maybeUrl = typeof input === "string" ? input : (input?.url ?? null);
-      if (!maybeUrl) {
-        return { ok: true, status: 200, json: async () => ({}) };
-      }
-
-      // You can add route-specific responses here if needed
-      return { ok: true, status: 200, json: async () => ({}) };
-    } catch (err) {
-      return { ok: false, status: 500, json: async () => ({}) };
-    }
-  });
+beforeAll(() => server.listen({ onUnhandledRequest: "warn" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // Silence specific noisy warnings from Amplify/UI during tests
 const origWarn = console.warn.bind(console);
