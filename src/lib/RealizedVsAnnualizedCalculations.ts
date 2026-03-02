@@ -1,7 +1,7 @@
 type PeriodSummary = {
   start: string;
   end: string;
-  trading_days: number;
+  trading_days?: number;
   volatility: number;
   sharpe_ratio?: number;
   alpha: number;
@@ -12,7 +12,7 @@ type PeriodSummary = {
 type BenchmarkSummary = {
   start: string;
   end: string;
-  trading_days: number;
+  trading_days?: number;
   volatility: number;
   sharpe_ratio: number;
   dividend_yield: number;
@@ -22,6 +22,7 @@ export function calculateSummaryMetrics(
   annualized: boolean,
   summary?: PeriodSummary,
   benchmark?: BenchmarkSummary,
+  view_1yr = false,
 ) {
   // single wrapper: ensure `days` is provided and non-zero before calling
   const withDaysCheck =
@@ -31,12 +32,12 @@ export function calculateSummaryMetrics(
       return fn(value, days as number);
     };
 
-  const annSqRt = withDaysCheck(
-    (value: number, days: number) => value * Math.sqrt(252 / days),
+  const annSqRt = withDaysCheck((value: number, days: number) =>
+    view_1yr ? value : value * Math.sqrt(252 / days),
   );
 
-  const ann = withDaysCheck(
-    (value: number, days: number) => value * (252 / days),
+  const ann = withDaysCheck((value: number, days: number) =>
+    view_1yr ? value : value * (252 / days),
   );
 
   const toggle = (
