@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col items-center justify-center text-center">
           {/* 404 Number with BYU Blue gradient */}
