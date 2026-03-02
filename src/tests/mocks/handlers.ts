@@ -175,6 +175,17 @@ export const handlers = [
       }),
     );
   }),
+
+  // Factor exposures
+  rest.get(`${API_BASE}/factor-exposures/:fund`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        factors: [],
+        exposures: [],
+      }),
+    );
+  }),
 ];
 
 export default handlers;

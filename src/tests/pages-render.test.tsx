@@ -1,6 +1,11 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
+import { vi } from "vitest";
+
+vi.mock("@/components/ReturnsChart", () => ({
+  ReturnsChart: () => React.createElement("div", null, "MockedChart"),
+}));
 
 const pages = [
   "../app/page",

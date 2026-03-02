@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { render } from "@testing-library/react";
 
+vi.mock("@/components/ReturnsChart", () => ({
+  ReturnsChart: () => React.createElement("div", null, "MockedChart"),
+}));
+
 // Mock next/navigation before importing pages
 vi.mock("next/navigation", () => ({
   useParams: () => ({ fund: "grad" }),
