@@ -109,9 +109,20 @@ export function PortfolioSummaryTable({
                     onWeightModeChange(checked ? "active" : "total")
                   }
                 />
-                <Label htmlFor="weight-toggle-portfolio" className="text-xs">
-                  Active
-                </Label>
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="weight-toggle-portfolio" className="text-xs">
+                    Active
+                  </Label>
+                  <Tooltip
+                    trigger={
+                      <InfoIcon size={14} className="text-muted-foreground" />
+                    }
+                    description={
+                      "Active weight = fund - benchmark (shows weights relative to the benchmark for all metrics)."
+                    }
+                    side="top"
+                  />
+                </div>
               </div>
               <div>
                 <Label
