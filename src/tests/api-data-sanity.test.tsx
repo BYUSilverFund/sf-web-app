@@ -9,6 +9,7 @@ import {
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import {
+  getActivePortfolioSummary,
   getPortfolioSummary,
   getPortfolioTimeSeries,
 } from "@/lib/api/portfolio";
@@ -96,6 +97,13 @@ describe("API data sanity", () => {
       end: "2024-01-02",
     });
     expect(ps).toHaveProperty("fund");
+
+    const aps = await getActivePortfolioSummary({
+      fund: "portfolio",
+      start: "2024-01-01",
+      end: "2024-01-02",
+    });
+    expect(aps).toHaveProperty("fund");
 
     const pts = await getPortfolioTimeSeries({
       fund: "portfolio",

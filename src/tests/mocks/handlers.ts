@@ -112,6 +112,17 @@ export const handlers = [
       ctx.json({ ...sampleFundSummary, fund: "portfolio" }),
     );
   }),
+  rest.post(`${API_BASE}/portfolio/summary/active`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        ...sampleFundSummary,
+        fund: "portfolio",
+        total_return: 0.002,
+        volatility: 0.03,
+      }),
+    );
+  }),
   rest.post(`${API_BASE}/portfolio/time-series`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(sampleTimeSeries));
   }),
