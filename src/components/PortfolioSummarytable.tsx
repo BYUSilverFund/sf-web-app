@@ -31,11 +31,15 @@ export function PortfolioSummaryTable({
   portfolio,
   portfolioSummary,
   benchmarkSummary,
+  weightMode,
+  onWeightModeChange,
   view_1yr,
 }: {
   portfolio: string;
   portfolioSummary: PortfolioSummaryResponse | undefined;
   benchmarkSummary: BenchmarkSummaryResponse | undefined;
+  weightMode: "total" | "active";
+  onWeightModeChange: (mode: "total" | "active") => void;
   view_1yr?: boolean;
 }) {
   const makeHeader = (label: string, description?: React.ReactNode) => {
@@ -90,21 +94,55 @@ export function PortfolioSummaryTable({
       <TableHeader>
         <TableRow>
           <TableHead className="align-middle whitespace-nowrap">
-            <div className="flex items-center gap-2">
-              <Label
-                htmlFor="annualized-toggle-portfolio"
-                className="text-xs text-muted-foreground"
-              >
-                Realized
-              </Label>
-              <Switch
-                id="annualized-toggle-portfolio"
-                checked={annualized}
-                onCheckedChange={setAnnualized}
-              />
-              <Label htmlFor="annualized-toggle-portfolio" className="text-xs">
-                Annualized
-              </Label>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Label
+                  htmlFor="weight-toggle-portfolio"
+                  className="text-xs text-muted-foreground"
+                >
+                  Total
+                </Label>
+                <Switch
+                  id="weight-toggle-portfolio"
+                  checked={weightMode === "active"}
+                  onCheckedChange={(checked) =>
+                    onWeightModeChange(checked ? "active" : "total")
+                  }
+                />
+                <div className="flex items-center gap-1">
+                  <Label htmlFor="weight-toggle-portfolio" className="text-xs">
+                    Active
+                  </Label>
+                  <Tooltip
+                    trigger={
+                      <InfoIcon size={14} className="text-muted-foreground" />
+                    }
+                    description={
+                      "Active weight = fund - benchmark (shows weights relative to the benchmark for all metrics)."
+                    }
+                    side="top"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label
+                  htmlFor="annualized-toggle-portfolio"
+                  className="text-xs text-muted-foreground"
+                >
+                  Realized
+                </Label>
+                <Switch
+                  id="annualized-toggle-portfolio"
+                  checked={annualized}
+                  onCheckedChange={setAnnualized}
+                />
+                <Label
+                  htmlFor="annualized-toggle-portfolio"
+                  className="text-xs"
+                >
+                  Annualized
+                </Label>
+              </div>
             </div>
           </TableHead>
           {columns.map((label) => (

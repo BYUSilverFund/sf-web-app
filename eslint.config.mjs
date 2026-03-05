@@ -14,7 +14,7 @@ export default [
       "dist/**",
       "coverage/**",
       "src/components/ui/**",
-      "/tests/*",
+      "src/tests/*",
     ],
   },
 
