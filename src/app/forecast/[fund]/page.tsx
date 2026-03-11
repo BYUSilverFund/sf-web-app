@@ -26,6 +26,7 @@ export default function FactorExposures() {
   const initialShowTop =
     parseInt(searchParams.get("show_top") || "10", 10) || 10;
   const [showTop, setShowTop] = useState<number>(initialShowTop);
+  const [weightMode, setWeightMode] = useState<"total" | "active">("total");
 
   const viewValue = searchParams.get("view") || "bar-chart";
   const [view, setView] = useState<string>(viewValue ?? "bar-chart");
@@ -38,7 +39,7 @@ export default function FactorExposures() {
     exposures,
     excludedHoldings,
     loading: exposuresLoading,
-  } = useExposures(fund);
+  } = useExposures(fund, weightMode);
   const { detailData, detailLabel } = useDetailData(
     fund,
     factorParam,
@@ -162,6 +163,23 @@ export default function FactorExposures() {
                 funds={fundKeys}
                 onValueChange={(v) => updateURLForFund(v)}
               />
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Weights</span>
+              <div className="flex items-center rounded bg-muted p-1">
+                <button
+                  className={`px-2 py-1 text-sm rounded ${weightMode === "total" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                  onClick={() => setWeightMode("total")}
+                >
+                  Total
+                </button>
+                <button
+                  className={`px-2 py-1 ml-1 text-sm rounded ${weightMode === "active" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                  onClick={() => setWeightMode("active")}
+                >
+                  Active
+                </button>
+              </div>
             </div>
           </div>
         </div>
