@@ -6,3 +6,4 @@ export * from "./allHoldings";
 export * from "./holding";
 export * from "./covarianceMatrix";
 export * from "./riskForecast";
+export * from "./betaChart";
