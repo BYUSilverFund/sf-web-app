@@ -78,6 +78,7 @@ export default function Page() {
     }
   }, [start, end]);
 
+  console.log(view);
   return (
     <div className="lg:px-24 md:px-12 sm:px-6">
       <div className="space-y-4 p-4">
@@ -108,6 +109,7 @@ export default function Page() {
             <FundSummaryTable
               allFundsSummary={fundSummary}
               benchmarkSummary={benchmarkSummary}
+              view_1yr={view === "1year"}
             />
           </Card>
           {/* Row 3 */}

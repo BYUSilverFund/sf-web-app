@@ -8,6 +8,8 @@ import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
 // Quantitative images
 import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
 import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
+import NathanPreslar from "@/images/fund-members/nathan-preslar.jpg";
+import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // Undergraduate images
 import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
 import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
@@ -66,6 +68,18 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             name="Andrew Hall"
             position="Quantitative Fund"
             linkedIn="https://www.linkedin.com/in/andrewhall1124/"
+          />
+          <TeamCard
+            headShot={NathanPreslar.src}
+            name="Nathan Preslar"
+            position="Quantitative Fund"
+            linkedIn="https://www.linkedin.com/in/nathan-preslar/"
+          />
+          <TeamCard
+            headShot={AndyCriddle.src}
+            name="Andy Criddle"
+            position="Quantitative Fund"
+            linkedIn="https://www.linkedin.com/in/andrewcriddle"
           />
           <TeamCard
             headShot={ElizabethHall.src}

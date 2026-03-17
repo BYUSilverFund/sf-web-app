@@ -156,6 +156,7 @@ export default function Page() {
               ticker={params.holding}
               holdingSummary={holdingSummary}
               benchmarkSummary={benchmarkSummary}
+              view_1yr={view === "1year"}
             />
           </Card>
           {/* Row 3 */}

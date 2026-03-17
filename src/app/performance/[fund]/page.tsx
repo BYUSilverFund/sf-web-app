@@ -11,6 +11,7 @@ import {
 import { format } from "date-fns";
 import * as React from "react";
 import {
+  getActivePortfolioSummary,
   getPortfolioSummary,
   getPortfolioTimeSeries,
 } from "@/lib/api/portfolio";
@@ -37,8 +38,18 @@ export default function Page() {
   const [end, setEnd] = useState<Date | undefined>();
   const [portfolioSummary, setPortfolioSummary] =
     useState<PortfolioSummaryResponse>();
+  const [weightMode, setWeightMode] = useState<"total" | "active">("total");
   const [benchmarkSummary, setBenchmarkSummary] =
     useState<BenchmarkSummaryResponse>();
+  const [summaryCache, setSummaryCache] = useState<
+    Record<
+      string,
+      Partial<Record<"total" | "active", PortfolioSummaryResponse>>
+    >
+  >({});
+  const [benchmarkCache, setBenchmarkCache] = useState<
+    Record<string, BenchmarkSummaryResponse>
+  >({});
   const [portfolioTimeSeries, setPortfolioTimeSeries] =
     useState<PortfolioTimeSeriesResponse>();
   const [allHoldingsSummary, setAllHoldingsSummary] =
@@ -58,6 +69,82 @@ export default function Page() {
     });
   }, [dates]);
 
+  const requestKey = useMemo(() => {
+    if (!start || !end || !fund) return undefined;
+    return `${fund}|${format(start, "yyyy-MM-dd")}|${format(end, "yyyy-MM-dd")}`;
+  }, [start, end, fund]);
+
+  const setBenchmarkForSummary = React.useCallback(
+    (summary: PortfolioSummaryResponse) => {
+      const benchmarkKey = `${summary.start}|${summary.end}`;
+      const cachedBenchmark = benchmarkCache[benchmarkKey];
+      if (cachedBenchmark) {
+        setBenchmarkSummary(cachedBenchmark);
+        return;
+      }
+
+      const benchmarkRequest: BenchmarkRequest = {
+        start: summary.start,
+        end: summary.end,
+      };
+
+      getBenchmarkSummary(benchmarkRequest)
+        .then((benchmark) => {
+          setBenchmarkSummary(benchmark);
+          setBenchmarkCache((prev) => ({
+            ...prev,
+            [benchmarkKey]: benchmark,
+          }));
+        })
+        .catch(console.error);
+    },
+    [benchmarkCache],
+  );
+
+  useEffect(() => {
+    if (requestKey && start && end && fund) {
+      const cachedSummary = summaryCache[requestKey]?.[weightMode];
+      if (cachedSummary) {
+        setPortfolioSummary(cachedSummary);
+        setBenchmarkForSummary(cachedSummary);
+        return;
+      }
+
+      const portfolioRequest: PortfolioRequest = {
+        fund: fund,
+        start: format(start, "yyyy-MM-dd"),
+        end: format(end, "yyyy-MM-dd"),
+      };
+
+      const getSummary =
+        weightMode === "active"
+          ? getActivePortfolioSummary
+          : getPortfolioSummary;
+
+      getSummary(portfolioRequest)
+        .then((summary) => {
+          setPortfolioSummary(summary);
+          setSummaryCache((prev) => ({
+            ...prev,
+            [requestKey]: {
+              ...(prev[requestKey] ?? {}),
+              [weightMode]: summary,
+            },
+          }));
+          setBenchmarkForSummary(summary);
+        })
+        .catch(console.error);
+    }
+  }, [
+    requestKey,
+    start,
+    end,
+    fund,
+    weightMode,
+    summaryCache,
+    setBenchmarkForSummary,
+  ]);
+
   useEffect(() => {
     if (start && end && fund) {
       const portfolioRequest: PortfolioRequest = {
@@ -66,19 +153,6 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
-      getPortfolioSummary(portfolioRequest)
-        .then((summary) => {
-          setPortfolioSummary(summary);
-          // Use the actual start and end dates from the portfolio summary response
-          const benchmarkRequest: BenchmarkRequest = {
-            start: summary.start,
-            end: summary.end,
-          };
-          getBenchmarkSummary(benchmarkRequest)
-            .then(setBenchmarkSummary)
-            .catch(console.error);
-        })
-        .catch(console.error);
       getPortfolioTimeSeries(portfolioRequest)
         .then(setPortfolioTimeSeries)
         .catch(console.error);
@@ -86,7 +160,7 @@ export default function Page() {
         .then(setAllHoldingsSummary)
         .catch(console.error);
     }
-  }, [start, end]);
+  }, [start, end, fund]);
 
   const pages = [
     {
@@ -137,6 +211,9 @@ export default function Page() {
               portfolio={fund}
               portfolioSummary={portfolioSummary}
               benchmarkSummary={benchmarkSummary}
+              weightMode={weightMode}
+              onWeightModeChange={setWeightMode}
+              view_1yr={view === "1year"}
             />
           </Card>
           {/* Row 3 */}
