@@ -25,11 +25,23 @@ export function getHeaderTooltips<T extends readonly string[]>(
     "Dividend Yield":
       "Dividend Yield = Dividends ÷ Ending Value over the selected period.",
 
-    Alpha: annualized
-      ? undefined //annualized
-      : undefined,
+    Alpha: (
+      <a
+        href="/alpha-beta-guide"
+        className="text-xs text-blue-600 hover:underline"
+      >
+        Alpha & Beta Calculation Guide
+      </a>
+    ),
 
-    Beta: undefined,
+    Beta: (
+      <a
+        href="/alpha-beta-guide"
+        className="text-xs text-blue-600 hover:underline"
+      >
+        Alpha & Beta Calculation Guide
+      </a>
+    ),
 
     "Tracking Error": annualized
       ? "Annualized Tracking Error = Standard deviation of daily active returns (Fund − Benchmark) × √252."

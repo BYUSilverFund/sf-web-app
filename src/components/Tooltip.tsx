@@ -27,15 +27,16 @@ export default function Tooltip({
     <TooltipProvider>
       <TooltipRoot>
         <TooltipTrigger asChild>
-          <button
-            type="button"
-            aria-label="info"
-            className="text-sm text-muted-foreground inline-flex items-center gap-1 cursor-help whitespace-nowrap"
-          >
+          <span className="inline-flex items-center gap-1 cursor-help whitespace-nowrap">
             {trigger}
-          </button>
+          </span>
         </TooltipTrigger>
-        <TooltipContent side={side} align={align} className={className}>
+        <TooltipContent
+          side={side}
+          align={align}
+          className={className}
+          onClick={(e) => e.stopPropagation()}
+        >
           {description}
         </TooltipContent>
       </TooltipRoot>
