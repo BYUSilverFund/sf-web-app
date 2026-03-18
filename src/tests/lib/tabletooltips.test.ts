@@ -95,12 +95,12 @@ describe("getHeaderTooltips", () => {
       expect(tooltips["Dividend Yield"]).toContain("Dividend Yield");
     });
 
-    it("returns undefined for Alpha", () => {
-      expect(tooltips["Alpha"]).toBeUndefined();
+    it("returns Alpha tooltip", () => {
+      expect(tooltips["Alpha"]).toBeDefined();
     });
 
-    it("returns undefined for Beta", () => {
-      expect(tooltips["Beta"]).toBeUndefined();
+    it("returns Beta tooltip", () => {
+      expect(tooltips["Beta"]).toBeDefined();
     });
 
     it("returns Ticker tooltip", () => {
