@@ -7,4 +7,5 @@ export type RiskForecast = {
   fund?: string;
   ticker?: string;
   fund_weight?: number;
+  positions_not_in_data?: string[];
 };

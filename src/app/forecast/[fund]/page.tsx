@@ -273,6 +273,34 @@ export default function FactorExposures() {
 
           <div className="w-72">
             <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
+            <div className="flex flex-col gap-2 items-center m-2 p-2">
+              {riskForecast?.positions_not_in_data &&
+              riskForecast.positions_not_in_data.length > 0 ? (
+                <Tooltip
+                  trigger={makeTrigger(
+                    <span className="text-sm">
+                      <strong>
+                        Excluded holdings (
+                        {riskForecast.positions_not_in_data.length}):
+                      </strong>{" "}
+                      {riskForecast.positions_not_in_data.join(", ")}
+                    </span>,
+                  )}
+                  description={tooltipDescription}
+                  side="top"
+                />
+              ) : (
+                <Tooltip
+                  trigger={makeTrigger(
+                    <span className="text-sm text-muted-foreground">
+                      All holdings included
+                    </span>,
+                  )}
+                  description={tooltipDescription}
+                  side="top"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
