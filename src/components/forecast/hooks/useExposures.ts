@@ -13,7 +13,7 @@ export function useExposures(
   const [exposures, setExposures] = useState<FactorData[]>([]);
   const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  // simple in-hook cache to avoid refetching when toggling weightMode
+  // simple in-hook cache to avoid refetching
   const cacheRef = useRef<
     Record<string, { exposures: FactorData[]; excluded: string[] }>
   >({});
@@ -22,7 +22,7 @@ export function useExposures(
     if (!fund) return;
     let mounted = true;
     const fetchData = async () => {
-      const key = `${fund}|${weightMode}`;
+      const key = `${fund}`;
       const cached = cacheRef.current[key];
       if (cached) {
         setExposures(cached.exposures);
@@ -33,10 +33,7 @@ export function useExposures(
         setLoading(true);
         const session = await fetchAuthSession();
         const token = session.tokens?.accessToken?.toString();
-        const endpoint =
-          weightMode === "active"
-            ? `${API_BASE_URL}factor-exposures/${fund}/active`
-            : `${API_BASE_URL}factor-exposures/${fund}`;
+        const endpoint = `${API_BASE_URL}factor-exposures/${fund}`;
         const response = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
