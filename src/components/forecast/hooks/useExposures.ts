@@ -6,7 +6,10 @@ import { fetchAuthSession } from "aws-amplify/auth";
 
 export type FactorData = { factor: string; exposure: number };
 
-export function useExposures(fund?: string) {
+export function useExposures(
+  fund?: string,
+  weightMode: "total" | "active" = "total",
+) {
   const [exposures, setExposures] = useState<FactorData[]>([]);
   const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,7 +58,7 @@ export function useExposures(fund?: string) {
     };
     fetchData();
     return () => void (mounted = false);
-  }, [fund]);
+  }, [fund, weightMode]);
 
   return { exposures, excludedHoldings, loading };
 }

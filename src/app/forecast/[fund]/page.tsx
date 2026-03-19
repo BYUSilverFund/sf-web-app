@@ -26,6 +26,7 @@ export default function FactorExposures() {
   const initialShowTop =
     parseInt(searchParams.get("show_top") || "10", 10) || 10;
   const [showTop, setShowTop] = useState<number>(initialShowTop);
+  const [weightMode, setWeightMode] = useState<"total" | "active">("total");
 
   const viewValue = searchParams.get("view") || "bar-chart";
   const [view, setView] = useState<string>(viewValue ?? "bar-chart");
@@ -38,7 +39,7 @@ export default function FactorExposures() {
     exposures,
     excludedHoldings,
     loading: exposuresLoading,
-  } = useExposures(fund);
+  } = useExposures(fund, weightMode);
   const { detailData, detailLabel } = useDetailData(
     fund,
     factorParam,
@@ -163,6 +164,33 @@ export default function FactorExposures() {
                 onValueChange={(v) => updateURLForFund(v)}
               />
             </div>
+            {fund !== "all_funds" && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm">Fund Weight</span>
+                <div className="flex items-center rounded bg-muted p-1">
+                  <button
+                    className={`px-2 py-1 text-sm rounded ${weightMode === "total" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                    onClick={() =>
+                      setWeightMode((prev) =>
+                        prev === "total" ? "active" : "total",
+                      )
+                    }
+                  >
+                    Total
+                  </button>
+                  <button
+                    className={`px-2 py-1 ml-1 text-sm rounded ${weightMode === "active" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                    onClick={() =>
+                      setWeightMode((prev) =>
+                        prev === "total" ? "active" : "total",
+                      )
+                    }
+                  >
+                    Active
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="sm:flex sm:items-start sm:gap-6">
