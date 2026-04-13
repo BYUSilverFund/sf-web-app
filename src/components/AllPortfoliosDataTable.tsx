@@ -298,6 +298,7 @@ export function AllPortfoliosDataTable({
   });
 
   return (
+    // Portfolio rows keep the updated table chrome while still routing straight into the selected portfolio page.
     <div className="w-full">
       <div className="space-y-4 p-4">
         <div className="flex items-center py-4">

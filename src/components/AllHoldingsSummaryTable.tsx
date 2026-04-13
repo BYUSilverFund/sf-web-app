@@ -1,4 +1,4 @@
-import { formatPercent, formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatPercent } from "@/lib/utils";
 import { AllHoldingsSummaryResponse } from "@/lib/types";
 import { ChevronsRight } from "lucide-react";
 
@@ -19,6 +19,7 @@ export function AllHoldingsSummaryTable({
       : 8;
 
   return (
+    // The sidebar summary stays compact by limiting the visible holdings and sending the full list to the dedicated page.
     <div className="flex flex-col">
       <div className="text-center border-b-2 border-solid">
         Top {displayCount} by Value

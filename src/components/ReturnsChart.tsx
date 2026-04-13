@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { formatPercent, formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatPercent } from "@/lib/utils";
 
 interface TooltipData {
   value: number;
@@ -68,6 +68,7 @@ export function ReturnsChart({
   } satisfies ChartConfig;
 
   return (
+    // The returns chart fills whatever card height the parent gives it so the updated layouts stay aligned.
     <ChartContainer config={chartConfig} className="h-full w-full md:py-4 py-1">
       <LineChart
         accessibilityLayer

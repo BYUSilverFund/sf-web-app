@@ -5,7 +5,7 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
 
-const Tooltip = ({ children, openOnClick = true, ...props }: any) => {
+const Tooltip = ({ children, openOnClick = false, ...props }: any) => {
   const [open, setOpen] = React.useState(false);
 
   const childrenWithClick = React.Children.map(children, (child: any) => {
@@ -22,10 +22,18 @@ const Tooltip = ({ children, openOnClick = true, ...props }: any) => {
     return child;
   });
 
+  if (openOnClick) {
+    return (
+      // Click-to-open tooltips need controlled state so the trigger can toggle them explicitly.
+      <TooltipPrimitive.Root open={open} onOpenChange={setOpen} {...props}>
+        {childrenWithClick}
+      </TooltipPrimitive.Root>
+    );
+  }
+
   return (
-    <TooltipPrimitive.Root open={open} onOpenChange={setOpen} {...props}>
-      {childrenWithClick}
-    </TooltipPrimitive.Root>
+    // Standard hover tooltips are left uncontrolled so Radix can manage pointer interactions normally.
+    <TooltipPrimitive.Root {...props}>{children}</TooltipPrimitive.Root>
   );
 };
 const TooltipProvider = TooltipPrimitive.Provider;
@@ -42,7 +50,7 @@ const TooltipContent = React.forwardRef<
       side={side}
       align={align}
       className={cn(
-        "z-50 rounded-md border border-border bg-background px-2 py-1.5 text-xs text-muted-foreground shadow-md",
+        "z-50 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-left text-xs normal-case tracking-normal text-gray-900 shadow-md",
         className
       )}
       {...props}

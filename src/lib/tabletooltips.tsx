@@ -2,18 +2,25 @@ import * as React from "react";
 
 type TooltipMap = Record<string, React.ReactNode | undefined>;
 
-export function getHeaderTooltips<T extends readonly string[]>(
-  annualized: boolean,
-  columns: T,
-): Record<T[number], React.ReactNode | undefined> {
-  const all: TooltipMap = {
+function buildHeaderTooltips(annualized: boolean): TooltipMap {
+  return {
     Value: "Market value as of the end date.",
+
+    Return: "Cumulative return over the selected period.",
+
+    // DailyAverageReturns: annualized
+    //   ? "Annualized returns = (Sum of daily returns ÷ Number of observations) × 252."
+    //   : "Realized returns = (Sum of daily returns ÷ Number of observations) × Number of observations.",
 
     "Total Return": "Cumulative return over the selected period.",
 
     Volatility: annualized
       ? "Annualized volatility = standard deviation of daily returns × √252."
       : "Volatility = standard deviation of daily returns over the selected period.",
+
+    AverageReturns: annualized
+      ? "Annualized returns = (Sum of daily returns ÷ Number of observations) × 252."
+      : "Realized returns = (Sum of daily returns ÷ Number of observations) × Number of observations.",
 
     "Sharpe Ratio": annualized
       ? "Annualized Sharpe Ratio = Annualized excess return ÷ Annualized volatility."
@@ -75,6 +82,20 @@ export function getHeaderTooltips<T extends readonly string[]>(
 
     Type: "Indicates whether the transaction was a Buy or Sell order.",
   };
+}
+
+export function getHeaderTooltip<T extends string>(
+  annualized: boolean,
+  column: T,
+): React.ReactNode | undefined {
+  return buildHeaderTooltips(annualized)[column];
+}
+
+export function getHeaderTooltips<T extends readonly string[]>(
+  annualized: boolean,
+  columns: T,
+): Record<T[number], React.ReactNode | undefined> {
+  const all = buildHeaderTooltips(annualized);
 
   const filtered = Object.fromEntries(
     columns.map((c) => [c, all[c]]),

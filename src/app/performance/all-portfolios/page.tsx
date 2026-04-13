@@ -10,6 +10,10 @@ import { format } from "date-fns";
 import { useEffect, useState, Suspense } from "react";
 import { downloadAllPortfoliosCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
+import {
+  PerformancePageShell,
+  PerformanceTitleRow,
+} from "@/components/PerformancePageLayout";
 
 export default function Page() {
   const [view, setView] = useState("cohort");
@@ -39,38 +43,40 @@ export default function Page() {
   ];
 
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6">
-      <div className="space-y-4 p-4">
-        <Suspense fallback={null}>
-          <Breadcrumbs pages={pages} currentPage="All Portfolios" />
-        </Suspense>
-        {/* Row 1 */}
-        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <ViewButton
+    <PerformancePageShell>
+      <Suspense fallback={null}>
+        <Breadcrumbs pages={pages} currentPage="All Portfolios" />
+      </Suspense>
+      {/* This page now shares the same shell and title treatment as the rest of performance. */}
+      <PerformanceTitleRow
+        title="All Portfolios"
+        subtitle={
+          allPortfoliosSummary
+            ? `as of ${formatDate(allPortfoliosSummary.end)}`
+            : undefined
+        }
+      />
+      <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+        <ViewButton
+          start={start}
+          end={end}
+          setStart={setStart}
+          setEnd={setEnd}
+          view={view}
+          setView={setView}
+        />
+        <div className="flex flex-wrap items-center gap-3 sm:ml-auto">
+          <DownloadCSVButton
             start={start}
             end={end}
-            setStart={setStart}
-            setEnd={setEnd}
-            view={view}
-            setView={setView}
+            filenamePrefix="all_portfolios"
+            onDownload={downloadAllPortfoliosCSV}
           />
-          {allPortfoliosSummary && (
-            <div>As of {formatDate(allPortfoliosSummary.end)}</div>
-          )}
-          <div className="ml-auto flex flex-wrap items-center gap-3">
-            <DownloadCSVButton
-              start={start}
-              end={end}
-              filenamePrefix="all_portfolios"
-              onDownload={downloadAllPortfoliosCSV}
-            />
-          </div>
-        </Card>
-        {/* Row 2 */}
-        <Card>
-          <AllPortfoliosDataTable data={allPortfoliosSummary?.portfolios} />
-        </Card>
-      </div>
-    </div>
+        </div>
+      </Card>
+      <Card>
+        <AllPortfoliosDataTable data={allPortfoliosSummary?.portfolios} />
+      </Card>
+    </PerformancePageShell>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 
 interface DownloadCSVButtonProps {
@@ -18,6 +19,8 @@ interface DownloadCSVButtonProps {
    * Example: "all_portfolios", "portfolio_tech", "all_funds"
    */
   filenamePrefix: string;
+  size?: ComponentProps<typeof Button>["size"];
+  className?: string;
 }
 
 export function DownloadCSVButton({
@@ -25,6 +28,8 @@ export function DownloadCSVButton({
   end,
   onDownload,
   filenamePrefix,
+  size = "sm",
+  className,
 }: DownloadCSVButtonProps) {
   const handleDownload = async () => {
     if (!start || !end) return;
@@ -63,7 +68,8 @@ export function DownloadCSVButton({
   return (
     <Button
       variant="outline"
-      size="sm"
+      size={size}
+      className={className}
       onClick={handleDownload}
       disabled={!start || !end}
     >
