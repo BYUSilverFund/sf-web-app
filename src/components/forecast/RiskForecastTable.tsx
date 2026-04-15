@@ -2,6 +2,9 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { RiskForecast } from "@/lib/types";
+import Tooltip from "@/components/Tooltip";
+import { InfoIcon } from "lucide-react";
+import { getRiskForecastTooltips } from "@/lib/tabletooltips";
 
 type RiskForecastTableProps = {
   forecast: RiskForecast | undefined;
@@ -12,16 +15,31 @@ function MetricCard({
   title,
   value,
   loading,
+  tooltip,
 }: {
   title: string;
   value?: string;
   loading?: boolean;
+  tooltip?: string;
 }) {
   return (
     <div className="w-full">
       <Card className="rounded-md border bg-card text-card-foreground shadow p-4">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">{title}</div>
+          {tooltip ? (
+            <Tooltip
+              side="left"
+              trigger={
+                <>
+                  <span className="text-sm text-muted-foreground">{title}</span>
+                  <InfoIcon size={12} className="text-muted-foreground" />
+                </>
+              }
+              description={tooltip}
+            />
+          ) : (
+            <div className="text-sm text-muted-foreground">{title}</div>
+          )}
         </div>
 
         <div className="mt-3 text-3xl font-semibold text-left">
@@ -58,6 +76,7 @@ export function RiskForecastTable({
   fundName,
 }: RiskForecastTableProps) {
   const loading = !forecast;
+  const tooltips = getRiskForecastTooltips();
 
   return (
     <Card className="bg-gray border-none shadow-none text-card-foreground">
@@ -73,6 +92,7 @@ export function RiskForecastTable({
             title="Beta"
             loading={loading}
             value={forecast ? forecast.beta.toFixed(2) : undefined}
+            tooltip={tooltips["Beta"]}
           />
           <MetricCard
             title="Volatility"
@@ -82,11 +102,17 @@ export function RiskForecastTable({
                 ? `${(forecast.volatility * 100).toFixed(2)}%`
                 : undefined
             }
+            tooltip={tooltips["Volatility"]}
           />
           <MetricCard
             title={forecast?.ticker ? "Portfolio Weight" : "Tracking Error"}
             loading={loading}
             value={getPortfolioWeightOrTrackingError(forecast)}
+            tooltip={
+              forecast?.ticker
+                ? tooltips["Portfolio Weight"]
+                : tooltips["Tracking Error"]
+            }
           />
         </div>
       </CardContent>
