@@ -80,7 +80,10 @@ import type {
   PortfolioSummaryResponse,
   PortfolioTimeSeriesResponse,
 } from "@/lib/types";
-import { calculateSummaryMetrics } from "@/lib/RealizedVsAnnualizedCalculations";
+import {
+  calculateAverageDailyReturn,
+  calculateSummaryMetrics,
+} from "@/lib/RealizedVsAnnualizedCalculations";
 
 import {
   formatDate,
@@ -106,16 +109,6 @@ const timeFilters = [
 ] as const;
 const benchmarkMetricCount = 6;
 const riskMetricCount = 4;
-
-function getMeanReturn(
-  values: number[] | undefined,
-  annualized: boolean,
-): number | undefined {
-  if (!values?.length) return undefined;
-
-  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
-  return annualized ? mean * 252 : mean * values.length;
-}
 
 export default function Page() {
   const router = useRouter();
@@ -345,9 +338,11 @@ export default function Page() {
     return {
       realized: {
         returnMetric: {
-          fund: formatPercent(getMeanReturn(fundDailyReturns, false) ?? 0),
+          fund: formatPercent(
+            calculateAverageDailyReturn(fundDailyReturns, false) ?? 0,
+          ),
           benchmark: formatPercent(
-            getMeanReturn(benchmarkDailyReturns, false) ?? 0,
+            calculateAverageDailyReturn(benchmarkDailyReturns, false) ?? 0,
           ),
         },
         volatility: {
@@ -364,9 +359,11 @@ export default function Page() {
       },
       annualized: {
         returnMetric: {
-          fund: formatPercent(getMeanReturn(fundDailyReturns, true) ?? 0),
+          fund: formatPercent(
+            calculateAverageDailyReturn(fundDailyReturns, true) ?? 0,
+          ),
           benchmark: formatPercent(
-            getMeanReturn(benchmarkDailyReturns, true) ?? 0,
+            calculateAverageDailyReturn(benchmarkDailyReturns, true) ?? 0,
           ),
         },
         volatility: {

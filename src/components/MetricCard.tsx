@@ -22,9 +22,15 @@ function TitleWithTooltip({
   const forceSecondLineWithIcon =
     normalizedTitle === "AVERAGE RETURNS" ||
     normalizedTitle === "INFORMATION RATIO";
+
   const titleWords = title.trim().split(/\s+/);
   const firstLine = titleWords[0] ?? title;
   const secondLine = titleWords.slice(1).join(" ");
+
+  // For normal layout: bind icon to last word
+  const words = title.trim().split(/\s+/);
+  const lastWord = words.pop();
+  const rest = words.join(" ");
 
   return (
     <TooltipProvider>
@@ -33,18 +39,22 @@ function TitleWithTooltip({
           {forceSecondLineWithIcon ? (
             <span className="inline-block cursor-help leading-tight text-center">
               <span className="block">{firstLine}</span>
+
               <span className="block">
-                {secondLine}
-                <span className="ml-1 inline-block align-middle">
-                  <InfoIcon className="h-3 w-3 text-muted-foreground" />
+                <span className="whitespace-nowrap inline-flex items-center">
+                  {secondLine}
+                  <InfoIcon className="ml-0.5 h-3 w-3 text-muted-foreground" />
                 </span>
               </span>
             </span>
           ) : (
-            <span className="inline leading-tight cursor-help">
-              <span className="whitespace-normal break-words">{title}</span>
-              <span className="ml-1 inline-block align-middle">
-                <InfoIcon className="h-3 w-3 text-muted-foreground" />
+            <span className="inline leading-tight cursor-help text-center">
+              <span className="whitespace-normal break-words">
+                {rest && `${rest} `}
+                <span className="whitespace-nowrap inline-flex items-center">
+                  {lastWord}
+                  <InfoIcon className="ml-0.5 h-3 w-3 text-muted-foreground" />
+                </span>
               </span>
             </span>
           )}

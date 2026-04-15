@@ -71,7 +71,7 @@ const tooltipColumns = [
   "Price",
   "Value",
   "Weight",
-  "Total Return",
+  "Return",
   "Volatility",
   "Alpha",
   "Beta",

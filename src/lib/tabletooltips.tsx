@@ -8,10 +8,6 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
 
     Return: "Cumulative return over the selected period.",
 
-    // DailyAverageReturns: annualized
-    //   ? "Annualized returns = (Sum of daily returns ÷ Number of observations) × 252."
-    //   : "Realized returns = (Sum of daily returns ÷ Number of observations) × Number of observations.",
-
     "Total Return": "Cumulative return over the selected period.",
 
     Volatility: annualized
@@ -19,8 +15,8 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
       : "Volatility = standard deviation of daily returns over the selected period.",
 
     AverageReturns: annualized
-      ? "Annualized returns = (Sum of daily returns ÷ Number of observations) × 252."
-      : "Realized returns = (Sum of daily returns ÷ Number of observations) × Number of observations.",
+      ? "Annualized returns = average daily return over the selected period × 252."
+      : "Realized returns = average daily return over the selected period.",
 
     "Sharpe Ratio": annualized
       ? "Annualized Sharpe Ratio = Annualized excess return ÷ Annualized volatility."

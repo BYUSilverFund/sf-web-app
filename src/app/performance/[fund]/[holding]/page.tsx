@@ -60,7 +60,10 @@ import {
   getHoldingTimeSeries,
   getTrades,
 } from "@/lib/api/holding";
-import { calculateSummaryMetrics } from "@/lib/RealizedVsAnnualizedCalculations";
+import {
+  calculateAverageDailyReturn,
+  calculateSummaryMetrics,
+} from "@/lib/RealizedVsAnnualizedCalculations";
 import { getHeaderTooltip, getHeaderTooltips } from "@/lib/tabletooltips";
 import type {
   BenchmarkRequest,
@@ -89,16 +92,6 @@ const timeFilters = [
   { label: "Max", value: "max" },
   { label: "Custom", value: "custom" },
 ] as const;
-
-function getMeanReturn(
-  values: number[] | undefined,
-  annualized: boolean,
-): number | undefined {
-  if (!values?.length) return undefined;
-
-  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
-  return annualized ? mean * 252 : mean * values.length;
-}
 
 function formatOptionalPercent(value: number | undefined): string {
   return typeof value === "number" ? formatPercent(value) : "--";
@@ -439,11 +432,11 @@ export default function Page() {
   const displayedHoldingDividendYield = holdingSummary?.dividend_yield;
   const displayedHoldingAlpha =
     displayMetrics.fundAlpha ?? holdingSummary?.alpha;
-  const displayedHoldingAverageReturn = getMeanReturn(
+  const displayedHoldingAverageReturn = calculateAverageDailyReturn(
     holdingDailyReturns,
     isAnnualized,
   );
-  const displayedBenchmarkAverageReturn = getMeanReturn(
+  const displayedBenchmarkAverageReturn = calculateAverageDailyReturn(
     benchmarkDailyReturns,
     isAnnualized,
   );
