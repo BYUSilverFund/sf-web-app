@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -110,7 +111,7 @@ const timeFilters = [
 const benchmarkMetricCount = 6;
 const riskMetricCount = 4;
 
-export default function Page() {
+function PerformancePageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -617,8 +618,48 @@ export default function Page() {
   );
 }
 
+export default function Page() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PerformancePageContent />
+    </Suspense>
+  );
+}
+
 function LoadingBlock({ className }: { className: string }) {
   return <div className={`animate-pulse rounded bg-gray-100 ${className}`} />;
+}
+
+function PageSkeleton() {
+  return (
+    <PerformancePageShell>
+      <PerformanceTitleRow title="Performance Metrics" />
+      <div className="flex min-h-0 flex-1 flex-col gap-3">
+        <PerformanceGraphRow>
+          <PerformancePrimaryPane
+            height={PERFORMANCE_PAGE_LAYOUT.graphPanelHeight}
+          >
+            <PerformanceGraphPanel
+              height={PERFORMANCE_PAGE_LAYOUT.graphPanelHeight}
+            >
+              <ChartCardSkeleton />
+            </PerformanceGraphPanel>
+          </PerformancePrimaryPane>
+          <PerformanceSidebar height={PERFORMANCE_PAGE_LAYOUT.graphPanelHeight}>
+            <div className="h-full rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+              <LoadingBlock className="mb-4 h-5 w-40" />
+              <LoadingBlock className="h-24 w-full" />
+            </div>
+          </PerformanceSidebar>
+        </PerformanceGraphRow>
+        <PerformanceMetricsSection
+          header={<LoadingBlock className="h-10 w-72" />}
+        >
+          <MetricsGridSkeleton />
+        </PerformanceMetricsSection>
+      </div>
+    </PerformancePageShell>
+  );
 }
 
 function ChartCardSkeleton() {
