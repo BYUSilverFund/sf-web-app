@@ -103,3 +103,15 @@ export function getHeaderTooltips<T extends readonly string[]>(
 
   return filtered;
 }
+
+export function getRiskForecastTooltips(): Record<string, string> {
+  return {
+    Beta: "Beta = portfolio-to-benchmark covariance / benchmark variance",
+
+    Volatility: "Volatility = square root of portfolio variance",
+
+    "Tracking Error": "Tracking Error = square root of active weight variance",
+
+    "Portfolio Weight": "Portfolio Weight = holding value / total fund value",
+  };
+}
