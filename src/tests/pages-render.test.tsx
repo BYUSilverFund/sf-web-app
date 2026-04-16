@@ -3,6 +3,21 @@ import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
 import { vi } from "vitest";
 
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  refresh: vi.fn(),
+  back: vi.fn(),
+  forward: vi.fn(),
+  prefetch: vi.fn().mockResolvedValue(undefined),
+};
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => mockRouter,
+  usePathname: () => "/performance",
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock("@/components/ReturnsChart", () => ({
   ReturnsChart: () => React.createElement("div", null, "MockedChart"),
 }));

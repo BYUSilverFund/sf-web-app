@@ -20,16 +20,19 @@ import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
-import { PortfolioSummaryTable } from "@/components/PortfolioSummarytable";
+import { PortfolioSummaryTable } from "@/components/PortfolioSummaryTable";
 import { ReturnsChart } from "@/components/ReturnsChart";
 import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { DashboardWrapper } from "@/components/DashboardWrapper";
 import { downloadPortfolioCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 import { FactorExposuresButton } from "@/components/forecast/FactorExposuresButton";
+import {
+  PerformancePageShell,
+  PerformanceTitleRow,
+} from "@/components/PerformancePageLayout";
 
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();
@@ -55,7 +58,7 @@ export default function Page() {
   const [allHoldingsSummary, setAllHoldingsSummary] =
     useState<AllHoldingsSummaryResponse>();
 
-  // Memoized dates based on view and fund
+  // The date range follows the selected view so the table and chart stay in sync.
   const dates = useMemo(() => {
     if (!fund) return undefined;
     return getDateFromView(view, fund);
@@ -76,6 +79,7 @@ export default function Page() {
 
   const setBenchmarkForSummary = React.useCallback(
     (summary: PortfolioSummaryResponse) => {
+      // Benchmark requests are cached because summary toggles can reuse the same date range.
       const benchmarkKey = `${summary.start}|${summary.end}`;
       const cachedBenchmark = benchmarkCache[benchmarkKey];
       if (cachedBenchmark) {
@@ -170,69 +174,73 @@ export default function Page() {
   ];
 
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6">
-      <div className="space-y-4 p-4">
-        <DashboardWrapper>
-          <Suspense fallback={null}>
-            <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
-          </Suspense>
-          {/* Row 1 */}
-          <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-            <ViewButton
+    <PerformancePageShell>
+      <div className="flex min-h-0 flex-1 flex-col gap-3">
+        {/* The portfolio detail page now uses the shared shell/title rhythm from the main performance area. */}
+        <Suspense fallback={null}>
+          <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
+        </Suspense>
+        <PerformanceTitleRow
+          title={formatPortfolio(fund)}
+          subtitle={
+            portfolioSummary
+              ? `as of ${formatDate(portfolioSummary.end)}`
+              : undefined
+          }
+        />
+        <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+          <ViewButton
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            view={view}
+            setView={setView}
+            fund={fund}
+          />
+          <div className="flex flex-wrap items-center gap-3 sm:ml-auto">
+            <FactorExposuresButton fund={fund} />
+            <DownloadCSVButton
               start={start}
               end={end}
-              setStart={setStart}
-              setEnd={setEnd}
-              view={view}
-              setView={setView}
-              fund={fund}
+              filenamePrefix={`portfolio_${fund}`}
+              onDownload={(req) =>
+                downloadPortfolioCSV({
+                  ...req,
+                  fund: fund,
+                })
+              }
             />
-            {portfolioSummary && (
-              <div>As of {formatDate(portfolioSummary.end)}</div>
-            )}
-            <div className="ml-auto flex flex-wrap items-center gap-3">
-              <FactorExposuresButton fund={fund} />
-              <DownloadCSVButton
-                start={start}
-                end={end}
-                filenamePrefix={`portfolio_${fund}`}
-                onDownload={(req) =>
-                  downloadPortfolioCSV({
-                    ...req,
-                    fund: fund,
-                  })
-                }
-              />
-            </div>
-          </Card>
-          {/* Row 2 */}
-          <Card className="flex flex-col h-fit">
-            <PortfolioSummaryTable
-              portfolio={fund}
-              portfolioSummary={portfolioSummary}
-              benchmarkSummary={benchmarkSummary}
-              weightMode={weightMode}
-              onWeightModeChange={setWeightMode}
-              view_1yr={view === "1year"}
+          </div>
+        </Card>
+        <Card className="flex flex-col h-fit">
+          <PortfolioSummaryTable
+            portfolio={fund}
+            portfolioSummary={portfolioSummary}
+            benchmarkSummary={benchmarkSummary}
+            weightMode={weightMode}
+            onWeightModeChange={setWeightMode}
+            view_1yr={view === "1year"}
+          />
+        </Card>
+        <div className="min-h-0 flex flex-col gap-4 md:flex-1 md:flex-row md:space-y-0">
+          {/* The chart and holdings summary stay side by side on desktop, but stack naturally on smaller screens. */}
+          <Card className="flex min-h-0 flex-col md:w-2/3">
+            <ReturnsChart
+              data={portfolioTimeSeries && portfolioTimeSeries["records"]}
+              label={formatPortfolio(fund)}
             />
           </Card>
-          {/* Row 3 */}
-          <div className="md:flex md:space-y-0 space-y-4 min-h-0 gap-4 pb-5">
-            <Card className="min-h-0 flex flex-col md:w-2/3">
-              <ReturnsChart
-                data={portfolioTimeSeries && portfolioTimeSeries["records"]}
-                label={formatPortfolio(fund)}
-              />
-            </Card>
-            <Card className="md:w-2/6 flex flex-col w-full overflow-y-auto">
+          <Card className="flex min-h-0 w-full flex-col overflow-hidden md:w-2/6">
+            <div className="min-h-0 flex-1">
               <AllHoldingsSummaryTable
                 fund={fund}
                 allHoldingsSummary={allHoldingsSummary}
               />
-            </Card>
-          </div>
-        </DashboardWrapper>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
+    </PerformancePageShell>
   );
 }

@@ -2,18 +2,21 @@ import * as React from "react";
 
 type TooltipMap = Record<string, React.ReactNode | undefined>;
 
-export function getHeaderTooltips<T extends readonly string[]>(
-  annualized: boolean,
-  columns: T,
-): Record<T[number], React.ReactNode | undefined> {
-  const all: TooltipMap = {
+function buildHeaderTooltips(annualized: boolean): TooltipMap {
+  return {
     Value: "Market value as of the end date.",
+
+    Return: "Cumulative return over the selected period.",
 
     "Total Return": "Cumulative return over the selected period.",
 
     Volatility: annualized
       ? "Annualized volatility = standard deviation of daily returns × √252."
       : "Volatility = standard deviation of daily returns over the selected period.",
+
+    AverageReturns: annualized
+      ? "Annualized returns = average daily return over the selected period × 252."
+      : "Realized returns = average daily return over the selected period.",
 
     "Sharpe Ratio": annualized
       ? "Annualized Sharpe Ratio = Annualized excess return ÷ Annualized volatility."
@@ -75,10 +78,36 @@ export function getHeaderTooltips<T extends readonly string[]>(
 
     Type: "Indicates whether the transaction was a Buy or Sell order.",
   };
+}
+
+export function getHeaderTooltip<T extends string>(
+  annualized: boolean,
+  column: T,
+): React.ReactNode | undefined {
+  return buildHeaderTooltips(annualized)[column];
+}
+
+export function getHeaderTooltips<T extends readonly string[]>(
+  annualized: boolean,
+  columns: T,
+): Record<T[number], React.ReactNode | undefined> {
+  const all = buildHeaderTooltips(annualized);
 
   const filtered = Object.fromEntries(
     columns.map((c) => [c, all[c]]),
   ) as Record<T[number], React.ReactNode | undefined>;
 
   return filtered;
+}
+
+export function getRiskForecastTooltips(): Record<string, string> {
+  return {
+    Beta: "Beta = portfolio-to-benchmark covariance / benchmark variance",
+
+    Volatility: "Volatility = square root of portfolio variance",
+
+    "Tracking Error": "Tracking Error = square root of active weight variance",
+
+    "Portfolio Weight": "Portfolio Weight = holding value / total fund value",
+  };
 }

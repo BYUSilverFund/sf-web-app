@@ -1,75 +1,100 @@
 "use client";
+import Link from "next/link";
+import { format } from "date-fns";
+import { ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
 
 import { AllDividendsDataTable } from "@/components/AllDividendsDataTable";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Card } from "@/components/ui/card";
+import {
+  PerformancePageShell,
+  PerformanceSectionCard,
+  PerformanceTitleRow,
+  PerformanceToolbar,
+} from "@/components/PerformancePageLayout";
 import { ViewButton } from "@/components/ViewSelect";
+import { Button } from "@/components/ui/button";
 import { getDividends } from "@/lib/api/holding";
-import { DividendsResponse, HoldingRequest } from "@/lib/types";
+import type { DividendsResponse, HoldingRequest } from "@/lib/types";
 import { formatDate, formatPortfolio } from "@/lib/utils";
-import { format } from "date-fns";
-import { useParams } from "next/navigation";
-import { useEffect, useState, useMemo, Suspense } from "react";
 
 export default function Page() {
+  const params = useParams<{ fund: string; holding: string }>();
+  const requestSequence = useRef(0);
   const [view, setView] = useState("max");
   const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
   const [end, setEnd] = useState<Date | undefined>(new Date());
-  const [allDividends, setAllDividends] = useState<
-    DividendsResponse | undefined
-  >();
+  const [allDividends, setAllDividends] = useState<DividendsResponse>();
 
-  const params = useParams<{ fund: string; holding: string }>();
-
-  // Fetch all dividends for this holding
   useEffect(() => {
-    if (start && end && params?.fund && params?.holding) {
-      const holdingRequest: HoldingRequest = {
-        fund: params.fund,
-        ticker: params.holding,
-        start: format(start, "yyyy-MM-dd"),
-        end: format(end, "yyyy-MM-dd"),
-      };
+    if (!start || !end) return;
+    const requestId = ++requestSequence.current;
 
-      getDividends(holdingRequest).then(setAllDividends).catch(console.error);
-    }
-  }, [start, end, params.fund, params.holding]);
+    const holdingRequest: HoldingRequest = {
+      fund: params.fund,
+      ticker: params.holding,
+      start: format(start, "yyyy-MM-dd"),
+      end: format(end, "yyyy-MM-dd"),
+    };
 
-  // Breadcrumb navigation
-  // All Funds > [fund] > [ticker] > [All Trades]
-  const pages = [
-    { name: "All Funds", href: "/performance" },
-    { name: formatPortfolio(params.fund), href: `/performance/${params.fund}` },
-    {
-      name: params.holding.toUpperCase(),
-      href: `/performance/${params.fund}/${params.holding}`,
-    },
-  ];
+    getDividends(holdingRequest)
+      .then((dividends) => {
+        if (requestSequence.current !== requestId) return;
+        setAllDividends(dividends);
+      })
+      .catch((error) => {
+        if (requestSequence.current !== requestId) return;
+        console.error(error);
+      });
+  }, [end, params.fund, params.holding, start]);
 
-  // Memoized trade list
-  const filteredDividends = useMemo((): DividendsResponse => {
-    if (!allDividends) {
-      return {
-        fund: params.fund,
-        ticker: params.holding,
-        start: "2000-01-01",
-        end: format(new Date(), "yyyy-MM-dd"),
-        dividends: [],
-      };
-    }
-    return { ...allDividends };
-  }, [allDividends, params.fund, params.holding]);
-
-  // Render page
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6">
-      <div className="space-y-4 p-4">
-        <Suspense fallback={null}>
-          <Breadcrumbs pages={pages} currentPage="All Dividends" />
-        </Suspense>
+    <PerformancePageShell>
+      <PerformanceTitleRow
+        title={`${params.holding} - All Dividends`}
+        subtitle={
+          allDividends ? `as of ${formatDate(allDividends.end)}` : undefined
+        }
+      />
 
-        {/* Row 1 */}
-        <Card className="sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
+      <PerformanceToolbar>
+        <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              asChild
+              variant="outline"
+              className="px-4 py-2 bg-white border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50 transition-colors h-auto"
+            >
+              <Link href={`/performance?tab=${params.fund}`}>
+                Portfolio:{" "}
+                <span className="font-semibold text-gray-900">
+                  {formatPortfolio(params.fund)}
+                </span>
+              </Link>
+            </Button>
+            <ChevronRight className="h-4 w-4 text-gray-300" />
+            <Button
+              asChild
+              variant="outline"
+              className="px-4 py-2 bg-white border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50 transition-colors h-auto"
+            >
+              <Link href={`/performance/${params.fund}/${params.holding}`}>
+                Ticker:{" "}
+                <span className="font-semibold text-gray-900">
+                  {params.holding}
+                </span>
+              </Link>
+            </Button>
+            <ChevronRight className="h-4 w-4 text-gray-300" />
+            <Button
+              type="button"
+              variant="ghost"
+              className="px-4 py-2 !bg-[#002E5D] !border-[#002E5D] border rounded text-sm !text-white hover:!bg-[#002E5D] hover:!text-white h-auto"
+            >
+              Page: <span className="font-semibold">All Dividends</span>
+            </Button>
+          </div>
+
           <ViewButton
             start={start}
             end={end}
@@ -79,14 +104,12 @@ export default function Page() {
             setView={setView}
             fund={params.fund}
           />
-          {allDividends && <div>As of {formatDate(allDividends.end)}</div>}
-        </Card>
+        </div>
+      </PerformanceToolbar>
 
-        {/* Row 2: Dividends Table */}
-        <Card>
-          <AllDividendsDataTable dividends={filteredDividends} />
-        </Card>
-      </div>
-    </div>
+      <PerformanceSectionCard className="px-5 py-4">
+        <AllDividendsDataTable dividends={allDividends} />
+      </PerformanceSectionCard>
+    </PerformancePageShell>
   );
 }

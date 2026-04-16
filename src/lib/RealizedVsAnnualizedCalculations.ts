@@ -18,6 +18,20 @@ type BenchmarkSummary = {
   dividend_yield: number;
 };
 
+const TRADING_DAYS_PER_YEAR = 252;
+
+export function calculateAverageDailyReturn(
+  returns: number[] | undefined,
+  annualized: boolean,
+): number | undefined {
+  if (!returns?.length) return undefined;
+
+  const meanDailyReturn =
+    returns.reduce((sum, dailyReturn) => sum + dailyReturn, 0) / returns.length;
+
+  return annualized ? meanDailyReturn * TRADING_DAYS_PER_YEAR : meanDailyReturn;
+}
+
 export function calculateSummaryMetrics(
   annualized: boolean,
   summary?: PeriodSummary,
@@ -33,11 +47,11 @@ export function calculateSummaryMetrics(
     };
 
   const annSqRt = withDaysCheck((value: number, days: number) =>
-    view_1yr ? value : value * Math.sqrt(252 / days),
+    view_1yr ? value : value * Math.sqrt(TRADING_DAYS_PER_YEAR / days),
   );
 
   const ann = withDaysCheck((value: number, days: number) =>
-    view_1yr ? value : value * (252 / days),
+    view_1yr ? value : value * (TRADING_DAYS_PER_YEAR / days),
   );
 
   const toggle = (
