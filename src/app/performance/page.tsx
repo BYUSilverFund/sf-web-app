@@ -14,7 +14,10 @@ import { ChevronDownIcon, HelpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { FundTabsBar } from "@/components/FundTabsBar";
-import { PerformanceChart } from "@/components/PerformanceChart";
+import {
+  PerformanceChart,
+  PerformanceChartLegend,
+} from "@/components/PerformanceChart";
 import { MetricsBar } from "@/components/MetricsBar";
 import { MetricsRow } from "@/components/MetricsRow";
 import { RiskMetrics } from "@/components/RiskMetrics";
@@ -110,6 +113,10 @@ const timeFilters = [
 ] as const;
 const benchmarkMetricCount = 6;
 const riskMetricCount = 4;
+
+function getPreferredChartTickCount(view: string): number | undefined {
+  return view === "cohort" || view === "1year" ? 12 : undefined;
+}
 
 function PerformancePageContent() {
   const router = useRouter();
@@ -519,7 +526,10 @@ function PerformancePageContent() {
                   </TooltipProvider>
 
                   <div className="min-h-0 flex-1">
-                    <PerformanceChart data={chartData} />
+                    <PerformanceChart
+                      data={chartData}
+                      preferredTickCount={getPreferredChartTickCount(view)}
+                    />
                   </div>
 
                   {/* Filters collapse to a select on mobile, but keep button tabs on larger screens. */}
@@ -544,20 +554,14 @@ function PerformancePageContent() {
                       onCustomEndDateChange={setEnd}
                     />
 
-                    <div className="flex gap-4 rounded border border-gray-300 bg-white/90 px-3 py-1.5 backdrop-blur-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-6 bg-[#1F5F3F]" />
-                        <span className="text-xs">
-                          {isAllFunds
-                            ? "Fund"
-                            : (formatPortfolio(activeTab) ?? "Fund")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-6 bg-[#6B7280] opacity-70" />
-                        <span className="text-xs">Benchmark</span>
-                      </div>
-                    </div>
+                    <PerformanceChartLegend
+                      fundLabel={
+                        isAllFunds
+                          ? "Fund"
+                          : (formatPortfolio(activeTab) ?? "Fund")
+                      }
+                      className="backdrop-blur-sm"
+                    />
                   </div>
                 </>
               )}
