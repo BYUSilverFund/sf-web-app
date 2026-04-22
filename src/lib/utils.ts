@@ -12,6 +12,13 @@ export function formatCurrency(value: number): string {
   }).format(value);
 }
 
+export function formatMillions(
+  value: number,
+  fractionDigits: number = 2,
+): string {
+  return `${(value / 1_000_000).toFixed(fractionDigits)} Million`;
+}
+
 export function formatPercent(
   value: number,
   fractionDigits: number = 2,

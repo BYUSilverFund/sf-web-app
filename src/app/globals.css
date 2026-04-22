@@ -9,6 +9,7 @@
   body {
     @apply bg-background text-foreground;
   }
+
   :root {
     --background: 0 0% 100%;
 
@@ -115,21 +116,12 @@
 This is where you place your custom classes that will be reused throughout your project */
 @layer components {
   .title {
-    @apply text-3xl md:text-4xl lg:text-5xl text-center text-blue-900;
+    @apply text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center text-blue-900;
   }
   .sectionTitle {
-    @apply text-2xl md:text-3xl lg:text-4xl text-center text-blue-900;
+    @apply text-xl sm:text-2xl md:text-3xl xl:text-4xl text-center text-blue-900;
   }
   .text {
     @apply text-sm md:text-base lg:text-lg text-blue-900;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }

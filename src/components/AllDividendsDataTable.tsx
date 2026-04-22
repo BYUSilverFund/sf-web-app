@@ -1,10 +1,12 @@
 import * as React from "react";
 import {
+  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -44,7 +46,7 @@ const makeHeader = (label: string, description?: React.ReactNode) => {
 const sortableHeader = (
   label: string,
   description: React.ReactNode | undefined,
-  column: any,
+  column: Column<DividendsRecord, unknown>,
 ) => (
   <div className="flex items-center gap-1 whitespace-nowrap">
     {makeHeader(label, description)}
@@ -93,34 +95,52 @@ export function AllDividendsDataTable({
 }: {
   dividends: DividendsResponse | undefined;
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "date", desc: true },
+  ]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const sortedDividends = React.useMemo(
+    () => dividends?.dividends ?? [],
+    [dividends?.dividends],
+  );
   const table = useReactTable({
-    data: dividends?.dividends ?? [],
+    data: sortedDividends,
     columns: dividendColumns,
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    state: { sorting },
+    state: { sorting, pagination },
   });
 
   if (!dividends || dividends.dividends.length === 0)
     return (
-      <div className="flex items-center justify-center py-8 text-muted-foreground">
+      <div className="flex items-center justify-center py-8 text-sm text-gray-500">
         No dividends found
       </div>
     );
 
   return (
     <div className="w-full">
-      <div className="space-y-4 p-4">
-        <div className="overflow-hidden rounded-md border">
+      <div className="space-y-4">
+        {/* This table uses the tighter card/table chrome introduced across the refreshed performance detail pages. */}
+        <div className="overflow-x-auto border border-gray-200 rounded">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow
+                  key={headerGroup.id}
+                  className="border-b border-gray-200 hover:bg-transparent"
+                >
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="py-2.5 px-3 text-xs font-semibold text-gray-600 h-auto"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -134,9 +154,12 @@ export function AllDividendsDataTable({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className="border-b border-gray-100">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="py-2.5 px-3 text-sm text-gray-900"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -157,15 +180,16 @@ export function AllDividendsDataTable({
           </Table>
         </div>
 
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="text-muted-foreground flex-1 text-sm">
+        <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
+          <div>
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </div>
-          <div className="space-x-2">
+          <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
+              className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
@@ -174,6 +198,7 @@ export function AllDividendsDataTable({
             <Button
               variant="outline"
               size="sm"
+              className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >

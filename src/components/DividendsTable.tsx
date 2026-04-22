@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { DividendsResponse } from "@/lib/types";
 import Link from "next/link";
@@ -26,6 +27,14 @@ export function DividendsTable({
   if (!dividends || dividends.dividends.length === 0)
     return <div className="text-center py-2 text-muted-foreground">None</div>;
 
+  const visibleDividends = useMemo(
+    () =>
+      [...dividends.dividends]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 5),
+    [dividends.dividends],
+  );
+
   return (
     <Table>
       <TableHeader>
@@ -37,7 +46,7 @@ export function DividendsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {dividends.dividends.slice(0, 5).map((dividend, index) => (
+        {visibleDividends.map((dividend, index) => (
           <TableRow key={index}>
             <TableCell>{dividend.date}</TableCell>
             <TableCell>{dividend.shares}</TableCell>

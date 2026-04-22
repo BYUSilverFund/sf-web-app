@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   flexRender,
@@ -9,18 +10,13 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, InfoIcon } from "lucide-react";
+import { ArrowUpDown, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -55,7 +51,7 @@ const makeHeader = (label: string, description?: React.ReactNode) => {
 const sortableHeader = (
   label: string,
   description: React.ReactNode | undefined,
-  column: any,
+  column: Column<AllHoldingsRecord, unknown>,
 ) => (
   <div className="flex items-center gap-1">
     {makeHeader(label, description)}
@@ -75,7 +71,7 @@ const tooltipColumns = [
   "Price",
   "Value",
   "Weight",
-  "Total Return",
+  "Return",
   "Volatility",
   "Alpha",
   "Beta",
@@ -93,7 +89,7 @@ const headerTooltips: Record<string, React.ReactNode | undefined> = {
   Price: shared["Price"],
   Value: shared["Value"],
   Weight: shared["Weight"],
-  Return: shared["Total Return"],
+  Return: shared["Return"],
   Volatility: shared["Volatility"],
   Alpha: shared["Alpha"],
   Beta: shared["Beta"],
@@ -184,15 +180,21 @@ export const columns: ColumnDef<AllHoldingsRecord>[] = [
 export function AllHoldingsDataTable({
   data,
   portfolioSummary,
+  loading = false,
 }: {
   data: AllHoldingsRecord[] | undefined;
   portfolioSummary: PortfolioSummaryResponse | undefined;
+  loading?: boolean;
 }) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -210,6 +212,7 @@ export function AllHoldingsDataTable({
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -219,6 +222,7 @@ export function AllHoldingsDataTable({
     state: {
       sorting,
       columnFilters,
+      pagination,
       columnVisibility,
       rowSelection,
     },
@@ -226,53 +230,37 @@ export function AllHoldingsDataTable({
 
   return (
     <div className="w-full">
-      <div className="space-y-4 p-4">
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Filter tickers..."
-            value={
-              (table.getColumn("ticker")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("ticker")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <div className="space-y-4">
+        <div className="flex items-center">
+          {loading ? (
+            <div className="h-[42px] w-full animate-pulse rounded border border-gray-300 bg-gray-100" />
+          ) : (
+            <Input
+              placeholder="Filter tickers..."
+              value={
+                (table.getColumn("ticker")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("ticker")?.setFilterValue(event.target.value)
+              }
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-white h-auto shadow-none placeholder:text-gray-400"
+            />
+          )}
         </div>
-        <div className="overflow-hidden rounded-md border">
+        <div className="overflow-x-auto border border-gray-200 rounded">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow
+                  key={headerGroup.id}
+                  className="border-b border-gray-200 hover:bg-transparent"
+                >
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead
+                        key={header.id}
+                        className="py-2.5 px-3 text-xs font-semibold text-gray-600 h-auto"
+                      >
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -286,24 +274,45 @@ export function AllHoldingsDataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => router.push(`${row.getValue("ticker")}`)}
-                  className="cursor-pointer hover:bg-muted transition"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
+              {loading
+                ? Array.from({ length: 10 }).map((_, rowIndex) => (
+                    <TableRow
+                      key={`loading-row-${rowIndex}`}
+                      className="border-b border-gray-100"
+                    >
+                      {Array.from({ length: columns.length }).map(
+                        (_, cellIndex) => (
+                          <TableCell
+                            key={`loading-cell-${rowIndex}-${cellIndex}`}
+                            className="py-2.5 px-3"
+                          >
+                            <div className="h-5 w-full animate-pulse rounded bg-gray-100" />
+                          </TableCell>
+                        ),
                       )}
-                    </TableCell>
+                    </TableRow>
+                  ))
+                : table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => router.push(`${row.getValue("ticker")}`)}
+                      className="cursor-pointer border-b border-gray-100 hover:bg-gray-50 transition"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="py-2.5 px-3 text-sm text-gray-900"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-              {table.getRowModel().rows.length === 0 && (
+              {!loading && table.getRowModel().rows.length === 0 && (
                 <TableRow className="h-[33.33vh]">
                   <TableCell
                     colSpan={table.getAllLeafColumns().length}
@@ -314,25 +323,31 @@ export function AllHoldingsDataTable({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="text-muted-foreground flex-1 text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="space-x-2">
+        <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
+          {loading ? (
+            <div className="h-4 w-40 animate-pulse rounded bg-gray-100" />
+          ) : (
+            <div>
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </div>
+          )}
+          <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
+              className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white cursor-default h-auto"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={loading || !table.getCanPreviousPage()}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
+              className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white cursor-default h-auto"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={loading || !table.getCanNextPage()}
             >
               Next
             </Button>
