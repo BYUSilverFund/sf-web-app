@@ -75,7 +75,7 @@ export function AllFundsSummary({
               href={`/performance?tab=${portfolio.portfolio}`}
               onClick={() => onPortfolioSelect?.(portfolio.portfolio)}
             >
-              <div className="text-sm font-bold text-[#002E5D]">
+              <div className="text-sm font-bold">
                 {formatPortfolio(portfolio.portfolio) ?? portfolio.portfolio}
               </div>
               <div className="text-right">

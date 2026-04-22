@@ -20,8 +20,8 @@ export function RiskMetrics({ metrics, mode }: RiskMetricsProps) {
 
   return (
     // Risk metrics follow the same mobile scrolling pattern as the benchmark metrics to keep cards readable.
-    <div className="rounded-lg border border-gray-200 bg-white px-3 py-3 shadow-sm">
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-700 sm:text-sm">
+    <div className="rounded-lg bg-white px-3 py-3">
+      <h3 className="border-b mb-2 text-xs font-semibold uppercase tracking-wider text-gray-700 sm:text-sm">
         Relative Risk Metrics
       </h3>
 

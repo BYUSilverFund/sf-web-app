@@ -76,6 +76,7 @@ function parseChartDate(date: string): number {
 }
 
 function formatChartDate(date: string): string {
+  if (!date) return "";
   return CHART_DATE_FORMATTER.format(new Date(parseChartDate(date)));
 }
 

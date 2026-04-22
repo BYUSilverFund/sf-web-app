@@ -65,11 +65,11 @@ export function MetricsRow({ metrics, mode }: MetricsRowProps) {
 
   return (
     // The benchmark metrics switch from a horizontal card scroller on small screens to a grid on larger screens.
-    <div className="rounded-lg border border-gray-200 bg-white px-3 py-3 shadow-sm">
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-700 sm:text-sm">
+    <div className="rounded-lg bg-white px-3 py-3">
+      <h3 className="border-b mb-2 text-xs font-semibold uppercase tracking-wider text-gray-700 sm:text-sm">
         Compared To Benchmark Metrics
       </h3>
-      <div className="-mx-1 overflow-x-auto pb-1 sm:mx-0 sm:overflow-visible sm:pb-0">
+      <div className="mx-1 overflow-x-auto pb-1 sm:mx-0 sm:overflow-visible sm:pb-0">
         <div
           className="flex min-w-max gap-3 px-1 sm:grid sm:min-w-0 sm:px-0"
           style={{

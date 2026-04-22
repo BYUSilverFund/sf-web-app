@@ -254,9 +254,7 @@ export function PerformanceSectionCard({
 }) {
   return (
     // Section cards wrap tables and metric groups without owning any page-specific logic.
-    <div className={cn("rounded border border-gray-300 bg-white", className)}>
-      {children}
-    </div>
+    <div className={cn("border-gray-300 bg-white", className)}>{children}</div>
   );
 }
 

@@ -666,7 +666,7 @@ export default function Page() {
                         href={`/performance/${params.fund}/${params.holding}/trades`}
                         className="text-sm text-[#002E5D] hover:underline"
                       >
-                        View all trades
+                        View all
                       </Link>
                     </div>
                   </>
@@ -676,7 +676,7 @@ export default function Page() {
 
             <PerformanceFlexSidebarPane ratio={HOLDING_LAYOUT.dividendRatio}>
               <HoldingSideCard
-                title="Last Dividend Received"
+                title="Last Dividend"
                 className="px-4 py-3"
                 titleClassName="mb-1.5"
               >
@@ -695,19 +695,20 @@ export default function Page() {
                 ) : latestDividend ? (
                   <>
                     <div className="text-lg font-semibold leading-tight text-gray-900">
-                      {formatCurrency(latestDividend.dividends)}
+                      {formatCurrency(latestDividend.dividends)}{" "}
+                      <p className="mt-1.5 line-clamp-2 text-sm leading-tight text-gray-500">
+                        {latestDividend.date} at{" "}
+                        {formatCurrency(latestDividend.dividends_per_share)} per
+                        share.
+                      </p>
                     </div>
-                    <p className="mt-1.5 line-clamp-2 text-sm leading-tight text-gray-500">
-                      Paid on {latestDividend.date} at{" "}
-                      {formatCurrency(latestDividend.dividends_per_share)} per
-                      share.
-                    </p>
+
                     <div className="mt-auto border-t border-gray-200 pt-2">
                       <Link
                         href={`/performance/${params.fund}/${params.holding}/dividends`}
                         className="text-sm text-[#002E5D] hover:underline"
                       >
-                        View all dividends
+                        View all
                       </Link>
                     </div>
                   </>
@@ -740,14 +741,14 @@ export default function Page() {
                 flex: `${holdingBenchmarkMetricCount} ${holdingBenchmarkMetricCount} 0%`,
               }}
             >
-              <PerformanceSectionCard className="px-4 py-3 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700">
+              <PerformanceSectionCard className="px-4 py-3">
+                <h3 className="border-b mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700">
                   Compared To Benchmark Metrics
                 </h3>
                 {isLoading ? (
                   <MetricsCardSkeleton count={holdingBenchmarkMetricCount} />
                 ) : (
-                  <div className="-mx-1 overflow-x-auto pb-1 sm:mx-0 sm:overflow-visible sm:pb-0">
+                  <div className="mx-1 overflow-x-auto pb-1 sm:mx-0 sm:overflow-visible sm:pb-0">
                     <div
                       className="flex min-w-max gap-3 px-1 sm:grid sm:min-w-0 sm:px-0"
                       style={{
@@ -826,8 +827,8 @@ export default function Page() {
                 flex: `${holdingRiskMetricCount} ${holdingRiskMetricCount} 0%`,
               }}
             >
-              <PerformanceSectionCard className="px-4 py-3 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700">
+              <PerformanceSectionCard className="px-4 py-3">
+                <h3 className="border-b mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700">
                   Relative Risk Metrics
                 </h3>
                 {isLoading ? (
