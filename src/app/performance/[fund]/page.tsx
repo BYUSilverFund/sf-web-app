@@ -18,10 +18,13 @@ import {
 
 import { useParams } from "next/navigation";
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
+import {
+  PerformanceChart,
+  PerformanceChartLegend,
+} from "@/components/PerformanceChart";
 import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { PortfolioSummaryTable } from "@/components/PortfolioSummaryTable";
-import { ReturnsChart } from "@/components/ReturnsChart";
 import { AllHoldingsSummaryTable } from "@/components/AllHoldingsSummaryTable";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
@@ -33,6 +36,10 @@ import {
   PerformancePageShell,
   PerformanceTitleRow,
 } from "@/components/PerformancePageLayout";
+
+function getPreferredChartTickCount(view: string): number | undefined {
+  return view === "cohort" || view === "1year" ? 12 : undefined;
+}
 
 export default function Page() {
   const { fund } = useParams<{ fund: string }>();
@@ -173,6 +180,20 @@ export default function Page() {
     },
   ];
 
+  const chartData = useMemo(
+    () =>
+      portfolioTimeSeries?.records.map((record) => ({
+        date: record.date,
+        fund: Number((record.cummulative_return ?? 0).toFixed(2)),
+        benchmark: Number(
+          (record.benchmark_cummulative_return ?? 0).toFixed(2),
+        ),
+        value: record.value,
+        fundLabel: formatPortfolio(fund) ?? "Fund",
+      })) ?? [],
+    [fund, portfolioTimeSeries],
+  );
+
   return (
     <PerformancePageShell>
       <div className="flex min-h-0 flex-1 flex-col gap-3">
@@ -226,10 +247,19 @@ export default function Page() {
         <div className="min-h-0 flex flex-col gap-4 md:flex-1 md:flex-row md:space-y-0">
           {/* The chart and holdings summary stay side by side on desktop, but stack naturally on smaller screens. */}
           <Card className="flex min-h-0 flex-col md:w-2/3">
-            <ReturnsChart
-              data={portfolioTimeSeries && portfolioTimeSeries["records"]}
-              label={formatPortfolio(fund)}
-            />
+            <div className="flex min-h-0 flex-1 flex-col">
+              <div className="min-h-0 flex-1">
+                <PerformanceChart
+                  data={chartData}
+                  preferredTickCount={getPreferredChartTickCount(view)}
+                />
+              </div>
+              <div className="mt-3 flex justify-end px-3 pb-3">
+                <PerformanceChartLegend
+                  fundLabel={formatPortfolio(fund) ?? "Fund"}
+                />
+              </div>
+            </div>
           </Card>
           <Card className="flex min-h-0 w-full flex-col overflow-hidden md:w-2/6">
             <div className="min-h-0 flex-1">

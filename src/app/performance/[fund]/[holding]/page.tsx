@@ -18,7 +18,10 @@ import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 import { FactorExposuresButton } from "@/components/forecast/FactorExposuresButton";
 import { MetricCard } from "@/components/MetricCard";
 import { MetricModeToggle } from "@/components/MetricModeToggle";
-import { PerformanceChart } from "@/components/PerformanceChart";
+import {
+  PerformanceChart,
+  PerformanceChartLegend,
+} from "@/components/PerformanceChart";
 import {
   PERFORMANCE_PAGE_LAYOUT,
   PerformanceChartCard,
@@ -113,6 +116,10 @@ const HOLDING_LAYOUT = {
 } as const;
 const holdingBenchmarkMetricCount = 5;
 const holdingRiskMetricCount = 2;
+
+function getPreferredChartTickCount(view: string): number | undefined {
+  return view === "cohort" || view === "1year" ? 12 : undefined;
+}
 
 function LoadingBlock({ className }: { className: string }) {
   return <div className={`animate-pulse rounded bg-gray-100 ${className}`} />;
@@ -583,7 +590,10 @@ export default function Page() {
                   </TooltipProvider>
 
                   <div className="min-h-0 flex-1">
-                    <PerformanceChart data={chartData} />
+                    <PerformanceChart
+                      data={chartData}
+                      preferredTickCount={getPreferredChartTickCount(view)}
+                    />
                   </div>
 
                   {/* Mobile gets a select-based filter control; desktop keeps the current quick-select buttons. */}
@@ -598,16 +608,7 @@ export default function Page() {
                       onCustomEndDateChange={setEnd}
                     />
 
-                    <div className="flex gap-4 rounded border border-gray-300 bg-white/90 px-3 py-1.5">
-                      <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-6 bg-[#1F5F3F]" />
-                        <span className="text-xs">Ticker</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="h-0.5 w-6 bg-[#6B7280] opacity-70" />
-                        <span className="text-xs">Benchmark</span>
-                      </div>
-                    </div>
+                    <PerformanceChartLegend fundLabel={params.holding} />
                   </div>
                 </>
               )}
