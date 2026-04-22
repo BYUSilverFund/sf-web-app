@@ -77,9 +77,7 @@ export function TopHoldingsSummary({
               href={`/performance/${fund}/${holding.ticker}`}
               className="flex items-center justify-between border-b border-gray-200 py-1.5 last:border-b-0 hover:bg-gray-50"
             >
-              <div className="text-[15px] font-bold text-[#002E5D]">
-                {holding.ticker}
-              </div>
+              <div className="text-[15px] font-bold">{holding.ticker}</div>
               <div className="text-right">
                 <div className="text-[15px] font-semibold text-gray-900">
                   {formatCurrency(holding.value)}
