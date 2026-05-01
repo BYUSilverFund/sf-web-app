@@ -90,12 +90,13 @@ export function getDateFromView(view: string, fund: string = ""): [Date, Date] {
     case "cohort": {
       // Determine cohort period (May -> May)
       const may = 4; // May = month index 4 (0-based)
+      const june = 5; // to prevent no data issues the first week of may we wont display the new cohort data until June
 
       let cohortStart = new Date(today.getFullYear(), may, 1);
       let cohortEnd = new Date(today.getFullYear() + 1, may, 0); // last day of April next year
 
       // If today is before May, use last year's May as start
-      if (today.getMonth() < may) {
+      if (today.getMonth() < june) {
         cohortStart = new Date(today.getFullYear() - 1, may, 1);
         cohortEnd = new Date(today.getFullYear(), may, 0);
       }
