@@ -27,9 +27,7 @@ describe("getHeaderTooltips", () => {
     });
 
     it("returns non-annualized Sharpe Ratio tooltip", () => {
-      expect(tooltips["Sharpe Ratio"]).toContain(
-        "Volatility over the selected period",
-      );
+      expect(tooltips["Sharpe Ratio"]).toContain("daily volatility");
     });
 
     it("returns non-annualized Tracking Error tooltip", () => {
