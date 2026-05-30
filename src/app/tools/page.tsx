@@ -26,8 +26,8 @@ const Tools: React.FC = () => {
       <SquareSvgTl className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <SquareSvgBr className="absolute bottom-0 left-0 w-full h-auto z-0 pointer-events-none" />
       <h3 className="text-center title mt-4 mb-20">Student Tools</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 z-10">
-        <div className="flex justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-24 gap-y-12 max-w-6xl mx-auto z-10">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">Data</h5>
             <ul>
@@ -62,7 +62,7 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">
               Background Research & News
@@ -84,15 +84,14 @@ const Tools: React.FC = () => {
               </li>
               <li>
                 <ToolLink
-                  href="https://guides.lib.byu.com/company/articles"
-                  text="Articles & News Guide"
-                  newTab
+                  href="/tools/investment-memos"
+                  text="Investment Memos"
                 />
               </li>
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">Industry Ratios</h5>
             <ul>
@@ -120,7 +119,7 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">Analyst Reports</h5>
             <ul>
@@ -141,7 +140,7 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">Database Help</h5>
             <ul>
@@ -162,7 +161,7 @@ const Tools: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="w-72">
           <div>
             <h5 className="w-full text-lg font-semibold">Silver Fund Tools</h5>
             <ul>

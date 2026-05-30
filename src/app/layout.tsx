@@ -1,6 +1,7 @@
 // Import necessary types and components from Next.js and Google Fonts
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
+// @ts-expect-error: CSS import type declarations are handled by Next.js
 import "./globals.css";
 import Footer from "../components/Footer";
 import Navbar from "@/components/Navbar";
@@ -62,10 +63,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased bg-gray-50`}
       >
-        <AmplifyInit />
-        <Navbar />
-        {children}
-        <Footer />
+        <div className="flex min-h-screen flex-col">
+          <AmplifyInit />
+          <Navbar />
+
+          <main className="flex-1">{children}</main>
+
+          <Footer />
+        </div>
       </body>
     </html>
   );

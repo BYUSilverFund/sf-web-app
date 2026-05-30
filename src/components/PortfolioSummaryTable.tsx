@@ -58,7 +58,7 @@ export function PortfolioSummaryTable({
     );
   };
   // false = Realized, true = Annualized
-  const [annualized, setAnnualized] = React.useState(false);
+  const [annualized, setAnnualized] = React.useState(true);
 
   const columns = [
     "Value",

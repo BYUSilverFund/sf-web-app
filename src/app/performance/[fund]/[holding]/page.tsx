@@ -291,7 +291,7 @@ export default function Page() {
     getDateFromView("max", params.fund)[1],
   );
   const [metricMode, setMetricMode] = useState<"realized" | "annualized">(
-    "realized",
+    "annualized",
   );
   const [holdingSummary, setHoldingSummary] =
     useState<HoldingSummaryResponse>();
