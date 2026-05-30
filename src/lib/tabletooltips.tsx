@@ -20,7 +20,7 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
 
     "Sharpe Ratio": annualized
       ? "Annualized Sharpe Ratio = Annualized excess return ÷ Annualized volatility."
-      : "Sharpe Ratio = Average excess return ÷ Volatility over the selected period.",
+      : "Sharpe Ratio = Average daily excess return ÷ daily volatility.",
 
     Dividends:
       "Dividends = Total cash distributions received over the selected period.",
@@ -29,21 +29,29 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
       "Dividend Yield = Dividends ÷ Ending Value over the selected period.",
 
     Alpha: (
-      <a
-        href="/alpha-beta-guide"
-        className="text-xs text-blue-600 hover:underline"
-      >
-        Alpha & Beta Calculation Guide
-      </a>
+      <span>
+        Alpha = regression intercept of daily excess returns, annualized as
+        daily alpha × 252.{" "}
+        <a
+          href="/alpha-beta-guide"
+          className="text-xs text-blue-600 hover:underline"
+        >
+          Guide
+        </a>
+      </span>
     ),
 
     Beta: (
-      <a
-        href="/alpha-beta-guide"
-        className="text-xs text-blue-600 hover:underline"
-      >
-        Alpha & Beta Calculation Guide
-      </a>
+      <span>
+        Beta = slope from OLS regression of fund excess returns on benchmark
+        excess returns.{" "}
+        <a
+          href="/alpha-beta-guide"
+          className="text-xs text-blue-600 hover:underline"
+        >
+          Guide
+        </a>
+      </span>
     ),
 
     "Tracking Error": annualized
@@ -52,7 +60,7 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
 
     "Information Ratio": annualized
       ? "Annualized Information Ratio = Annualized average active return ÷ Annualized tracking error."
-      : "Information Ratio = Average active return ÷ Tracking error.",
+      : "Information Ratio = Average daily active return ÷ daily tracking error.",
 
     Ticker: "Stock ticker symbol for the holding.",
 
