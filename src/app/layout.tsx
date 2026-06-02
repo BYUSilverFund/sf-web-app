@@ -62,10 +62,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased bg-gray-50`}
       >
-        <AmplifyInit />
-        <Navbar />
-        {children}
-        <Footer />
+        <div className="flex min-h-screen flex-col">
+          <AmplifyInit />
+          <Navbar />
+
+          <main className="flex-1">{children}</main>
+
+          <Footer />
+        </div>
       </body>
     </html>
   );

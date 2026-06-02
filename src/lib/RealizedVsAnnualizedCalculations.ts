@@ -62,13 +62,20 @@ export function calculateSummaryMetrics(
   const days = summary?.trading_days;
   const benchDays = benchmark?.trading_days;
 
-  const fundVol = summary
-    ? toggle(summary.volatility, annSqRt(summary.volatility, days))
-    : undefined;
+  const fundVol =
+    summary?.volatility !== undefined
+      ? toggle(
+          summary.volatility / Math.sqrt(252), // realized/daily
+          summary.volatility, // annualized
+        )
+      : undefined;
 
   const fundSharpe =
-    summary && summary.sharpe_ratio != null
-      ? toggle(summary.sharpe_ratio, annSqRt(summary.sharpe_ratio, days))
+    summary?.sharpe_ratio != null
+      ? toggle(
+          summary.sharpe_ratio, // realized/daily fallback
+          summary.sharpe_ratio, // annualized
+        )
       : undefined;
 
   const fundAlpha = summary
@@ -76,8 +83,11 @@ export function calculateSummaryMetrics(
     : undefined;
 
   const fundTE =
-    summary && summary.tracking_error !== undefined
-      ? toggle(summary.tracking_error, annSqRt(summary.tracking_error, days))
+    summary?.tracking_error !== undefined
+      ? toggle(
+          summary.tracking_error / Math.sqrt(252), // realized/daily
+          summary.tracking_error, // annualized
+        )
       : undefined;
 
   const fundIR =
@@ -88,9 +98,13 @@ export function calculateSummaryMetrics(
         )
       : undefined;
 
-  const benchVol = benchmark
-    ? toggle(benchmark.volatility, annSqRt(benchmark.volatility, benchDays))
-    : undefined;
+  const benchVol =
+    benchmark?.volatility !== undefined
+      ? toggle(
+          benchmark.volatility / Math.sqrt(252), // realized/daily
+          benchmark.volatility, // annualized
+        )
+      : undefined;
 
   const benchSharpe = benchmark
     ? toggle(benchmark.sharpe_ratio, annSqRt(benchmark.sharpe_ratio, benchDays))

@@ -129,7 +129,7 @@ function PerformancePageContent() {
   );
   const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
   const [metricMode, setMetricMode] = useState<"realized" | "annualized">(
-    "realized",
+    "annualized",
   );
   const [activeRates, setActiveRates] = useState(false);
 
