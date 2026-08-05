@@ -519,8 +519,7 @@ function PerformancePageContent() {
                       </div>
 
                       <p className="mt-1 text-sm text-gray-500">
-                        Benchmark {metrics.benchmarkValue} |{" "}
-                        {metrics.benchmarkReturn}
+                        Benchmark {metrics.benchmarkReturn}
                       </p>
                     </div>
                   </TooltipProvider>

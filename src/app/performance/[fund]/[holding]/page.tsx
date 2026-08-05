@@ -579,10 +579,6 @@ export default function Page() {
                       <p className="mt-1 text-sm text-gray-500">
                         Benchmark{" "}
                         {benchmarkSummary
-                          ? formatCurrency(benchmarkSummary.adjusted_close)
-                          : "--"}{" "}
-                        |{" "}
-                        {benchmarkSummary
                           ? formatPercent(benchmarkSummary.total_return)
                           : "--"}
                       </p>
