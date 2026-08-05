@@ -302,7 +302,7 @@ export default function Page() {
   const [dividends, setDividends] = useState<DividendsResponse>();
   const [trades, setTrades] = useState<TradesResponse>();
   const [isLoading, setIsLoading] = useState(true);
-
+  console.log(holdingSummary);
   useEffect(() => {
     if (view === "custom") return;
 
@@ -578,10 +578,6 @@ export default function Page() {
 
                       <p className="mt-1 text-sm text-gray-500">
                         Benchmark{" "}
-                        {benchmarkSummary
-                          ? formatCurrency(benchmarkSummary.adjusted_close)
-                          : "--"}{" "}
-                        |{" "}
                         {benchmarkSummary
                           ? formatPercent(benchmarkSummary.total_return)
                           : "--"}
