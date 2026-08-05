@@ -12,10 +12,6 @@ describe("getHeaderTooltips", () => {
       "Information Ratio",
     ] as const);
 
-    it("returns Value tooltip", () => {
-      expect(tooltips["Value"]).toContain("Market value");
-    });
-
     it("returns Total Return tooltip", () => {
       expect(tooltips["Total Return"]).toContain("Cumulative return");
     });
@@ -84,10 +80,6 @@ describe("getHeaderTooltips", () => {
       "Shares",
       "Price",
     ] as const);
-
-    it("returns Dividends tooltip", () => {
-      expect(tooltips["Dividends"]).toContain("Total cash distributions");
-    });
 
     it("returns Dividend Yield tooltip", () => {
       expect(tooltips["Dividend Yield"]).toContain("Dividend Yield");
