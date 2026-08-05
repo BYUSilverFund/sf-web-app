@@ -26,12 +26,6 @@ export function MetricsRow({ metrics, mode }: MetricsRowProps) {
 
   const metricsData = [
     {
-      name: "Value",
-      fund: metrics.value.fund,
-      benchmark: metrics.value.benchmark,
-      tooltip: sharedTooltips.Value,
-    },
-    {
       name: "Average Returns",
       fund: displayMetrics.returnMetric.fund,
       benchmark: displayMetrics.returnMetric.benchmark,
@@ -54,12 +48,6 @@ export function MetricsRow({ metrics, mode }: MetricsRowProps) {
       fund: metrics.dividendYield.fund,
       benchmark: metrics.dividendYield.benchmark,
       tooltip: sharedTooltips["Dividend Yield"],
-    },
-    {
-      name: "Dividends",
-      fund: metrics.dividendValue.fund,
-      benchmark: metrics.dividendValue.benchmark,
-      tooltip: sharedTooltips.Dividends,
     },
   ];
 

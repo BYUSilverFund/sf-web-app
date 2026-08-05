@@ -18,6 +18,16 @@ export function RiskMetrics({ metrics, mode }: RiskMetricsProps) {
     "Information Ratio",
   ] as const);
 
+  const metricsData = [
+    { name: "Alpha", value: displayMetrics.alpha },
+    { name: "Beta", value: metrics.beta },
+    { name: "Tracking Error", value: displayMetrics.trackingError },
+    {
+      name: "Information Ratio",
+      value: displayMetrics.informationRatio,
+    },
+  ];
+
   return (
     // Risk metrics follow the same mobile scrolling pattern as the benchmark metrics to keep cards readable.
     <div className="rounded-lg bg-white px-3 py-3">
@@ -28,17 +38,11 @@ export function RiskMetrics({ metrics, mode }: RiskMetricsProps) {
       <div className="-mx-1 overflow-x-auto pb-1 sm:mx-0 sm:overflow-visible sm:pb-0">
         <div
           className="flex min-w-max gap-3 px-1 sm:grid sm:min-w-0 sm:px-0"
-          style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}
+          style={{
+            gridTemplateColumns: `repeat(${metricsData.length}, minmax(0, 1fr))`,
+          }}
         >
-          {[
-            { name: "Alpha", value: displayMetrics.alpha },
-            { name: "Beta", value: metrics.beta },
-            { name: "Tracking Error", value: displayMetrics.trackingError },
-            {
-              name: "Information Ratio",
-              value: displayMetrics.informationRatio,
-            },
-          ].map((metric) => (
+          {metricsData.map((metric) => (
             <MetricCard
               key={metric.name}
               title={metric.name}

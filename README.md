@@ -26,9 +26,6 @@ Hooks run automatically on `git commit`. You can also run linting and formatting
 # Format all files
 npm run format
 
-# Check formatting
-npm run format:check
-
 # Lint all files
 npm run lint
 
