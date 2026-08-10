@@ -85,6 +85,13 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
     Date: "The date the trade was executed.",
 
     Type: "Indicates whether the transaction was a Buy or Sell order.",
+
+    "Trade Return": "Holding's return in % since the trade was executed",
+
+    "Cost Basis": "Value of the trade executed (shares × price per share).",
+
+    "Trade Current Value":
+      "Current value of the trade (shares × current price per share).",
   };
 }
 

@@ -659,7 +659,10 @@ export default function Page() {
                     </div>
                     <div className="mt-2 border-t border-gray-200 pt-2">
                       <Link
-                        href={`/performance/${params.fund}/${params.holding}/trades`}
+                        href={{
+                          pathname: `/performance/${params.fund}/${params.holding}/trades`,
+                          query: { value: holdingSummary?.price },
+                        }}
                         className="text-sm text-[#002E5D] hover:underline"
                       >
                         View all

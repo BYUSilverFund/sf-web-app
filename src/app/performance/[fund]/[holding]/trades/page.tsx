@@ -4,7 +4,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { AllTradesDataTable } from "@/components/AllTradesDataTable";
 import {
@@ -17,7 +17,7 @@ import { ViewButton } from "@/components/ViewSelect";
 import { Button } from "@/components/ui/button";
 import { getTrades } from "@/lib/api/holding";
 import type { HoldingRequest, TradesResponse } from "@/lib/types";
-import { formatDate, formatPortfolio } from "@/lib/utils";
+import { formatDate, formatPortfolio, formatCurrency } from "@/lib/utils";
 
 export default function Page() {
   const params = useParams<{ fund: string; holding: string }>();
@@ -26,6 +26,10 @@ export default function Page() {
   const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
   const [end, setEnd] = useState<Date | undefined>(new Date());
   const [allTrades, setAllTrades] = useState<TradesResponse>();
+
+  const searchParams = useSearchParams();
+  const rawValue = searchParams.get("value");
+  const currentValue: number = rawValue !== null ? Number(rawValue) : 0;
 
   useEffect(() => {
     if (!start || !end) return;
@@ -51,7 +55,6 @@ export default function Page() {
 
   return (
     <PerformancePageShell>
-      {/* This table view now shares the same shell/title/toolbar rhythm as the other performance views. */}
       <PerformanceTitleRow
         title={`${params.holding} - All Trades`}
         subtitle={allTrades ? `as of ${formatDate(allTrades.end)}` : undefined}
@@ -108,7 +111,10 @@ export default function Page() {
       </PerformanceToolbar>
 
       <PerformanceSectionCard className="px-5 py-4">
-        <AllTradesDataTable trades={allTrades} />
+        <h2 className="text-xl font-semibold mb-2">
+          {params.holding} - {formatCurrency(currentValue)}
+        </h2>
+        <AllTradesDataTable trades={allTrades} currentValue={currentValue} />
       </PerformanceSectionCard>
     </PerformancePageShell>
   );
