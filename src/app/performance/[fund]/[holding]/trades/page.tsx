@@ -56,7 +56,6 @@ export default function Page() {
   return (
     <PerformancePageShell>
       <PerformanceTitleRow title={`${params.holding} - All Trades`} />
-
       <PerformanceToolbar>
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
