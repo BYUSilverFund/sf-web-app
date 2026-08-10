@@ -25,7 +25,7 @@ import {
 import Tooltip from "./Tooltip";
 import { getHeaderTooltips } from "@/lib/tabletooltips";
 import { TradesResponse, TradesRecord } from "@/lib/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatPercent } from "@/lib/utils";
 
 const makeHeader = (label: string, description?: React.ReactNode) => {
   if (description === undefined) return <span>{label}</span>;
@@ -61,10 +61,20 @@ const sortableHeader = (
   </div>
 );
 
-const tooltipColumns = ["Date", "Type", "Shares", "Price", "Value"] as const;
+const tooltipColumns = [
+  "Date",
+  "Type",
+  "Shares",
+  "Price",
+  "Cost Basis",
+  "Trade Return",
+  "Trade Current Value",
+] as const;
 const shared = getHeaderTooltips(true, tooltipColumns);
 
-export const tradeColumns: ColumnDef<TradesRecord>[] = [
+export const getTradeColumns = (
+  currentValue: number,
+): ColumnDef<TradesRecord>[] => [
   {
     accessorKey: "date",
     header: ({ column }) => sortableHeader("Date", shared["Date"], column),
@@ -87,15 +97,51 @@ export const tradeColumns: ColumnDef<TradesRecord>[] = [
   },
   {
     accessorKey: "value",
-    header: ({ column }) => sortableHeader("Value", shared["Value"], column),
-    cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
+    header: ({ column }) =>
+      sortableHeader("Cost Basis", shared["Cost Basis"], column),
+    cell: ({ row }) => (
+      <div>
+        {row.getValue("type") === "SELL"
+          ? ""
+          : formatCurrency(row.getValue("value"))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "current_value",
+    header: ({ column }) =>
+      sortableHeader("Current Value", shared["Trade Current Value"], column),
+    cell: ({ row }) => {
+      const shares = Number(row.getValue("shares") ?? 0);
+      return (
+        <div>
+          {row.getValue("type") === "SELL"
+            ? ""
+            : formatCurrency(currentValue * shares)}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "return",
+    header: ({ column }) =>
+      sortableHeader("Return", shared["Trade Return"], column),
+    cell: ({ row }) => {
+      const buyPrice = Number(row.getValue("price") ?? 0);
+      const tradeReturn =
+        buyPrice > 0 ? ((currentValue - buyPrice) / buyPrice) * 100 : 0;
+
+      return <div>{formatPercent(tradeReturn)}</div>;
+    },
   },
 ];
 
 export function AllTradesDataTable({
   trades,
+  currentValue,
 }: {
   trades: TradesResponse | undefined;
+  currentValue: number;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -103,9 +149,14 @@ export function AllTradesDataTable({
     pageSize: 10,
   });
 
+  const columns = React.useMemo(
+    () => getTradeColumns(currentValue),
+    [currentValue],
+  );
+
   const table = useReactTable({
     data: trades?.trades ?? [],
-    columns: tradeColumns,
+    columns: columns,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
@@ -127,11 +178,11 @@ export function AllTradesDataTable({
       <div className="space-y-4">
         <div className="overflow-x-auto border border-gray-200 rounded">
           <Table>
-            <TableHeader className="bg-white">
+            <TableHeader className="bg-gray-100">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow
                   key={headerGroup.id}
-                  className="border-b border-gray-200 hover:bg-transparent"
+                  className="border-b border-gray-400"
                 >
                   {headerGroup.headers.map((header) => (
                     <TableHead
@@ -151,7 +202,10 @@ export function AllTradesDataTable({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="border-b border-gray-100">
+                <TableRow
+                  key={row.id}
+                  className={`border-b border-gray-100 ${row.original.type?.toUpperCase() === "SELL" ? "bg-blue-50" : ""}`}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}

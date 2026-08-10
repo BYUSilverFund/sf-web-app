@@ -76,6 +76,7 @@ import type {
   HoldingSummaryResponse,
   HoldingTimeSeriesResponse,
   TradesResponse,
+  TradesRecord,
 } from "@/lib/types";
 import {
   formatDate,
@@ -302,6 +303,7 @@ export default function Page() {
   const [dividends, setDividends] = useState<DividendsResponse>();
   const [trades, setTrades] = useState<TradesResponse>();
   const [isLoading, setIsLoading] = useState(true);
+  const [chartTrades, setChartTrades] = useState<TradesRecord[]>();
 
   useEffect(() => {
     if (view === "custom") return;
@@ -430,6 +432,38 @@ export default function Page() {
     )[0];
   }, [dividends?.dividends]);
   const latestTrades = trades?.trades?.slice(0, 5) ?? [];
+
+  useEffect(() => {
+    const aggregatedTradesMap: Record<string, Omit<TradesRecord, "value">> = {};
+
+    if (trades?.trades) {
+      for (const trade of trades.trades) {
+        const key = `${trade.date}_${trade.price}_${trade.type}`;
+
+        if (!aggregatedTradesMap[key]) {
+          aggregatedTradesMap[key] = {
+            date: trade.date,
+            type: trade.type,
+            price: Number(trade.price ?? 0),
+            shares: Number(trade.shares ?? 0),
+          };
+        } else {
+          aggregatedTradesMap[key].shares += Number(trade.shares ?? 0);
+        }
+      }
+    }
+
+    // Convert to array and compute value = shares * price
+    const aggregatedTrades: TradesRecord[] = Object.values(
+      aggregatedTradesMap,
+    ).map((item) => ({
+      ...item,
+      value: item.shares * item.price,
+    }));
+    setChartTrades(aggregatedTrades);
+  }, [trades]);
+  console.log("chart trades", chartTrades);
+
   const totalReturnTooltip = getHeaderTooltip(false, "Total Return");
   const displayedHoldingVolatility =
     displayMetrics.fundVol ?? holdingSummary?.volatility;
@@ -450,12 +484,7 @@ export default function Page() {
 
   return (
     <PerformancePageShell>
-      <PerformanceTitleRow
-        title={params.holding}
-        subtitle={
-          holdingSummary ? `as of ${formatDate(holdingSummary.end)}` : undefined
-        }
-      />
+      <PerformanceTitleRow title={params.holding} />
 
       <PerformanceToolbar>
         <div className="flex w-full flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -659,7 +688,10 @@ export default function Page() {
                     </div>
                     <div className="mt-2 border-t border-gray-200 pt-2">
                       <Link
-                        href={`/performance/${params.fund}/${params.holding}/trades`}
+                        href={{
+                          pathname: `/performance/${params.fund}/${params.holding}/trades`,
+                          query: { value: holdingSummary?.price },
+                        }}
                         className="text-sm text-[#002E5D] hover:underline"
                       >
                         View all

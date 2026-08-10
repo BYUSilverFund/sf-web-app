@@ -415,14 +415,7 @@ function PerformancePageContent() {
 
   return (
     <PerformancePageShell>
-      <PerformanceTitleRow
-        title="Performance Metrics"
-        subtitle={
-          !isLoading && selectedSummary
-            ? `as of ${formatDate(selectedSummary.end)}`
-            : undefined
-        }
-      />
+      <PerformanceTitleRow title="Performance Metrics" />
 
       <FundTabsBar
         activeTab={activeTab}

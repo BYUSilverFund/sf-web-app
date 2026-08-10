@@ -83,11 +83,6 @@ export default function Page() {
       {/* The all-holdings page uses the shared performance shell and toolbar instead of page-local spacing. */}
       <PerformanceTitleRow
         title={`${formatPortfolio(params.fund)} - All Holdings`}
-        subtitle={
-          !isLoading && allHoldingsSummary
-            ? `as of ${formatDate(allHoldingsSummary.end)}`
-            : undefined
-        }
       />
 
       <PerformanceToolbar>

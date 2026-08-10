@@ -48,14 +48,7 @@ export default function Page() {
         <Breadcrumbs pages={pages} currentPage="All Portfolios" />
       </Suspense>
       {/* This page now shares the same shell and title treatment as the rest of performance. */}
-      <PerformanceTitleRow
-        title="All Portfolios"
-        subtitle={
-          allPortfoliosSummary
-            ? `as of ${formatDate(allPortfoliosSummary.end)}`
-            : undefined
-        }
-      />
+      <PerformanceTitleRow title="All Portfolios" />
       <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         <ViewButton
           start={start}
