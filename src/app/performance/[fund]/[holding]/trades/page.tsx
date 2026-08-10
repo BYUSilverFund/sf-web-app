@@ -55,10 +55,7 @@ export default function Page() {
 
   return (
     <PerformancePageShell>
-      <PerformanceTitleRow
-        title={`${params.holding} - All Trades`}
-        subtitle={allTrades ? `as of ${formatDate(allTrades.end)}` : undefined}
-      />
+      <PerformanceTitleRow title={`${params.holding} - All Trades`} />
 
       <PerformanceToolbar>
         <div className="flex w-full items-center justify-between gap-2">

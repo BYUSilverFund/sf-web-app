@@ -201,14 +201,7 @@ export default function Page() {
         <Suspense fallback={null}>
           <Breadcrumbs pages={pages} currentPage={formatPortfolio(fund)} />
         </Suspense>
-        <PerformanceTitleRow
-          title={formatPortfolio(fund)}
-          subtitle={
-            portfolioSummary
-              ? `as of ${formatDate(portfolioSummary.end)}`
-              : undefined
-          }
-        />
+        <PerformanceTitleRow title={formatPortfolio(fund)} />
         <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
           <ViewButton
             start={start}
