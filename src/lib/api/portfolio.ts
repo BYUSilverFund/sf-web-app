@@ -2,6 +2,7 @@ import {
   PortfolioRequest,
   PortfolioSummaryResponse,
   PortfolioTimeSeriesResponse,
+  TradesResponse,
 } from "../types";
 import { API_BASE_URL } from "../variables";
 
@@ -74,5 +75,27 @@ export async function getPortfolioTimeSeries(
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch data.");
+  }
+}
+
+export async function getPortfolioTrades(
+  request: PortfolioRequest,
+): Promise<TradesResponse> {
+  try {
+    const response = await fetch(API_BASE_URL + "portfolio/trades", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const tradesResponse: TradesResponse = await response.json();
+    return tradesResponse;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch trades data.");
   }
 }

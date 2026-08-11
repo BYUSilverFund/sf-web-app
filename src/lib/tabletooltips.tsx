@@ -88,10 +88,13 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
 
     "Trade Return": "Holding's return in % since the trade was executed",
 
-    "Cost Basis": "Value of the trade executed (shares × price per share).",
+    "Transaction Value":
+      "Value of the trade executed (shares × price per share).",
 
     "Trade Current Value":
       "Current value of the trade (shares × current price per share).",
+
+    "Trade Current Price": "Price of holding as of last market close.",
   };
 }
 

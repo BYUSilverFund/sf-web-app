@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   PaginationState,
+  Row,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -43,6 +44,10 @@ const makeHeader = (label: string, description?: React.ReactNode) => {
   );
 };
 
+const getCurrentPrice = (row: Row<TradesRecord>): number | null => {
+  return row.original.current_price;
+};
+
 const sortableHeader = (
   label: string,
   description: React.ReactNode | undefined,
@@ -66,19 +71,28 @@ const tooltipColumns = [
   "Type",
   "Shares",
   "Price",
-  "Cost Basis",
+  "Trade Current Price",
+  "Transaction Value",
   "Trade Return",
   "Trade Current Value",
 ] as const;
 const shared = getHeaderTooltips(true, tooltipColumns);
 
-export const getTradeColumns = (
-  currentValue: number,
-): ColumnDef<TradesRecord>[] => [
+const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
   {
     accessorKey: "date",
     header: ({ column }) => sortableHeader("Date", shared["Date"], column),
-    cell: ({ row }) => <div>{row.getValue("date")}</div>,
+    cell: ({ row }) => {
+      return <div>{row.getValue("date")}</div>;
+    },
+  },
+  {
+    accessorKey: "ticker",
+    header: ({ column }) =>
+      sortableHeader("Ticker", "Holding ticker symbol", column),
+    cell: ({ row }) => {
+      return <div>{row.getValue("ticker")}</div>;
+    },
   },
   {
     accessorKey: "type",
@@ -96,42 +110,79 @@ export const getTradeColumns = (
     cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
   },
   {
-    accessorKey: "value",
+    id: "currentPrice",
+    accessorFn: (row) => row.current_price,
     header: ({ column }) =>
-      sortableHeader("Cost Basis", shared["Cost Basis"], column),
-    cell: ({ row }) => (
-      <div>
-        {row.getValue("type") === "SELL"
-          ? ""
-          : formatCurrency(row.getValue("value"))}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "current_value",
-    header: ({ column }) =>
-      sortableHeader("Current Value", shared["Trade Current Value"], column),
+      sortableHeader("Current Price", shared["Trade Current Price"], column),
     cell: ({ row }) => {
-      const shares = Number(row.getValue("shares") ?? 0);
+      const currentPrice = getCurrentPrice(row);
       return (
         <div>
-          {row.getValue("type") === "SELL"
-            ? ""
-            : formatCurrency(currentValue * shares)}
+          {currentPrice !== null && currentPrice !== undefined
+            ? formatCurrency(currentPrice)
+            : ""}
         </div>
       );
     },
   },
   {
-    accessorKey: "return",
+    accessorKey: "value",
+    header: ({ column }) =>
+      sortableHeader("Transaction Value", shared["Transaction Value"], column),
+    cell: ({ row }) => <div>{formatCurrency(row.getValue("value"))}</div>,
+  },
+  {
+    id: "currentValue",
+    accessorFn: (row) => {
+      const currentPrice = row.current_price;
+      const shares = Number(row.shares ?? 0);
+      return currentPrice !== null && currentPrice !== undefined
+        ? currentPrice * shares
+        : null;
+    },
+    header: ({ column }) =>
+      sortableHeader("Current Value", shared["Trade Current Value"], column),
+    cell: ({ row }) => {
+      const shares = Number(row.getValue("shares") ?? 0);
+      const currentPrice = getCurrentPrice(row);
+      return (
+        <div>
+          {currentPrice !== null && currentPrice !== undefined
+            ? formatCurrency(currentPrice * shares)
+            : ""}
+        </div>
+      );
+    },
+  },
+  {
+    id: "return",
+    accessorFn: (row) => {
+      const buyPrice = Number(row.price ?? 0);
+      const currentPrice = row.current_price;
+      if (
+        buyPrice !== 0 &&
+        currentPrice !== null &&
+        currentPrice !== undefined
+      ) {
+        return ((currentPrice - buyPrice) / buyPrice) * 100;
+      }
+      return null;
+    },
     header: ({ column }) =>
       sortableHeader("Return", shared["Trade Return"], column),
     cell: ({ row }) => {
       const buyPrice = Number(row.getValue("price") ?? 0);
+      const currentPrice = getCurrentPrice(row);
       const tradeReturn =
-        buyPrice > 0 ? ((currentValue - buyPrice) / buyPrice) * 100 : 0;
+        buyPrice !== 0 && currentPrice !== null && currentPrice !== undefined
+          ? ((currentPrice - buyPrice) / buyPrice) * 100
+          : 0;
 
-      return <div>{formatPercent(tradeReturn)}</div>;
+      return currentPrice !== null && currentPrice !== undefined ? (
+        <div>{formatPercent(tradeReturn)}</div>
+      ) : (
+        <></>
+      );
     },
   },
 ];
@@ -141,7 +192,7 @@ export function AllTradesDataTable({
   currentValue,
 }: {
   trades: TradesResponse | undefined;
-  currentValue: number;
+  currentValue: number | undefined;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -149,14 +200,9 @@ export function AllTradesDataTable({
     pageSize: 10,
   });
 
-  const columns = React.useMemo(
-    () => getTradeColumns(currentValue),
-    [currentValue],
-  );
-
   const table = useReactTable({
     data: trades?.trades ?? [],
-    columns: columns,
+    columns: getTradeColumns(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
