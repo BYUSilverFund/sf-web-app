@@ -462,7 +462,6 @@ export default function Page() {
     }));
     setChartTrades(aggregatedTrades);
   }, [trades]);
-  console.log("chart trades", chartTrades);
 
   const totalReturnTooltip = getHeaderTooltip(false, "Total Return");
   const displayedHoldingVolatility =
@@ -643,7 +642,7 @@ export default function Page() {
           <PerformanceStackedSidebar gap={HOLDING_LAYOUT.sidebarGap}>
             <PerformanceFlexSidebarPane ratio={HOLDING_LAYOUT.tradesRatio}>
               <HoldingSideCard
-                title="Last 5 Trades"
+                title="Recent Trades"
                 className="px-4 py-3"
                 titleClassName="mb-2"
               >

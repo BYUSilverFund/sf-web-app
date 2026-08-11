@@ -53,7 +53,7 @@ export function TopHoldingsSummary({
   const holdings = allHoldingsSummary.holdings.filter(
     (holding) => holding.active,
   );
-  const topHoldings = holdings.slice(0, 10);
+  const topHoldings = holdings.slice(0, 9);
   const holdingsLabel = topHoldings.length === 1 ? "Holding" : "Holdings";
 
   return (
@@ -94,6 +94,15 @@ export function TopHoldingsSummary({
           className="flex items-center justify-center gap-1 text-[15px] text-[#002E5D] hover:underline"
         >
           <span>View all holdings</span>
+          <ChevronsRight size={16} />
+        </Link>
+      </div>
+      <div className="mt-1.5 border-t border-gray-200 pt-1">
+        <Link
+          href={`/performance/${fund}/all-trades`}
+          className="flex items-center justify-center gap-1 text-[15px] text-[#002E5D] hover:underline"
+        >
+          <span>View all trades</span>
           <ChevronsRight size={16} />
         </Link>
       </div>
