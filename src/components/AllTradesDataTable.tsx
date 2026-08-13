@@ -148,7 +148,7 @@ const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
       return (
         <div>
           {currentPrice !== null && currentPrice !== undefined
-            ? formatCurrency(currentPrice * shares)
+            ? formatCurrency(Math.abs(currentPrice * shares))
             : ""}
         </div>
       );
