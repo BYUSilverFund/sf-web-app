@@ -105,6 +105,7 @@ export const mockTrades: TradesRecord[] = [
     shares: 50,
     price: 145.3,
     value: 7265,
+    current_price: 100,
   },
   {
     date: "2023-10-05",
@@ -112,5 +113,6 @@ export const mockTrades: TradesRecord[] = [
     shares: 25,
     price: 142.1,
     value: 3552.5,
+    current_price: 150,
   },
 ];
