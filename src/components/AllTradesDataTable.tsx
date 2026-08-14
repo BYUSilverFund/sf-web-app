@@ -75,6 +75,7 @@ const tooltipColumns = [
   "Transaction Value",
   "Trade Return",
   "Trade Current Value",
+  "Alpha",
 ] as const;
 const shared = getHeaderTooltips(true, tooltipColumns);
 
@@ -114,16 +115,7 @@ const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
     accessorFn: (row) => row.current_price,
     header: ({ column }) =>
       sortableHeader("Current Price", shared["Trade Current Price"], column),
-    cell: ({ row }) => {
-      const currentPrice = getCurrentPrice(row);
-      return (
-        <div>
-          {currentPrice !== null && currentPrice !== undefined
-            ? formatCurrency(currentPrice)
-            : ""}
-        </div>
-      );
-    },
+    cell: ({ row }) => <div>{formatCurrency(getCurrentPrice(row))}</div>,
   },
   {
     accessorKey: "value",
@@ -145,13 +137,11 @@ const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
     cell: ({ row }) => {
       const shares = Number(row.getValue("shares") ?? 0);
       const currentPrice = getCurrentPrice(row);
-      return (
-        <div>
-          {currentPrice !== null && currentPrice !== undefined
-            ? formatCurrency(Math.abs(currentPrice * shares))
-            : ""}
-        </div>
-      );
+      const currVal =
+        currentPrice !== null && currentPrice !== undefined
+          ? Math.abs(currentPrice * shares)
+          : null;
+      return <div>{formatCurrency(currVal)}</div>;
     },
   },
   {
@@ -176,32 +166,39 @@ const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
       const tradeReturn =
         buyPrice !== 0 && currentPrice !== null && currentPrice !== undefined
           ? ((currentPrice - buyPrice) / buyPrice) * 100
-          : 0;
+          : null;
 
-      return currentPrice !== null && currentPrice !== undefined ? (
-        <div>{formatPercent(tradeReturn)}</div>
-      ) : (
-        <></>
-      );
+      return <div>{formatPercent(tradeReturn)}</div>;
     },
+  },
+  {
+    accessorKey: "alpha",
+    header: ({ column }) => sortableHeader("Alpha", shared["Alpha"], column),
+    cell: ({ row }) => <div>{formatPercent(row.getValue("alpha"))}</div>,
   },
 ];
 
 export function AllTradesDataTable({
   trades,
-  currentValue,
 }: {
   trades: TradesResponse | undefined;
-  currentValue: number | undefined;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [onlySells, setOnlySells] = React.useState<boolean>(false);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
 
+  const allTradesList = trades?.trades ?? [];
+
+  const data = React.useMemo(() => {
+    if (!onlySells) return allTradesList;
+    return allTradesList.filter((t) => t.type?.toUpperCase() === "SELL");
+  }, [allTradesList, onlySells]);
+
   const table = useReactTable({
-    data: trades?.trades ?? [],
+    data,
     columns: getTradeColumns(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
@@ -221,7 +218,54 @@ export function AllTradesDataTable({
   return (
     // The trades table mirrors the dividends table spacing so the two holding detail subpages feel like one system.
     <div className="w-full">
-      <div className="space-y-4">
+      {/* Top Controls Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-gray-100 p-1 rounded text-xs">
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant={onlySells ? "default" : "outline"}
+            size="sm"
+            className={`px-3 py-1 text-xs h-8 border ${
+              onlySells
+                ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+            }`}
+            onClick={() => {
+              setOnlySells(!onlySells);
+              setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+            }}
+          >
+            {onlySells ? "Showing Only Sells" : "Filter: Only Sells"}
+          </Button>
+          {onlySells && (
+            <span className="text-gray-500 font-medium">
+              ({data.length} sell {data.length === 1 ? "trade" : "trades"})
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-gray-600 font-medium">Rows per page:</span>
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              const newSize = Number(e.target.value);
+              setPagination({
+                pageIndex: 0,
+                pageSize: newSize,
+              });
+            }}
+            className="h-8 px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            {[10, 25, 50, 100, 1000].map((size) => (
+              <option key={size} value={size}>
+                {size >= 1000 ? "All" : size}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="space-y-2">
         <div className="overflow-x-auto border border-gray-200 rounded">
           <Table>
             <TableHeader className="bg-gray-100">

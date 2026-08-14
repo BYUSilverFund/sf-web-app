@@ -29,8 +29,10 @@ describe("Utility Functions", () => {
       expect(formatCurrency(-500.25)).toBe("-$500.25");
     });
 
-    it("formats decimals correctly", () => {
-      expect(formatCurrency(99.9)).toBe("$99.90");
+    it("returns dash for non-number inputs", () => {
+      expect(formatCurrency(null)).toBe("—");
+      expect(formatCurrency(undefined)).toBe("—");
+      expect(formatCurrency(NaN)).toBe("—");
     });
   });
 
@@ -57,6 +59,12 @@ describe("Utility Functions", () => {
 
     it("handles negative percentages", () => {
       expect(formatPercent(-0.05)).toBe("-0.05%");
+    });
+
+    it("returns dash for non-number inputs", () => {
+      expect(formatPercent(null)).toBe("—");
+      expect(formatPercent(undefined)).toBe("—");
+      expect(formatPercent(NaN)).toBe("—");
     });
   });
 

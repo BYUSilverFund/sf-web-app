@@ -67,7 +67,9 @@ export interface TradesRecord {
   shares: number;
   price: number;
   value: number;
-  current_price: number | null;
+  ticker?: string;
+  alpha?: number | null;
+  current_price?: number | null;
 }
 
 export interface TradesResponse {
