@@ -61,7 +61,7 @@ import {
   getDividends,
   getHoldingSummary,
   getHoldingTimeSeries,
-  getTrades,
+  getRecentTrades,
 } from "@/lib/api/holding";
 import {
   calculateAverageDailyReturn,
@@ -330,7 +330,7 @@ export default function Page() {
       getHoldingSummary(holdingRequest),
       getHoldingTimeSeries(holdingRequest),
       getDividends(holdingRequest),
-      getTrades(holdingRequest),
+      getRecentTrades(holdingRequest),
     ])
       .then(async ([summary, timeSeries, dividendsData, tradesData]) => {
         const benchmarkRequest: BenchmarkRequest = {

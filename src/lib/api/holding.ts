@@ -100,3 +100,27 @@ export async function getTrades(
     throw new Error("Failed to fetch data.");
   }
 }
+
+export async function getRecentTrades(
+  request: HoldingRequest,
+): Promise<TradesResponse> {
+  try {
+    const response = await fetch(API_BASE_URL + "holding/recent-trades", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result: TradesResponse = await response.json();
+    console.log("result", result);
+
+    return result;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch data.");
+  }
+}
