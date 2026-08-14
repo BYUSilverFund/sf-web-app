@@ -32,6 +32,8 @@ export default function AlphaBetaGuidePage() {
           </CardHeader>
 
           <CardContent className="space-y-8 pt-4">
+            <UndergradBetaChart />
+
             {/* Beta */}
             <section className="space-y-2">
               <h4 className="text-base font-semibold">Beta</h4>
@@ -42,8 +44,6 @@ export default function AlphaBetaGuidePage() {
                   formula="(R_p - R_f) = \alpha + \beta (R_b - R_f) + \varepsilon_t"
                 />
               </div>
-
-              <UndergradBetaChart />
 
               <p className="text-sm leading-relaxed">
                 Beta is estimated as the slope from an OLS regression of the

@@ -446,6 +446,7 @@ export default function Page() {
             type: trade.type,
             price: Number(trade.price ?? 0),
             shares: Number(trade.shares ?? 0),
+            current_price: trade.current_price ?? null,
           };
         } else {
           aggregatedTradesMap[key].shares += Number(trade.shares ?? 0);
@@ -687,10 +688,7 @@ export default function Page() {
                     </div>
                     <div className="mt-2 border-t border-gray-200 pt-2">
                       <Link
-                        href={{
-                          pathname: `/performance/${params.fund}/${params.holding}/trades`,
-                          query: { value: holdingSummary?.price },
-                        }}
+                        href={`/performance/${params.fund}/${params.holding}/trades`}
                         className="text-sm text-[#002E5D] hover:underline"
                       >
                         View all

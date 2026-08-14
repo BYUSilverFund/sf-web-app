@@ -105,6 +105,8 @@ export const mockTrades: TradesRecord[] = [
     shares: 50,
     price: 145.3,
     value: 7265,
+    ticker: "AAPL",
+    alpha: 0.05,
     current_price: 100,
   },
   {
@@ -113,6 +115,8 @@ export const mockTrades: TradesRecord[] = [
     shares: 25,
     price: 142.1,
     value: 3552.5,
+    ticker: "AAPL",
+    alpha: -0.02,
     current_price: 150,
   },
 ];

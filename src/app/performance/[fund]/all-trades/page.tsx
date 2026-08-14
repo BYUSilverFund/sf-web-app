@@ -106,7 +106,7 @@ export default function Page() {
             Loading trades...
           </div>
         ) : (
-          <AllTradesDataTable trades={trades} currentValue={0} />
+          <AllTradesDataTable trades={trades} />
         )}
       </PerformanceSectionCard>
     </PerformancePageShell>

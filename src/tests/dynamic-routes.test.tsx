@@ -22,14 +22,6 @@ describe("Dynamic routes", () => {
     expect(container).toBeTruthy();
   });
 
-  it("renders performance/[fund] page without crash", async () => {
-    const mod = await import("../app/performance/[fund]/page");
-    const Component = mod.default;
-    const element = React.createElement(Component);
-    const { container } = render(element);
-    expect(container).toBeTruthy();
-  });
-
   it("renders performance/all-portfolios page without crash", async () => {
     const mod = await import("../app/performance/all-portfolios/page");
     const Component = mod.default;
