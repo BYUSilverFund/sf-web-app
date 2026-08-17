@@ -45,7 +45,7 @@ const makeHeader = (label: string, description?: React.ReactNode) => {
 };
 
 const getCurrentPrice = (row: Row<TradesRecord>): number | null => {
-  return row.original.current_price;
+  return row.original.current_price ?? null;
 };
 
 const sortableHeader = (
