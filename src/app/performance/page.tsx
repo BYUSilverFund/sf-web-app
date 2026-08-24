@@ -113,6 +113,9 @@ const timeFilters = [
 ] as const;
 const benchmarkMetricCount = 6;
 const riskMetricCount = 4;
+const totalReturnTooltip = getHeaderTooltips(false, ["Total Return"] as const)[
+  "Total Return"
+];
 
 function getPreferredChartTickCount(view: string): number | undefined {
   return view === "cohort" || view === "1year" ? 12 : undefined;
@@ -333,15 +336,20 @@ function PerformancePageContent() {
     [benchmarkSummary, selectedSummary, view],
   );
 
+  const { fundDailyReturns, benchmarkDailyReturns } = useMemo(() => {
+    if (!selectedTimeSeries?.records) {
+      return { fundDailyReturns: undefined, benchmarkDailyReturns: undefined };
+    }
+    return {
+      fundDailyReturns: selectedTimeSeries.records.map((r) => r.return_),
+      benchmarkDailyReturns: selectedTimeSeries.records.map(
+        (r) => r.benchmark_return,
+      ),
+    };
+  }, [selectedTimeSeries?.records]);
+
   const fundMetrics = useMemo(() => {
     if (!selectedSummary || !benchmarkSummary) return undefined;
-
-    const fundDailyReturns = selectedTimeSeries?.records.map(
-      (record) => record.return_,
-    );
-    const benchmarkDailyReturns = selectedTimeSeries?.records.map(
-      (record) => record.benchmark_return,
-    );
 
     return {
       realized: {
@@ -402,16 +410,14 @@ function PerformancePageContent() {
     };
   }, [
     annualizedMetrics,
+    benchmarkDailyReturns,
     benchmarkSummary,
+    fundDailyReturns,
     realizedMetrics,
     selectedSummary,
-    selectedTimeSeries,
   ]);
 
   const showMetricsSkeleton = isLoading || !fundMetrics;
-  const totalReturnTooltip = getHeaderTooltips(false, [
-    "Total Return",
-  ] as const)["Total Return"];
 
   return (
     <PerformancePageShell>
