@@ -1,8 +1,9 @@
 "use client";
 
 import { format } from "date-fns";
-import type { ComponentProps } from "react";
+import { useState, type ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface DownloadCSVButtonProps {
   start: Date | undefined;
@@ -31,11 +32,15 @@ export function DownloadCSVButton({
   size = "sm",
   className,
 }: DownloadCSVButtonProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const handleDownload = async () => {
-    if (!start || !end) return;
+    if (!start || !end || isDownloading) return;
 
     const startStr = format(start, "yyyy-MM-dd");
     const endStr = format(end, "yyyy-MM-dd");
+
+    setIsDownloading(true);
 
     try {
       const blob = await onDownload({
@@ -44,6 +49,7 @@ export function DownloadCSVButton({
       });
 
       if (typeof window.URL?.createObjectURL !== "function") {
+        setIsDownloading(false);
         return;
       }
 
@@ -62,6 +68,8 @@ export function DownloadCSVButton({
       }
     } catch (err) {
       console.error("Failed to download CSV:", err);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -71,9 +79,16 @@ export function DownloadCSVButton({
       size={size}
       className={className}
       onClick={handleDownload}
-      disabled={!start || !end}
+      disabled={!start || !end || isDownloading}
     >
-      Download CSV
+      {isDownloading ? (
+        <>
+          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+          Downloading...
+        </>
+      ) : (
+        "Download CSV"
+      )}
     </Button>
   );
 }
