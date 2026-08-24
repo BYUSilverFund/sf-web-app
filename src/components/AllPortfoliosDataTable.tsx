@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import Tooltip from "./Tooltip";
 import { getHeaderTooltips } from "@/lib/tabletooltips";
 import { AllPortfoliosRecord } from "@/lib/types";
@@ -266,8 +267,10 @@ export const columns: ColumnDef<AllPortfoliosRecord>[] = [
 ];
 export function AllPortfoliosDataTable({
   data = [],
+  loading = false,
 }: {
   data?: AllPortfoliosRecord[] | undefined;
+  loading?: boolean;
 }) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -302,16 +305,20 @@ export function AllPortfoliosDataTable({
     <div className="w-full">
       <div className="space-y-4 p-4">
         <div className="flex items-center py-4">
-          <Input
-            placeholder="Filter portfolios..."
-            value={
-              (table.getColumn("portfolio")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("portfolio")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          {loading ? (
+            <div className="h-[40px] w-full max-w-sm animate-pulse rounded border border-gray-300 bg-gray-100" />
+          ) : (
+            <Input
+              placeholder="Filter portfolios..."
+              value={
+                (table.getColumn("portfolio")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("portfolio")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -360,7 +367,9 @@ export function AllPortfoliosDataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {loading ? (
+                <TableSkeleton columnCount={columns.length} />
+              ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -392,16 +401,20 @@ export function AllPortfoliosDataTable({
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="text-muted-foreground flex-1 text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
+          {loading ? (
+            <div className="h-4 w-40 animate-pulse rounded bg-gray-100 flex-1" />
+          ) : (
+            <div className="text-muted-foreground flex-1 text-sm">
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </div>
+          )}
           <div className="space-x-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={loading || !table.getCanPreviousPage()}
             >
               Previous
             </Button>
@@ -409,7 +422,7 @@ export function AllPortfoliosDataTable({
               variant="outline"
               size="sm"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={loading || !table.getCanNextPage()}
             >
               Next
             </Button>
