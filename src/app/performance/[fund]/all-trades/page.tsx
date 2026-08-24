@@ -101,13 +101,7 @@ export default function Page() {
       </PerformanceToolbar>
 
       <PerformanceSectionCard className="px-5 py-4">
-        {isLoading ? (
-          <div className="text-center py-6 text-muted-foreground">
-            Loading trades...
-          </div>
-        ) : (
-          <AllTradesDataTable trades={trades} />
-        )}
+        <AllTradesDataTable trades={trades} loading={isLoading} />
       </PerformanceSectionCard>
     </PerformancePageShell>
   );

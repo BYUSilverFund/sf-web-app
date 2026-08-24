@@ -180,8 +180,10 @@ const getTradeColumns = (): ColumnDef<TradesRecord>[] => [
 
 export function AllTradesDataTable({
   trades,
+  loading = false,
 }: {
   trades: TradesResponse | undefined;
+  loading?: boolean;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [onlySells, setOnlySells] = React.useState<boolean>(false);
@@ -197,9 +199,11 @@ export function AllTradesDataTable({
     return allTradesList.filter((t) => t.type?.toUpperCase() === "SELL");
   }, [allTradesList, onlySells]);
 
+  const tradeColumns = React.useMemo(() => getTradeColumns(), []);
+
   const table = useReactTable({
     data,
-    columns: getTradeColumns(),
+    columns: tradeColumns,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
@@ -208,7 +212,7 @@ export function AllTradesDataTable({
     state: { sorting, pagination },
   });
 
-  if (!trades || trades.trades.length === 0)
+  if (!loading && (!trades || trades.trades.length === 0))
     return (
       <div className="flex items-center justify-center py-8 text-sm text-gray-500">
         No trades found
@@ -219,52 +223,56 @@ export function AllTradesDataTable({
     // The trades table mirrors the dividends table spacing so the two holding detail subpages feel like one system.
     <div className="w-full">
       {/* Top Controls Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-gray-100 p-1 rounded text-xs">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant={onlySells ? "default" : "outline"}
-            size="sm"
-            className={`px-3 py-1 text-xs h-8 border ${
-              onlySells
-                ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            }`}
-            onClick={() => {
-              setOnlySells(!onlySells);
-              setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-            }}
-          >
-            {onlySells ? "Showing Only Sells" : "Filter: Only Sells"}
-          </Button>
-          {onlySells && (
-            <span className="text-gray-500 font-medium">
-              ({data.length} sell {data.length === 1 ? "trade" : "trades"})
-            </span>
-          )}
-        </div>
+      {loading ? (
+        <div className="h-[40px] w-full animate-pulse rounded bg-gray-100 mb-2" />
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-gray-100 p-1 rounded text-xs">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant={onlySells ? "default" : "outline"}
+              size="sm"
+              className={`px-3 py-1 text-xs h-8 border ${
+                onlySells
+                  ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
+              onClick={() => {
+                setOnlySells(!onlySells);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+            >
+              {onlySells ? "Showing Only Sells" : "Filter: Only Sells"}
+            </Button>
+            {onlySells && (
+              <span className="text-gray-500 font-medium">
+                ({data.length} sell {data.length === 1 ? "trade" : "trades"})
+              </span>
+            )}
+          </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-gray-600 font-medium">Rows per page:</span>
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => {
-              const newSize = Number(e.target.value);
-              setPagination({
-                pageIndex: 0,
-                pageSize: newSize,
-              });
-            }}
-            className="h-8 px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            {[10, 25, 50, 100, 1000].map((size) => (
-              <option key={size} value={size}>
-                {size >= 1000 ? "All" : size}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600 font-medium">Rows per page:</span>
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                const newSize = Number(e.target.value);
+                setPagination({
+                  pageIndex: 0,
+                  pageSize: newSize,
+                });
+              }}
+              className="h-8 px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              {[10, 25, 50, 100, 1000].map((size) => (
+                <option key={size} value={size}>
+                  {size >= 1000 ? "All" : size}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
       <div className="space-y-2">
         <div className="overflow-x-auto border border-gray-200 rounded">
           <Table>
@@ -291,25 +299,43 @@ export function AllTradesDataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className={`border-b border-gray-100 ${row.original.type?.toUpperCase() === "SELL" ? "bg-blue-50" : ""}`}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="py-2.5 px-3 text-sm text-gray-900"
+              {loading
+                ? Array.from({ length: 10 }).map((_, rowIndex) => (
+                    <TableRow
+                      key={`loading-row-${rowIndex}`}
+                      className="border-b border-gray-100"
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
+                      {Array.from({ length: tradeColumns.length }).map(
+                        (_, cellIndex) => (
+                          <TableCell
+                            key={`loading-cell-${rowIndex}-${cellIndex}`}
+                            className="py-2.5 px-3"
+                          >
+                            <div className="h-5 w-full animate-pulse rounded bg-gray-100" />
+                          </TableCell>
+                        ),
                       )}
-                    </TableCell>
+                    </TableRow>
+                  ))
+                : table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      className={`border-b border-gray-100 ${row.original.type?.toUpperCase() === "SELL" ? "bg-blue-50" : ""}`}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="py-2.5 px-3 text-sm text-gray-900"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-              {table.getRowModel().rows.length === 0 && (
+              {!loading && table.getRowModel().rows.length === 0 && (
                 <TableRow className="h-[33.33vh]">
                   <TableCell
                     colSpan={table.getAllLeafColumns().length}
@@ -321,17 +347,21 @@ export function AllTradesDataTable({
           </Table>
         </div>
         <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
-          <div>
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </div>
+          {loading ? (
+            <div className="h-4 w-40 animate-pulse rounded bg-gray-100" />
+          ) : (
+            <div>
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
               className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={loading || !table.getCanPreviousPage()}
             >
               Previous
             </Button>
@@ -340,7 +370,7 @@ export function AllTradesDataTable({
               size="sm"
               className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={loading || !table.getCanNextPage()}
             >
               Next
             </Button>
