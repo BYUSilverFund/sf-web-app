@@ -92,8 +92,10 @@ export const dividendColumns: ColumnDef<DividendsRecord>[] = [
 
 export function AllDividendsDataTable({
   dividends,
+  loading = false,
 }: {
   dividends: DividendsResponse | undefined;
+  loading?: boolean;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: "date", desc: true },
@@ -117,7 +119,7 @@ export function AllDividendsDataTable({
     state: { sorting, pagination },
   });
 
-  if (!dividends || dividends.dividends.length === 0)
+  if (!loading && (!dividends || dividends.dividends.length === 0))
     return (
       <div className="flex items-center justify-center py-8 text-sm text-gray-500">
         No dividends found
@@ -153,22 +155,40 @@ export function AllDividendsDataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="border-b border-gray-100">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="py-2.5 px-3 text-sm text-gray-900"
+              {loading
+                ? Array.from({ length: 10 }).map((_, rowIndex) => (
+                    <TableRow
+                      key={`loading-row-${rowIndex}`}
+                      className="border-b border-gray-100"
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
+                      {Array.from({ length: dividendColumns.length }).map(
+                        (_, cellIndex) => (
+                          <TableCell
+                            key={`loading-cell-${rowIndex}-${cellIndex}`}
+                            className="py-2.5 px-3"
+                          >
+                            <div className="h-5 w-full animate-pulse rounded bg-gray-100" />
+                          </TableCell>
+                        ),
                       )}
-                    </TableCell>
+                    </TableRow>
+                  ))
+                : table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} className="border-b border-gray-100">
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="py-2.5 px-3 text-sm text-gray-900"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-              {table.getRowModel().rows.length === 0 && (
+              {!loading && table.getRowModel().rows.length === 0 && (
                 <TableRow className="h-[33.33vh]">
                   <TableCell
                     colSpan={table.getAllLeafColumns().length}
@@ -181,17 +201,21 @@ export function AllDividendsDataTable({
         </div>
 
         <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
-          <div>
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </div>
+          {loading ? (
+            <div className="h-4 w-40 animate-pulse rounded bg-gray-100" />
+          ) : (
+            <div>
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
               className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={loading || !table.getCanPreviousPage()}
             >
               Previous
             </Button>
@@ -200,7 +224,7 @@ export function AllDividendsDataTable({
               size="sm"
               className="px-3 py-1.5 border border-gray-300 rounded text-xs text-gray-600 bg-white h-auto"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={loading || !table.getCanNextPage()}
             >
               Next
             </Button>
