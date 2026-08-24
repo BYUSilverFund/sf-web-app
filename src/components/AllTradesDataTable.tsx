@@ -326,8 +326,10 @@ export function AllTradesDataTable({
                 <TableRow className="h-[33.33vh]">
                   <TableCell
                     colSpan={table.getAllLeafColumns().length}
-                    className="text-center"
-                  ></TableCell>
+                    className="text-center text-sm text-gray-500"
+                  >
+                    No trades found.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
