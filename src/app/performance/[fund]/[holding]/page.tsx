@@ -394,11 +394,13 @@ export default function Page() {
   const displayMetrics =
     metricMode === "annualized" ? annualizedMetrics : realizedMetrics;
   const isAnnualized = metricMode === "annualized";
-  const holdingDailyReturns = holdingTimeSeries?.records.map(
-    (record) => record.return_,
+  const holdingDailyReturns = useMemo(
+    () => holdingTimeSeries?.records.map((record) => record.return_),
+    [holdingTimeSeries?.records],
   );
-  const benchmarkDailyReturns = holdingTimeSeries?.records.map(
-    (record) => record.benchmark_return,
+  const benchmarkDailyReturns = useMemo(
+    () => holdingTimeSeries?.records.map((record) => record.benchmark_return),
+    [holdingTimeSeries?.records],
   );
 
   const sharedMetricTooltips = getHeaderTooltips(isAnnualized, [
