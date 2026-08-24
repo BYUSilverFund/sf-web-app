@@ -15,9 +15,16 @@ export const PERFORMANCE_CHART_BENCHMARK_COLOR = "#4F6F8F";
 const PERFORMANCE_CHART_FUND_LINE_COLOR = "#1F5F3F";
 const PERFORMANCE_CHART_BENCHMARK_LINE_COLOR = "#6B7280";
 
-const CHART_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+const CHART_MONTH_YEAR_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const CHART_FULL_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
+  year: "numeric",
   timeZone: "UTC",
 });
 
@@ -47,20 +54,26 @@ interface PerformanceChartLegendProps {
 function getXAxisTicks(
   chartData: ChartPoint[],
   preferredTickCount?: number,
+  isShortRange?: boolean,
 ): number[] {
   if (chartData.length <= 1) {
     return chartData.map((point) => point.index);
   }
 
+  const defaultTickCount = isShortRange
+    ? chartData.length <= 8
+      ? chartData.length
+      : 6
+    : chartData.length <= 10
+      ? chartData.length
+      : chartData.length <= 21
+        ? 8
+        : chartData.length <= 42
+          ? 9
+          : 10;
+
   const resolvedTickCount = Math.min(
-    preferredTickCount ??
-      (chartData.length <= 10
-        ? chartData.length
-        : chartData.length <= 21
-          ? 8
-          : chartData.length <= 42
-            ? 9
-            : 10),
+    preferredTickCount ?? defaultTickCount,
     chartData.length,
   );
   const lastIndex = chartData.length - 1;
@@ -75,9 +88,17 @@ function parseChartDate(date: string): number {
   return Date.UTC(year, month - 1, day);
 }
 
-function formatChartDate(date: string): string {
+function formatTooltipDate(date: string): string {
   if (!date) return "";
-  return CHART_DATE_FORMATTER.format(new Date(parseChartDate(date)));
+  return CHART_FULL_DATE_FORMATTER.format(new Date(parseChartDate(date)));
+}
+
+function formatChartAxisDate(date: string, isShortRange: boolean): string {
+  if (!date) return "";
+  const d = new Date(parseChartDate(date));
+  return isShortRange
+    ? CHART_FULL_DATE_FORMATTER.format(d)
+    : CHART_MONTH_YEAR_FORMATTER.format(d);
 }
 
 function getChartDateForTick(
@@ -105,9 +126,9 @@ const CustomTooltip = ({
     const point = payload[0]?.payload as ChartPoint | undefined;
     const labelValue =
       typeof label === "string"
-        ? formatChartDate(label)
+        ? formatTooltipDate(label)
         : point?.date
-          ? formatChartDate(point.date)
+          ? formatTooltipDate(point.date)
           : "";
 
     return (
@@ -182,7 +203,12 @@ export function PerformanceChart({
     ...point,
     index,
   }));
-  const xAxisTicks = getXAxisTicks(chartData, preferredTickCount);
+  const isShortRange =
+    chartData.length < 2 ||
+    parseChartDate(chartData[chartData.length - 1].date) -
+      parseChartDate(chartData[0].date) <
+      93 * 24 * 60 * 60 * 1000;
+  const xAxisTicks = getXAxisTicks(chartData, preferredTickCount, isShortRange);
 
   return (
     // The parent card controls height, so the chart itself always stretches to fill the available slot.
@@ -213,7 +239,10 @@ export function PerformanceChart({
             stroke="#888"
             tick={{ fill: "#4B5563", fontSize: 12 }}
             tickFormatter={(value) =>
-              formatChartDate(getChartDateForTick(chartData, Number(value)))
+              formatChartAxisDate(
+                getChartDateForTick(chartData, Number(value)),
+                isShortRange,
+              )
             }
           />
           <YAxis
