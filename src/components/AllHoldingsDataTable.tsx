@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { TableSkeleton } from "@/components/TableSkeleton";
 import Tooltip from "./Tooltip";
 import { getHeaderTooltips } from "@/lib/tabletooltips";
 import { AllHoldingsRecord, PortfolioSummaryResponse } from "@/lib/types";
@@ -274,44 +275,30 @@ export function AllHoldingsDataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {loading
-                ? Array.from({ length: 10 }).map((_, rowIndex) => (
-                    <TableRow
-                      key={`loading-row-${rowIndex}`}
-                      className="border-b border-gray-100"
-                    >
-                      {Array.from({ length: columns.length }).map(
-                        (_, cellIndex) => (
-                          <TableCell
-                            key={`loading-cell-${rowIndex}-${cellIndex}`}
-                            className="py-2.5 px-3"
-                          >
-                            <div className="h-5 w-full animate-pulse rounded bg-gray-100" />
-                          </TableCell>
-                        ),
-                      )}
-                    </TableRow>
-                  ))
-                : table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      onClick={() => router.push(`${row.getValue("ticker")}`)}
-                      className="cursor-pointer border-b border-gray-100 hover:bg-gray-50 transition"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className="py-2.5 px-3 text-sm text-gray-900"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+              {loading ? (
+                <TableSkeleton columnCount={columns.length} />
+              ) : (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => router.push(`${row.getValue("ticker")}`)}
+                    className="cursor-pointer border-b border-gray-100 hover:bg-gray-50 transition"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="py-2.5 px-3 text-sm text-gray-900"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              )}
               {!loading && table.getRowModel().rows.length === 0 && (
                 <TableRow className="h-[33.33vh]">
                   <TableCell

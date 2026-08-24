@@ -21,6 +21,7 @@ export default function Page() {
   const [end, setEnd] = useState<Date | undefined>(defaultEnd(view));
   const [allPortfoliosSummary, setAllPortfoliosSummary] =
     useState<AllPortfoliosSummaryResponse>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (start && end) {
@@ -29,9 +30,17 @@ export default function Page() {
         end: format(end, "yyyy-MM-dd"),
       };
 
+      setIsLoading(true);
+
       getAllPortfoliosSummary(fundRequest)
-        .then(setAllPortfoliosSummary)
-        .catch(console.error);
+        .then((data) => {
+          setAllPortfoliosSummary(data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
   }, [start, end]);
 
@@ -68,7 +77,10 @@ export default function Page() {
         </div>
       </Card>
       <Card>
-        <AllPortfoliosDataTable data={allPortfoliosSummary?.portfolios} />
+        <AllPortfoliosDataTable
+          data={allPortfoliosSummary?.portfolios}
+          loading={isLoading}
+        />
       </Card>
     </PerformancePageShell>
   );
