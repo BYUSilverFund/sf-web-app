@@ -184,4 +184,17 @@ describe("AllTradesDataTable", () => {
     fireEvent.click(buttons[0]);
     expect(container).toBeTruthy();
   });
+
+  it("renders table loading skeleton when loading is true", () => {
+    const { container, queryByText } = render(
+      <AllTradesDataTable trades={undefined} loading={true} />,
+    );
+
+    // Should NOT show "No trades found" when loading is true
+    expect(queryByText("No trades found")).toBeNull();
+
+    // Should render animate-pulse skeleton rows and elements
+    const skeletons = container.querySelectorAll(".animate-pulse");
+    expect(skeletons.length).toBeGreaterThan(0);
+  });
 });

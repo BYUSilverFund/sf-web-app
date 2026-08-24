@@ -26,6 +26,7 @@ export default function Page() {
   const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
   const [end, setEnd] = useState<Date | undefined>(new Date());
   const [allTrades, setAllTrades] = useState<TradesResponse>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!start || !end) return;
@@ -38,14 +39,18 @@ export default function Page() {
       end: format(end, "yyyy-MM-dd"),
     };
 
+    setIsLoading(true);
+
     getTrades(holdingRequest)
       .then((trades) => {
         if (requestSequence.current !== requestId) return;
         setAllTrades(trades);
+        setIsLoading(false);
       })
       .catch((error) => {
         if (requestSequence.current !== requestId) return;
         console.error(error);
+        setIsLoading(false);
       });
   }, [end, params.fund, params.holding, start]);
 
@@ -103,7 +108,7 @@ export default function Page() {
       </PerformanceToolbar>
 
       <PerformanceSectionCard className="px-5 py-4">
-        <AllTradesDataTable trades={allTrades} />
+        <AllTradesDataTable trades={allTrades} loading={isLoading} />
       </PerformanceSectionCard>
     </PerformancePageShell>
   );
