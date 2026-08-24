@@ -25,6 +25,7 @@ export default function Page() {
   const [start, setStart] = useState<Date | undefined>(new Date("2000-01-01"));
   const [end, setEnd] = useState<Date | undefined>(new Date());
   const [allDividends, setAllDividends] = useState<DividendsResponse>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!start || !end) return;
@@ -37,14 +38,18 @@ export default function Page() {
       end: format(end, "yyyy-MM-dd"),
     };
 
+    setIsLoading(true);
+
     getDividends(holdingRequest)
       .then((dividends) => {
         if (requestSequence.current !== requestId) return;
         setAllDividends(dividends);
+        setIsLoading(false);
       })
       .catch((error) => {
         if (requestSequence.current !== requestId) return;
         console.error(error);
+        setIsLoading(false);
       });
   }, [end, params.fund, params.holding, start]);
 
@@ -103,7 +108,7 @@ export default function Page() {
       </PerformanceToolbar>
 
       <PerformanceSectionCard className="px-5 py-4">
-        <AllDividendsDataTable dividends={allDividends} />
+        <AllDividendsDataTable dividends={allDividends} loading={isLoading} />
       </PerformanceSectionCard>
     </PerformancePageShell>
   );
