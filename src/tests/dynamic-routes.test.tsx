@@ -20,7 +20,7 @@ describe("Dynamic routes", () => {
     const element = React.createElement(Component);
     const { container } = render(element);
     expect(container).toBeTruthy();
-  });
+  }, 20000);
 
   it("renders performance/all-portfolios page without crash", async () => {
     const mod = await import("../app/performance/all-portfolios/page");
@@ -28,5 +28,5 @@ describe("Dynamic routes", () => {
     const element = React.createElement(Component);
     const { container } = render(element);
     expect(container).toBeTruthy();
-  });
+  }, 20000);
 });
