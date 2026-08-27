@@ -146,19 +146,19 @@ describe("AllTradesDataTable", () => {
       <AllTradesDataTable trades={mockTradesData} />,
     );
 
-    const filterBtn = getByText("Filter: Only Sells");
-    expect(filterBtn).toBeTruthy();
+    const sellsBtn = getByText("Sells Only");
+    const allTradesBtn = getByText("All Trades");
+    expect(sellsBtn).toBeTruthy();
+    expect(allTradesBtn).toBeTruthy();
 
     // Click to filter only sells
-    fireEvent.click(filterBtn);
+    fireEvent.click(sellsBtn);
 
-    expect(getByText("Showing Only Sells")).toBeTruthy();
     expect(getByText("2023-10-05")).toBeTruthy(); // Sell trade
     expect(queryByText("2024-02-20")).toBeNull(); // Buy trade should be hidden
 
-    // Click again to clear filter
-    fireEvent.click(getByText("Showing Only Sells"));
-    expect(getByText("Filter: Only Sells")).toBeTruthy();
+    // Click All Trades to clear filter
+    fireEvent.click(allTradesBtn);
     expect(getByText("2024-02-20")).toBeTruthy();
   });
 

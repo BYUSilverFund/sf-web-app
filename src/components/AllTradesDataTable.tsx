@@ -229,22 +229,40 @@ export function AllTradesDataTable({
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3 bg-gray-100 p-1 rounded text-xs">
           <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant={onlySells ? "default" : "outline"}
-              size="sm"
-              className={`px-3 py-1 text-xs h-8 border ${
-                onlySells
-                  ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-              onClick={() => {
-                setOnlySells(!onlySells);
-                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-              }}
-            >
-              {onlySells ? "Showing Only Sells" : "Filter: Only Sells"}
-            </Button>
+            <div className="inline-flex rounded-md shadow-sm border border-gray-300 p-0.5 bg-white h-8 items-center">
+              <button
+                type="button"
+                className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
+                  !onlySells
+                    ? "bg-blue-900 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  if (onlySells) {
+                    setOnlySells(false);
+                    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+                  }
+                }}
+              >
+                All Trades
+              </button>
+              <button
+                type="button"
+                className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
+                  onlySells
+                    ? "bg-blue-900 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  if (!onlySells) {
+                    setOnlySells(true);
+                    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+                  }
+                }}
+              >
+                Sells Only
+              </button>
+            </div>
             {onlySells && (
               <span className="text-gray-500 font-medium">
                 ({data.length} sell {data.length === 1 ? "trade" : "trades"})
