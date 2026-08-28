@@ -35,6 +35,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
+### 4. Build for Production (Local Test)
+
+To verify production builds locally:
+
+```bash
+npm run build
+npm run start
+```
+
 ## Testing
 
 Unit and component tests are built with **Vitest** and **React Testing Library**:
@@ -89,4 +98,4 @@ Cognito resources (User Pool, App Client, Domain) are provisioned via Terraform 
 ## Deployment
 
 This app is deployed on **AWS Amplify**.
-Pushes to the `dev` and `main` branches automatically trigger deployments to their respective Amplify environments.
+Pushes to the `dev` and `prod` branches automatically trigger deployments to their respective Amplify environments.
