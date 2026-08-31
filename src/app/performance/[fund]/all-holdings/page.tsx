@@ -5,7 +5,7 @@ import { AllHoldingsDataTable } from "@/components/AllHoldingsDataTable";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllHoldingsSummary } from "@/lib/api/allHoldings";
 import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
-import { formatDate, formatPortfolio, getDateFromView } from "@/lib/utils";
+import { formatPortfolio, getDateFromView } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";

@@ -79,7 +79,6 @@ import type {
   TradesRecord,
 } from "@/lib/types";
 import {
-  formatDate,
   formatFloat,
   formatCurrency,
   formatPercent,
@@ -303,7 +302,6 @@ export default function Page() {
   const [dividends, setDividends] = useState<DividendsResponse>();
   const [trades, setTrades] = useState<TradesResponse>();
   const [isLoading, setIsLoading] = useState(true);
-  const [chartTrades, setChartTrades] = useState<TradesRecord[]>();
 
   useEffect(() => {
     if (view === "custom") return;

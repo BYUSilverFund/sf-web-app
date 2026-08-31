@@ -14,10 +14,11 @@ export function formatCurrency(value?: number | null): string {
   ) {
     return "—";
   }
+  const cleanVal = Math.abs(value) < 0.005 ? 0 : value;
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value);
+  }).format(cleanVal);
 }
 
 export function formatMillions(
@@ -39,11 +40,32 @@ export function formatPercent(
   ) {
     return "—";
   }
-  return `${value.toFixed(fractionDigits)}%`;
+  const formatted = value.toFixed(fractionDigits);
+  const cleanFormatted =
+    Object.is(Number(formatted), -0) || Number(formatted) === 0
+      ? (0).toFixed(fractionDigits)
+      : formatted;
+  return `${cleanFormatted}%`;
 }
 
-export function formatFloat(value: number, fractionDigits: number = 2): string {
-  return `${value.toFixed(fractionDigits)}`;
+export function formatFloat(
+  value?: number | null,
+  fractionDigits: number = 2,
+): string {
+  if (
+    value === null ||
+    value === undefined ||
+    typeof value !== "number" ||
+    Number.isNaN(value)
+  ) {
+    return "—";
+  }
+  const formatted = value.toFixed(fractionDigits);
+  const cleanFormatted =
+    Object.is(Number(formatted), -0) || Number(formatted) === 0
+      ? (0).toFixed(fractionDigits)
+      : formatted;
+  return `${cleanFormatted}`;
 }
 
 export function formatPortfolio(name: string): string | undefined {
