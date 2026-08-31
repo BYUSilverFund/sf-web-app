@@ -197,4 +197,52 @@ describe("AllTradesDataTable", () => {
     const skeletons = container.querySelectorAll(".animate-pulse");
     expect(skeletons.length).toBeGreaterThan(0);
   });
+
+  it("filters trades by ticker when selected in the ticker filter popover", () => {
+    const multiTickerTrades: TradesResponse = {
+      fund: "undergrad",
+      start: "2024-01-01",
+      end: "2024-12-31",
+      trades: [
+        {
+          date: "2024-02-20",
+          type: "Buy",
+          shares: 50,
+          price: 145.3,
+          value: 7265,
+          ticker: "AAPL",
+          alpha: 0.05,
+          current_price: 150.0,
+        },
+        {
+          date: "2023-10-05",
+          type: "Sell",
+          shares: 25,
+          price: 142.1,
+          value: 3552.5,
+          ticker: "MSFT",
+          alpha: -0.02,
+          current_price: 150.0,
+        },
+      ],
+    };
+
+    const { getByText, queryByText, getAllByText } = render(
+      <AllTradesDataTable trades={multiTickerTrades} />,
+    );
+
+    expect(getByText("Filter Tickers")).toBeTruthy();
+    expect(getByText("AAPL")).toBeTruthy();
+    expect(getByText("MSFT")).toBeTruthy();
+
+    // Open popover
+    fireEvent.click(getByText("Filter Tickers"));
+
+    // Toggle AAPL checkbox
+    const aaplLabels = getAllByText("AAPL");
+    fireEvent.click(aaplLabels[aaplLabels.length - 1]);
+
+    // Reset button should appear
+    expect(getByText("Reset Tickers")).toBeTruthy();
+  });
 });
