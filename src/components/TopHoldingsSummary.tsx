@@ -54,7 +54,10 @@ export function TopHoldingsSummary({
     (holding) => holding.active,
   );
   const topHoldings = holdings.slice(0, 9);
-  const holdingsLabel = topHoldings.length === 1 ? "Holding" : "Holdings";
+  const title =
+    topHoldings.length === 1
+      ? "Top Holding"
+      : `Top ${topHoldings.length} Holdings`;
 
   return (
     // Portfolio tabs reuse the overview summary slot to show the current fund's top holdings.
@@ -65,9 +68,7 @@ export function TopHoldingsSummary({
       )}
       style={{ height, width }}
     >
-      <h2 className="mb-1.5 text-lg font-bold">
-        Top {topHoldings.length} {holdingsLabel}
-      </h2>
+      <h2 className="mb-1.5 text-lg font-bold">{title}</h2>
 
       <div className="flex min-h-0 flex-1 flex-col">
         {topHoldings.map((holding) => {
