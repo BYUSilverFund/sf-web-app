@@ -14,6 +14,7 @@ import {
 import { ArrowUpDown, InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TickerFilterPopover } from "@/components/TickerFilterPopover";
 import {
   Table,
   TableBody,
@@ -188,6 +189,7 @@ export function AllTradesDataTable({
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [onlySells, setOnlySells] = React.useState<boolean>(false);
+  const [selectedTickers, setSelectedTickers] = React.useState<string[]>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -195,10 +197,29 @@ export function AllTradesDataTable({
 
   const allTradesList = trades?.trades ?? [];
 
+  // Ticker metadata: list of unique tickers and counts of trades
+  const tickerStats = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const trade of allTradesList) {
+      if (trade.ticker) {
+        counts[trade.ticker] = (counts[trade.ticker] || 0) + 1;
+      }
+    }
+    const tickers = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+    return { tickers, counts };
+  }, [allTradesList]);
+
   const data = React.useMemo(() => {
-    if (!onlySells) return allTradesList;
-    return allTradesList.filter((t) => t.type?.toUpperCase() === "SELL");
-  }, [allTradesList, onlySells]);
+    let list = allTradesList;
+    if (onlySells) {
+      list = list.filter((t) => t.type?.toUpperCase() === "SELL");
+    }
+    if (selectedTickers.length > 0) {
+      const selectedSet = new Set(selectedTickers);
+      list = list.filter((t) => t.ticker && selectedSet.has(t.ticker));
+    }
+    return list;
+  }, [allTradesList, onlySells, selectedTickers]);
 
   const tradeColumns = React.useMemo(() => getTradeColumns(), []);
 
@@ -228,7 +249,7 @@ export function AllTradesDataTable({
         <div className="h-[40px] w-full animate-pulse rounded bg-gray-100 mb-2" />
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3 bg-gray-100 p-1 rounded text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex rounded-md shadow-sm border border-gray-300 p-0.5 bg-white h-8 items-center">
               <button
                 type="button"
@@ -263,6 +284,18 @@ export function AllTradesDataTable({
                 Sells Only
               </button>
             </div>
+
+            {/* Reusable Ticker Filter Popover */}
+            <TickerFilterPopover
+              tickers={tickerStats.tickers}
+              selectedTickers={selectedTickers}
+              onSelectionChange={(selected) => {
+                setSelectedTickers(selected);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              counts={tickerStats.counts}
+            />
+
             {onlySells && (
               <span className="text-gray-500 font-medium">
                 ({data.length} sell {data.length === 1 ? "trade" : "trades"})
