@@ -16,7 +16,7 @@ import { ViewButton } from "@/components/ViewSelect";
 import { Button } from "@/components/ui/button";
 import { getDividends } from "@/lib/api/holding";
 import type { DividendsResponse, HoldingRequest } from "@/lib/types";
-import { formatDate, formatPortfolio } from "@/lib/utils";
+import { formatPortfolio } from "@/lib/utils";
 
 export default function Page() {
   const params = useParams<{ fund: string; holding: string }>();

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { ViewButton } from "@/components/ViewSelect";
 import { getAllPortfoliosSummary } from "@/lib/api/allPortfolios";
 import { AllPortfoliosSummaryResponse, FundRequest } from "@/lib/types";
-import { defaultEnd, defaultStart, formatDate } from "@/lib/utils";
+import { defaultEnd, defaultStart } from "@/lib/utils";
 import { format } from "date-fns";
 import { useEffect, useState, Suspense } from "react";
 import { downloadAllPortfoliosCSV } from "@/lib/api/csvDownloads";

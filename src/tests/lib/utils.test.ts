@@ -61,6 +61,11 @@ describe("Utility Functions", () => {
       expect(formatPercent(-0.05)).toBe("-0.05%");
     });
 
+    it("formats small negative numbers that round to zero as 0.00% without negative sign", () => {
+      expect(formatPercent(-0.0001)).toBe("0.00%");
+      expect(formatPercent(-0.004)).toBe("0.00%");
+    });
+
     it("returns dash for non-number inputs", () => {
       expect(formatPercent(null)).toBe("—");
       expect(formatPercent(undefined)).toBe("—");
@@ -87,6 +92,11 @@ describe("Utility Functions", () => {
 
     it("handles negative numbers", () => {
       expect(formatFloat(-2.567)).toBe("-2.57");
+    });
+
+    it("formats small negative numbers that round to zero as 0.00 without negative sign", () => {
+      expect(formatFloat(-0.0001)).toBe("0.00");
+      expect(formatFloat(-0.004)).toBe("0.00");
     });
   });
 

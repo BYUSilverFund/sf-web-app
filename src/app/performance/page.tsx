@@ -90,7 +90,6 @@ import {
 } from "@/lib/RealizedVsAnnualizedCalculations";
 
 import {
-  formatDate,
   formatFloat,
   formatCurrency,
   formatMillions,
