@@ -57,16 +57,19 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.14.0",
-    "@aws-amplify/backend-cli": "^1.4.9",
+    "@aws-amplify/backend": "^1.24.0",
+    "@aws-amplify/backend-cli": "^1.9.0",
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.35.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.3.3",
     "@types/aws-lambda": "^8.10.155",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
+    "@vitejs/plugin-react": "^5.0.0",
     "aws-cdk": "^2.178.1",
     "aws-cdk-lib": "^2.178.1",
     "constructs": "^10.4.2",
@@ -79,21 +82,27 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
+    "jsdom": "^22.0.0",
     "lint-staged": "^16.2.7",
-    "postcss": "^8",
+    "msw": "^1.2.1",
+    "postcss": "^8.5.26",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.2",
     "typescript": "^5",
     "typescript-eslint": "^8.46.1",
-    "vitest": "^1.0.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "jsdom": "^22.0.0",
-    "msw": "^1.2.1"
+    "vitest": "^3.2.7"
   },
   "overrides": {
-    "react-is": "^19.0.0-rc-69d4b800-20241021"
+    "react-is": "^19.0.0-rc-69d4b800-20241021",
+    "lodash": "^4.18.1",
+    "fast-xml-parser": "^5.11.1",
+    "yaml": "^2.9.0",
+    "glob": "^10.4.6",
+    "immutable": "^5.1.9",
+    "cookie": "^0.7.2",
+    "esbuild": "^0.25.9",
+    "postcss": "^8.5.26",
+    "vite": "^6.4.3"
   }
 }
