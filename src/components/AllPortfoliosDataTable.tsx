@@ -374,7 +374,11 @@ export function AllPortfoliosDataTable({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={() => router.push(`${row.getValue("portfolio")}`)}
+                    onClick={() =>
+                      router.push(
+                        `/performance?tab=${row.getValue("portfolio")}`,
+                      )
+                    }
                     className="cursor-pointer hover:bg-muted transition"
                   >
                     {row.getVisibleCells().map((cell) => (
