@@ -433,37 +433,6 @@ export default function Page() {
   }, [dividends?.dividends]);
   const latestTrades = trades?.trades?.slice(0, 5) ?? [];
 
-  useEffect(() => {
-    const aggregatedTradesMap: Record<string, Omit<TradesRecord, "value">> = {};
-
-    if (trades?.trades) {
-      for (const trade of trades.trades) {
-        const key = `${trade.date}_${trade.price}_${trade.type}`;
-
-        if (!aggregatedTradesMap[key]) {
-          aggregatedTradesMap[key] = {
-            date: trade.date,
-            type: trade.type,
-            price: Number(trade.price ?? 0),
-            shares: Number(trade.shares ?? 0),
-            current_price: trade.current_price ?? null,
-          };
-        } else {
-          aggregatedTradesMap[key].shares += Number(trade.shares ?? 0);
-        }
-      }
-    }
-
-    // Convert to array and compute value = shares * price
-    const aggregatedTrades: TradesRecord[] = Object.values(
-      aggregatedTradesMap,
-    ).map((item) => ({
-      ...item,
-      value: item.shares * item.price,
-    }));
-    setChartTrades(aggregatedTrades);
-  }, [trades]);
-
   const totalReturnTooltip = getHeaderTooltip(false, "Total Return");
   const displayedHoldingVolatility =
     displayMetrics.fundVol ?? holdingSummary?.volatility;
