@@ -1,5 +1,4 @@
 import { generateClient } from "aws-amplify/api";
-import gql from "graphql-tag";
 
 export interface AlumniInfo {
   name: string;
@@ -20,7 +19,7 @@ interface ListSilverFundAlumniInfosResponse {
 export const getAlumniInfo = async (): Promise<AlumniInfo[]> => {
   const client = generateClient();
   const result = await client.graphql({
-    query: gql`
+    query: /* GraphQL */ `
       query listSilverFundAlumniInfos {
         listSilverFundAlumniInfos {
           items {
