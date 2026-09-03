@@ -46,9 +46,7 @@ export const metadata: Metadata = {
     title: "BYU Silver Fund",
     description: "BYU's Premier Student-Run Investment Fund",
   },
-  icons: {
-    icon: "/sf-logo-white.png",
-  },
+  manifest: "/manifest.json",
 };
 
 // Define the root layout component for the application
