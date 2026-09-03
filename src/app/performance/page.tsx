@@ -110,7 +110,7 @@ const timeFilters = [
   { label: "Max", value: "max" },
   { label: "Custom", value: "custom" },
 ] as const;
-const benchmarkMetricCount = 6;
+const benchmarkMetricCount = 4;
 const riskMetricCount = 4;
 const totalReturnTooltip = getHeaderTooltips(false, ["Total Return"] as const)[
   "Total Return"

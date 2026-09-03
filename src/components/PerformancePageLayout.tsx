@@ -36,7 +36,7 @@ export function PerformancePageShell({
 }) {
   return (
     // This shell owns the fixed top spacing below the shared navbar for performance pages.
-    <div className="mx-auto w-full max-w-[1800px] px-3 py-1.5 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+    <div className="w-full px-3 py-1.5 sm:px-4 md:px-5 lg:px-6 xl:px-8">
       <div className="px-0 py-1">
         <div
           className={cn(
