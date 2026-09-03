@@ -76,7 +76,6 @@ import type {
   HoldingSummaryResponse,
   HoldingTimeSeriesResponse,
   TradesResponse,
-  TradesRecord,
 } from "@/lib/types";
 import {
   formatFloat,

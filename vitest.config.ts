@@ -14,6 +14,8 @@ export default defineConfig({
     setupFiles: ["src/tests/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     testTimeout: 15000,
+    teardownTimeout: 1000,
+    pool: "forks",
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
