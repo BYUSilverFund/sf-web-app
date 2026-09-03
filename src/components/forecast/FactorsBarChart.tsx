@@ -70,8 +70,8 @@ export function FactorsBarChart({
     : chartConfig;
 
   return (
-    <div className="h-auto">
-      <CardHeader>
+    <div className="flex flex-col h-full">
+      <CardHeader className="py-2.5 px-4">
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-4">
             {headerTitle ? (
@@ -83,7 +83,7 @@ export function FactorsBarChart({
           <div className="flex items-center gap-2">
             {view !== undefined && onViewChange ? (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:block">Display</span>
+                <span className="hidden sm:block text-sm">Display</span>
                 <ViewSelector
                   view={view}
                   onValueChange={(v) => onViewChange(v)}
@@ -97,8 +97,11 @@ export function FactorsBarChart({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="h-auto">
-        <ChartContainer config={chartConfigEffective} className="h-full w-full">
+      <CardContent className="px-3 pb-2 pt-0 flex-1 flex flex-col min-h-0">
+        <ChartContainer
+          config={chartConfigEffective}
+          className="aspect-auto h-[350px] lg:h-full lg:min-h-[350px] w-full"
+        >
           <BarChart
             accessibilityLayer
             data={displayedData}
@@ -163,9 +166,9 @@ export function FactorsBarChart({
             <XAxis
               dataKey="factor"
               type="category"
-              angle={-90}
+              angle={-45}
               tick={{ textAnchor: "end" }}
-              height={60}
+              height={55}
               tickFormatter={(v: string) =>
                 contributionMode ? String(v) : formatFactors(String(v))
               }

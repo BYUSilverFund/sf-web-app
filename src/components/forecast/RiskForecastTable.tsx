@@ -24,27 +24,31 @@ function MetricCard({
 }) {
   return (
     <div className="w-full">
-      <Card className="rounded-md border bg-card text-card-foreground shadow p-4">
+      <Card className="rounded-md border bg-card text-card-foreground shadow p-3">
         <div className="flex items-center justify-between">
           {tooltip ? (
             <Tooltip
               side="left"
               trigger={
                 <>
-                  <span className="text-sm text-muted-foreground">{title}</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {title}
+                  </span>
                   <InfoIcon size={12} className="text-muted-foreground" />
                 </>
               }
               description={tooltip}
             />
           ) : (
-            <div className="text-sm text-muted-foreground">{title}</div>
+            <div className="text-xs font-medium text-muted-foreground">
+              {title}
+            </div>
           )}
         </div>
 
-        <div className="mt-3 text-3xl font-semibold text-left">
+        <div className="mt-1.5 text-2xl font-semibold text-left">
           {loading ? (
-            <div className="h-7 w-28 bg-muted animate-pulse rounded" />
+            <div className="h-7 w-24 bg-muted animate-pulse rounded" />
           ) : (
             (value ?? "-")
           )}
@@ -80,14 +84,14 @@ export function RiskForecastTable({
 
   return (
     <Card className="bg-gray border-none shadow-none text-card-foreground">
-      <CardHeader className="pb-0">
-        <CardTitle className="text-lg text-left border-b pb-2">
+      <CardHeader className="p-0 pb-2">
+        <CardTitle className="text-base font-semibold text-left border-b pb-2">
           {getTitle(forecast, fundName)}
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <div className="flex flex-col gap-3">
+      <CardContent className="p-0 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-col gap-2.5">
           <MetricCard
             title="Beta"
             loading={loading}

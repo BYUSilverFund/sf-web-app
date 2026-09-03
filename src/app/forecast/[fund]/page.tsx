@@ -143,109 +143,114 @@ export default function FactorExposures() {
   );
 
   return (
-    <div className="lg:px-12 md:px-6 sm:px-0">
-      <div className="space-y-4 sm:px-4 py-4">
-        <div className="ml-5">
-          <Suspense fallback={null}>
-            <Breadcrumbs
-              pages={pagesForBreadcrumbs}
-              currentPage={breadcrumbTitle}
-            />
-          </Suspense>
-        </div>
-        <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <div className="sm:flex  items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <span>Fund</span>
-              <FundSelector
-                fund={fund}
-                funds={fundKeys}
-                onValueChange={(v) => updateURLForFund(v)}
+    <div className="w-full px-3 py-1.5 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+      <div className="flex flex-col lg:min-h-[calc(100dvh-75px-1.5rem)] w-full justify-between gap-2.5 py-1">
+        <div className="flex flex-col gap-2.5 flex-1">
+          <div>
+            <Suspense fallback={null}>
+              <Breadcrumbs
+                pages={pagesForBreadcrumbs}
+                currentPage={breadcrumbTitle}
               />
+            </Suspense>
+          </div>
+          <div className="rounded-xl border bg-card text-card-foreground shadow sm:flex space-y-2 sm:space-y-0 p-2.5 px-4 gap-2 items-center">
+            <div className="sm:flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium">Fund</span>
+                <FundSelector
+                  fund={fund}
+                  funds={fundKeys}
+                  onValueChange={(v) => updateURLForFund(v)}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="sm:flex sm:items-start sm:gap-6">
-          <div className="sm:flex-1 sm:mx-2">
-            <Card className="p-0 m-0">
-              <div className="">
-                {detailData ? (
-                  <div>
-                    <ForecastView
-                      data={detailData}
-                      showTop={showTop}
-                      setShowTop={(v) => updateURLForShowTop(v)}
-                      onFactorClick={
-                        isFactorDetail
-                          ? fund !== "all_funds"
-                            ? (s) => openHoldingPage(s)
-                            : undefined
-                          : (s) => openFactorView(s)
-                      }
-                      contributionMode={isFactorDetail}
-                      headerTitle={headerTooltipElement}
-                      view={view}
-                      onViewChange={(v) => updateURLForView(v)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    {exposuresLoading ? (
-                      <div className="p-6">
-                        <div className="animate-pulse space-y-4">
-                          <div className="h-6 w-1/3 bg-muted rounded" />
-                          <div className="h-40 bg-muted rounded" />
-                        </div>
-                      </div>
-                    ) : (
+          <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 flex-1">
+            <div className="flex-1 min-w-0 flex flex-col">
+              <Card className="p-0 m-0 flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col">
+                  {detailData ? (
+                    <div className="flex-1 flex flex-col">
                       <ForecastView
-                        data={exposures}
+                        data={detailData}
                         showTop={showTop}
                         setShowTop={(v) => updateURLForShowTop(v)}
-                        onFactorClick={(s) => openFactorView(s)}
+                        onFactorClick={
+                          isFactorDetail
+                            ? fund !== "all_funds"
+                              ? (s) => openHoldingPage(s)
+                              : undefined
+                            : (s) => openFactorView(s)
+                        }
                         contributionMode={isFactorDetail}
                         headerTitle={headerTooltipElement}
                         view={view}
                         onViewChange={(v) => updateURLForView(v)}
                       />
-                    )}
-                  </>
-                )}
-              </div>
-            </Card>
-            <div className="flex flex-col gap-2 items-center m-2 p-2">
-              {excludedHoldings && excludedHoldings.length > 0 ? (
-                <Tooltip
-                  trigger={makeTrigger(
+                    </div>
+                  ) : (
                     <>
-                      <span className="text-sm">
-                        <strong>
-                          Excluded holdings ({excludedHoldings.length}):
-                        </strong>{" "}
-                        {excludedHoldings.join(", ")}
-                      </span>
-                    </>,
+                      {exposuresLoading ? (
+                        <div className="p-6">
+                          <div className="animate-pulse space-y-4">
+                            <div className="h-6 w-1/3 bg-muted rounded" />
+                            <div className="h-40 bg-muted rounded" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex-1 flex flex-col">
+                          <ForecastView
+                            data={exposures}
+                            showTop={showTop}
+                            setShowTop={(v) => updateURLForShowTop(v)}
+                            onFactorClick={(s) => openFactorView(s)}
+                            contributionMode={isFactorDetail}
+                            headerTitle={headerTooltipElement}
+                            view={view}
+                            onViewChange={(v) => updateURLForView(v)}
+                          />
+                        </div>
+                      )}
+                    </>
                   )}
-                  description={tooltipDescription}
-                  side="top"
-                />
-              ) : (
-                <Tooltip
-                  trigger={makeTrigger(
-                    <span className="text-sm text-muted-foreground">
-                      All holdings included
-                    </span>,
-                  )}
-                  description={tooltipDescription}
-                  side="top"
-                />
-              )}
+                </div>
+              </Card>
+            </div>
+
+            <div className="w-full lg:w-72 shrink-0">
+              <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
             </div>
           </div>
+        </div>
 
-          <div className="w-72">
-            <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
-          </div>
+        <div className="flex flex-col gap-1 items-center p-1">
+          {excludedHoldings && excludedHoldings.length > 0 ? (
+            <Tooltip
+              trigger={makeTrigger(
+                <>
+                  <span className="text-xs">
+                    <strong>
+                      Excluded holdings ({excludedHoldings.length}):
+                    </strong>{" "}
+                    {excludedHoldings.join(", ")}
+                  </span>
+                </>,
+              )}
+              description={tooltipDescription}
+              side="top"
+            />
+          ) : (
+            <Tooltip
+              trigger={makeTrigger(
+                <span className="text-xs text-muted-foreground">
+                  All holdings included
+                </span>,
+              )}
+              description={tooltipDescription}
+              side="top"
+            />
+          )}
         </div>
       </div>
     </div>

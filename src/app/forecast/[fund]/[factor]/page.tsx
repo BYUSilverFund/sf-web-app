@@ -91,33 +91,33 @@ export default function FactorDetailPage() {
   );
 
   return (
-    <div className="lg:px-12 md:px-6 sm:px-0">
-      <div className="space-y-4 sm:px-4 py-4">
-        <div className="ml-5">
-          <Suspense fallback={null}>
-            <Breadcrumbs
-              pages={pages}
-              currentPage={`${formatFactors(factor)}`}
-            />
-          </Suspense>
-        </div>
-        <div className="rounded-xl border bg-card text-card-foreground shadow sm:m-2 sm:flex space-y-2 sm:space-y-0 p-4 gap-2 items-center">
-          <div className="sm:flex  items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <span>Fund</span>
-              <FundSelector
-                fund={fund}
-                funds={fundKeys}
-                onValueChange={(v) => updateURLForFund(v)}
+    <div className="w-full px-3 py-1.5 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+      <div className="flex flex-col lg:min-h-[calc(100dvh-75px-1.5rem)] w-full justify-between gap-2.5 py-1">
+        <div className="flex flex-col gap-2.5 flex-1">
+          <div>
+            <Suspense fallback={null}>
+              <Breadcrumbs
+                pages={pages}
+                currentPage={`${formatFactors(factor)}`}
               />
+            </Suspense>
+          </div>
+          <div className="rounded-xl border bg-card text-card-foreground shadow sm:flex space-y-2 sm:space-y-0 p-2.5 px-4 gap-2 items-center">
+            <div className="sm:flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium">Fund</span>
+                <FundSelector
+                  fund={fund}
+                  funds={fundKeys}
+                  onValueChange={(v) => updateURLForFund(v)}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="sm:flex sm:items-start sm:gap-6">
-          <div className="sm:flex-1 sm:mx-2">
-            <Card className="p-0">
-              <div className="sm:mx-2 p-1">
-                {view === "table" ? (
+          <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 flex-1">
+            <div className="flex-1 min-w-0 flex flex-col">
+              <Card className="p-0 flex-1 flex flex-col">
+                <div className="sm:mx-2 p-1 flex-1 flex flex-col">
                   <ForecastView
                     data={detailData ?? []}
                     showTop={showTop}
@@ -132,28 +132,13 @@ export default function FactorDetailPage() {
                     view={view}
                     onViewChange={(v) => updateURLForView(v)}
                   />
-                ) : (
-                  <ForecastView
-                    data={detailData ?? []}
-                    showTop={showTop}
-                    setShowTop={(v) => updateURLForShowTop(v)}
-                    onFactorClick={
-                      fund !== "all_funds"
-                        ? (s) => openHoldingPage(s)
-                        : undefined
-                    }
-                    contributionMode={true}
-                    headerTitle={headerTooltipElement}
-                    view={view}
-                    onViewChange={(v) => updateURLForView(v)}
-                  />
-                )}
-              </div>
-            </Card>
-          </div>
+                </div>
+              </Card>
+            </div>
 
-          <div className="w-72">
-            <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
+            <div className="w-full lg:w-72 shrink-0">
+              <RiskForecastTable forecast={riskForecast} fundName={fundLabel} />
+            </div>
           </div>
         </div>
       </div>
