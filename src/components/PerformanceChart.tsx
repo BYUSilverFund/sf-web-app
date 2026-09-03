@@ -70,7 +70,7 @@ function getXAxisTicks(
         ? 8
         : chartData.length <= 42
           ? 9
-          : 10;
+          : 12;
 
   const resolvedTickCount = Math.min(
     preferredTickCount ?? defaultTickCount,
@@ -79,7 +79,9 @@ function getXAxisTicks(
   const lastIndex = chartData.length - 1;
 
   return Array.from({ length: resolvedTickCount }, (_, index) =>
-    resolvedTickCount === 1 ? 0 : (index * lastIndex) / (resolvedTickCount - 1),
+    resolvedTickCount === 1
+      ? 0
+      : Math.round((index * lastIndex) / (resolvedTickCount - 1)),
   );
 }
 
@@ -230,12 +232,12 @@ export function PerformanceChart({
             type="number"
             domain={[0, Math.max(chartData.length - 1, 0)]}
             ticks={xAxisTicks}
-            interval={0}
+            interval="preserveStartEnd"
             axisLine={{ stroke: "#888", strokeWidth: 1 }}
             tickLine={{ stroke: "#888", strokeWidth: 1 }}
             tickSize={6}
             tickMargin={8}
-            minTickGap={0}
+            minTickGap={24}
             stroke="#888"
             tick={{ fill: "#4B5563", fontSize: 12 }}
             tickFormatter={(value) =>
