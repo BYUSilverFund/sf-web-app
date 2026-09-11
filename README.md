@@ -93,7 +93,16 @@ git commit --no-verify -m "emergency commit"
 ## Authentication
 
 This application uses **AWS Cognito** for user authentication and route protection (via AWS Amplify).
-Cognito resources (User Pool, App Client, Domain) are provisioned via Terraform in [`cognito.tf`](../sf-aws-terraform/cognito.tf) in the `sf-aws-terraform` repository.
+
+- Cognito resources (User Pool, App Client, Domain) are provisioned via Terraform in [`cognito.tf`](../sf-aws-terraform/cognito.tf) in the `sf-aws-terraform` repository.
+- **Pre-Sign-Up Hook**: User self-registration is validated by a Cognito Pre-Sign-Up Lambda trigger to restrict account creation to authorized BYU email domains.
+
+## GraphQL & Alumni Directory (AWS AppSync)
+
+The Alumni directory on the team page is fetched using AWS AppSync GraphQL querying an Amazon DynamoDB table (`src/graphql/backend.ts`).
+
+- **Authentication Mode**: API Key (`apiKey`).
+- **Annual Expiration & Rotation**: AWS AppSync API keys expire annually. When the key expires, generate a new key in the **AWS Console $\rightarrow$ AWS AppSync $\rightarrow$ Settings $\rightarrow$ API Keys** and update the Amplify environment configuration.
 
 ## Deployment
 
