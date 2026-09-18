@@ -8,8 +8,7 @@ import { AllHoldingsSummaryResponse, PortfolioRequest } from "@/lib/types";
 import { formatPortfolio, getDateFromView } from "@/lib/utils";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ActiveSwitch } from "@/components/ActiveSwitch";
+import { useEffect, useRef, useState } from "react";
 import { getPortfolioSummary } from "@/lib/api/portfolio";
 import { downloadAllHoldingsCSV } from "@/lib/api/csvDownloads";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
@@ -25,7 +24,6 @@ import { ChevronRight } from "lucide-react";
 export default function Page() {
   const params = useParams<{ fund: string }>();
   const requestSequence = useRef(0);
-  const [active, setActive] = useState(false);
   const [view, setView] = useState("cohort");
   const [start, setStart] = useState<Date | undefined>(
     getDateFromView(view, params.fund)[0],
@@ -69,14 +67,8 @@ export default function Page() {
       });
   }, [start, end, params.fund]);
 
-  const holdings = useMemo(() => {
-    // The active toggle is applied locally so the table can reuse the fetched holdings payload.
-    if (!allHoldingsSummary?.holdings) return [];
-    if (active) {
-      return allHoldingsSummary.holdings.filter((holding) => holding.active);
-    }
-    return allHoldingsSummary.holdings;
-  }, [allHoldingsSummary?.holdings, active]);
+  // The table intentionally shows all holdings without an active-only filter.
+  const holdings = allHoldingsSummary?.holdings ?? [];
 
   return (
     <PerformancePageShell>
@@ -111,7 +103,6 @@ export default function Page() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <ActiveSwitch active={active} setActive={setActive} />
             <ViewButton
               start={start}
               end={end}
