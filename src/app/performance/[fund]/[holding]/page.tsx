@@ -17,7 +17,6 @@ import { useParams } from "next/navigation";
 import { DownloadCSVButton } from "@/components/DownloadCSVButton";
 import { FactorExposuresButton } from "@/components/forecast/FactorExposuresButton";
 import { MetricCard } from "@/components/MetricCard";
-import { MetricModeToggle } from "@/components/MetricModeToggle";
 import {
   PerformanceChart,
   PerformanceChartLegend,
@@ -289,9 +288,6 @@ export default function Page() {
   const [end, setEnd] = useState<Date | undefined>(
     getDateFromView("max", params.fund)[1],
   );
-  const [metricMode, setMetricMode] = useState<"realized" | "annualized">(
-    "annualized",
-  );
   const [holdingSummary, setHoldingSummary] =
     useState<HoldingSummaryResponse>();
   const [benchmarkSummary, setBenchmarkSummary] =
@@ -366,17 +362,6 @@ export default function Page() {
     [holdingTimeSeries, params.holding],
   );
 
-  const realizedMetrics = useMemo(
-    () =>
-      calculateSummaryMetrics(
-        false,
-        holdingSummary,
-        benchmarkSummary,
-        view === "1year",
-      ),
-    [benchmarkSummary, holdingSummary, view],
-  );
-
   const annualizedMetrics = useMemo(
     () =>
       calculateSummaryMetrics(
@@ -388,9 +373,9 @@ export default function Page() {
     [benchmarkSummary, holdingSummary, view],
   );
 
-  const displayMetrics =
-    metricMode === "annualized" ? annualizedMetrics : realizedMetrics;
-  const isAnnualized = metricMode === "annualized";
+  // Holding metrics intentionally use annualized values without a mode toggle.
+  const displayMetrics = annualizedMetrics;
+  const isAnnualized = true;
   const holdingDailyReturns = useMemo(
     () => holdingTimeSeries?.records.map((record) => record.return_),
     [holdingTimeSeries?.records],
@@ -716,12 +701,8 @@ export default function Page() {
         <PerformanceMetricsSection
           header={
             <PerformanceToolbar className="border-0 rounded-none shadow-none">
-              <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex w-full items-center">
                 <h2 className="text-lg font-bold">Metrics</h2>
-                <MetricModeToggle
-                  metricMode={metricMode}
-                  setMetricMode={setMetricMode}
-                />
               </div>
             </PerformanceToolbar>
           }

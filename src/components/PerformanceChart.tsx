@@ -13,7 +13,7 @@ import { cn, formatCurrency } from "@/lib/utils";
 export const PERFORMANCE_CHART_FUND_COLOR = "#002E5D";
 export const PERFORMANCE_CHART_BENCHMARK_COLOR = "#4F6F8F";
 const PERFORMANCE_CHART_FUND_LINE_COLOR = "#1F5F3F";
-const PERFORMANCE_CHART_BENCHMARK_LINE_COLOR = "#6B7280";
+const PERFORMANCE_CHART_BENCHMARK_LINE_COLOR = "#9785ffa5";
 
 const CHART_MONTH_YEAR_FORMATTER = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -298,23 +298,23 @@ export function PerformanceChartLegend({
   return (
     <div
       className={cn(
-        "flex gap-4 rounded border border-gray-300 bg-white/90 px-3 py-1.5",
+        "flex gap-6 rounded border border-gray-300 bg-white/90 px-3 py-1.5",
         className,
       )}
     >
       <div className="flex items-center gap-2">
         <div
-          className="h-2.5 w-2.5 rounded-full"
+          className="h-3.5 w-3.5 rounded-full"
           style={{ backgroundColor: PERFORMANCE_CHART_FUND_LINE_COLOR }}
         />
-        <span className="text-xs">{fundLabel}</span>
+        <span className="text-s">{fundLabel}</span>
       </div>
       <div className="flex items-center gap-2">
         <div
-          className="h-2.5 w-2.5 rounded-full"
+          className="h-3.5 w-3.5 rounded-full"
           style={{ backgroundColor: PERFORMANCE_CHART_BENCHMARK_LINE_COLOR }}
         />
-        <span className="text-xs">{benchmarkLabel}</span>
+        <span className="text-s">{benchmarkLabel}</span>
       </div>
     </div>
   );

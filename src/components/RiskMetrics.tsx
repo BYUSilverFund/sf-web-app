@@ -18,15 +18,18 @@ export function RiskMetrics({ metrics, mode }: RiskMetricsProps) {
     "Information Ratio",
   ] as const);
 
-  const metricsData = [
-    { name: "Alpha", value: displayMetrics.alpha },
-    { name: "Beta", value: metrics.beta },
-    { name: "Tracking Error", value: displayMetrics.trackingError },
-    {
-      name: "Information Ratio",
-      value: displayMetrics.informationRatio,
-    },
-  ];
+  const metricsData =
+    mode === "annualized"
+      ? [
+          { name: "Alpha", value: displayMetrics.alpha },
+          { name: "Beta", value: metrics.beta },
+          { name: "Tracking Error", value: displayMetrics.trackingError },
+          {
+            name: "Information Ratio",
+            value: displayMetrics.informationRatio,
+          },
+        ]
+      : [];
 
   return (
     // Risk metrics follow the same mobile scrolling pattern as the benchmark metrics to keep cards readable.

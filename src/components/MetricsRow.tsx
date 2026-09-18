@@ -43,6 +43,7 @@ export function MetricsRow({ metrics, mode }: MetricsRowProps) {
       benchmark: displayMetrics.sharpeRatio.benchmark,
       tooltip: sharedTooltips["Sharpe Ratio"],
     },
+
     {
       name: "Dividend Yield",
       fund: metrics.dividendYield.fund,
