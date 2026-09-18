@@ -16,7 +16,7 @@ function buildHeaderTooltips(annualized: boolean): TooltipMap {
 
     AverageReturns: annualized
       ? "Annualized returns = average daily return over the selected period × 252."
-      : "Realized returns = average daily return over the selected period.",
+      : "Average daily return over the selected period.",
 
     "Sharpe Ratio": annualized
       ? "Annualized Sharpe Ratio = Annualized excess return ÷ Annualized volatility."

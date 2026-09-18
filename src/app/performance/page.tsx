@@ -60,7 +60,6 @@ import {
 import { getBenchmarkSummary } from "@/lib/api/benchmark";
 import { getFundSummary, getFundTimeSeries } from "@/lib/api/fund";
 import {
-  getActivePortfolioSummary,
   getPortfolioSummary,
   getPortfolioTimeSeries,
 } from "@/lib/api/portfolio";
@@ -130,17 +129,11 @@ function PerformancePageContent() {
     getDateFromView(view)[0],
   );
   const [end, setEnd] = useState<Date | undefined>(getDateFromView(view)[1]);
-  const [metricMode, setMetricMode] = useState<"realized" | "annualized">(
-    "annualized",
-  );
-  const [activeRates, setActiveRates] = useState(false);
 
   const [fundSummary, setFundSummary] = useState<FundSummaryResponse>();
   const [fundTimeSeries, setFundTimeSeries] =
     useState<FundTimeSeriesResponse>();
   const [portfolioSummary, setPortfolioSummary] =
-    useState<PortfolioSummaryResponse>();
-  const [activePortfolioSummary, setActivePortfolioSummary] =
     useState<PortfolioSummaryResponse>();
   const [portfolioTimeSeries, setPortfolioTimeSeries] =
     useState<PortfolioTimeSeriesResponse>();
@@ -155,11 +148,8 @@ function PerformancePageContent() {
   const activeTab = searchParams.get("tab") || ALL_FUNDS_KEY;
   const isAllFunds = activeTab === ALL_FUNDS_KEY;
   const selectedFund = isAllFunds ? "" : activeTab;
-  const selectedSummary = isAllFunds
-    ? fundSummary
-    : activeRates
-      ? activePortfolioSummary
-      : portfolioSummary;
+  // Portfolio metrics intentionally use total weights; active-weight mode is not exposed.
+  const selectedSummary = isAllFunds ? fundSummary : portfolioSummary;
   const selectedTimeSeries = isAllFunds ? fundTimeSeries : portfolioTimeSeries;
 
   const handleActiveTabChange = (nextTab: string) => {
@@ -226,7 +216,6 @@ function PerformancePageContent() {
           setFundSummary(summaryData.summary);
           setBenchmarkSummary(summaryData.benchmark);
           setPortfolioSummary(undefined);
-          setActivePortfolioSummary(undefined);
           setPortfolioTimeSeries(undefined);
           setAllHoldingsSummary(undefined);
           setIsLoading(false);
@@ -249,9 +238,8 @@ function PerformancePageContent() {
       getAllHoldingsSummary(portfolioRequest),
       getPortfolioTimeSeries(portfolioRequest),
       getPortfolioSummary(portfolioRequest),
-      getActivePortfolioSummary(portfolioRequest),
     ])
-      .then(async ([holdings, timeSeries, summary, activeSummary]) => {
+      .then(async ([holdings, timeSeries, summary]) => {
         const benchmarkRequest: BenchmarkRequest = {
           start: summary.start,
           end: summary.end,
@@ -264,7 +252,6 @@ function PerformancePageContent() {
         setAllHoldingsSummary(holdings);
         setPortfolioTimeSeries(timeSeries);
         setPortfolioSummary(summary);
-        setActivePortfolioSummary(activeSummary);
         setBenchmarkSummary(benchmark);
         setFundSummary(undefined);
         setFundTimeSeries(undefined);
@@ -579,18 +566,7 @@ function PerformancePageContent() {
           </PerformanceSidebar>
         </PerformanceGraphRow>
 
-        <PerformanceMetricsSection
-          header={
-            <MetricsBar
-              metricMode={metricMode}
-              setMetricMode={setMetricMode}
-              activeRates={activeRates}
-              setActiveRates={setActiveRates}
-              activeTab={activeTab}
-              embedded
-            />
-          }
-        >
+        <PerformanceMetricsSection header={<MetricsBar embedded />}>
           {showMetricsSkeleton ? (
             <MetricsGridSkeleton />
           ) : (
@@ -601,7 +577,8 @@ function PerformancePageContent() {
                   flex: `${benchmarkMetricCount} ${benchmarkMetricCount} 0%`,
                 }}
               >
-                <MetricsRow metrics={fundMetrics!} mode={metricMode} />
+                {/* Annualized is the single supported display mode. */}
+                <MetricsRow metrics={fundMetrics!} mode="annualized" />
               </div>
               <div
                 className="min-w-0 w-full max-w-[1100px] lg:max-w-none"
@@ -609,7 +586,7 @@ function PerformancePageContent() {
                   flex: `${riskMetricCount} ${riskMetricCount} 0%`,
                 }}
               >
-                <RiskMetrics metrics={fundMetrics!} mode={metricMode} />
+                <RiskMetrics metrics={fundMetrics!} mode="annualized" />
               </div>
             </div>
           )}
