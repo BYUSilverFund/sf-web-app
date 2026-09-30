@@ -86,7 +86,7 @@ const InvestmentMemos: React.FC = () => {
             <li>
               <MemoLink
                 href="/pdfs/investment-memos-2026/MTN/MTN_WriteUp.pdf"
-                text="MTN — Vail Resorts"
+                text="MTN — MTN Group Limited"
               />
             </li>
 
