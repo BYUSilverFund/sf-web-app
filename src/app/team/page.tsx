@@ -5,15 +5,9 @@ import { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 // grad fund images
-import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
-import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
-import AaronGill from "@/images/fund-members/aaron-gill.jpg";
-import MacleanLunt from "@/images/fund-members/maclean-lunt.jpg";
-import ZachMatthews from "@/images/fund-members/zachary-matthews.jpg";
+import MichaelRhoton from "@/images/fund-members/michael-rhoton.png";
+import CashClark from "@/images/fund-members/cash-clark.jpg";
 // quant fund images
-import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
-import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
-import NathanPreslar from "@/images/fund-members/nathan-preslar.jpg";
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // undergrad fund images
 import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
@@ -69,12 +63,6 @@ const BioTab: React.FC = () => {
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <TeamBio
-          name="Brandon Waits"
-          img={BrandonWaits.src}
-          bio="Brandon is currently studying computational mathematics, venturing to apply his quantitative skillset to financial markets. After working on the portfolio strategy team at Ensign Peak Advisors, Brandon hopes to pursue future opportunities in portfolio analytics, risk management, and quantitative investment research. In his free time, Brandon enjoys hiking in national parks and cooking with his wok."
-          team="Quantitative"
-        />
-        <TeamBio
           name="Brandon Bates"
           img={BrandonBates.src}
           bio="Brandon Bates is a seasoned portfolio manager for global macro, equity, and volatility hedge fund strategies. In his present role as Head of Systematic Macro at Magnetar Capital, he focuses on quantitative investment strategies across all asset classes that leverage fundamental economic insights and exploit persistent market frictions and behavioral biases. His efforts join data science methods with economic theory. Previously, he was a member of the hedge fund portfolio management teams at Squarepoint Capital and BlackRock (legacy Barclays Global Investors team). He is an advisor for Cambridge University's MFin Practicum on foreign-exchange and volatility investing and a frequent guest lecturer at the Yale School of Management teaching active foreign exchange investing. Brandon received AM and PhD degrees in financial economics from Harvard University."
@@ -107,29 +95,14 @@ const GradFundTab: React.FC = () => {
   return (
     <>
       <TeamCard
-        headShot={AaronGill.src}
-        name="Aaron Gill"
-        linkedIn="https://www.linkedin.com/in/aaron-w-gill/"
+        headShot={MichaelRhoton.src}
+        name="Michael Rhoton"
+        linkedIn="https://www.linkedin.com/in/michaelrhoton/"
       />
       <TeamCard
-        headShot={ZachMatthews.src}
-        name="Zachary Matthews"
-        linkedIn="https://www.linkedin.com/in/zacharygmatthews/"
-      />
-      <TeamCard
-        headShot={ElizabethHall.src}
-        name="Elizabeth Hall"
-        linkedIn="https://www.linkedin.com/in/elizabethdhall/"
-      />
-      <TeamCard
-        headShot={JosephLunt.src}
-        name="Joseph Lunt"
-        linkedIn="https://www.linkedin.com/in/joseph-lunt-54740bb2/"
-      />
-      <TeamCard
-        headShot={MacleanLunt.src}
-        name="Maclean Lunt"
-        linkedIn="https://www.linkedin.com/in/maclean-lunt/"
+        headShot={CashClark.src}
+        name="Cash Clark"
+        linkedIn="https://www.linkedin.com/in/cashclark/"
       />
     </>
   );
@@ -139,25 +112,16 @@ const QuantFundTab: React.FC = () => {
   return (
     <>
       <TeamCard
-        headShot={BrandonWaits.src}
-        name="Brandon Waits"
-        linkedIn="https://www.linkedin.com/in/brandonwaits/"
-      />
-      <TeamCard
-        headShot={AndrewHall.src}
-        name="Andrew Hall"
-        linkedIn="https://www.linkedin.com/in/andrewhall1124/"
-      />
-      <TeamCard
-        headShot={NathanPreslar.src}
-        name="Nathan Preslar"
-        linkedIn="https://www.linkedin.com/in/nathan-preslar/"
-      />
-      <TeamCard
         headShot={AndyCriddle.src}
         name="Andy Criddle"
         linkedIn="https://www.linkedin.com/in/andrewcriddle"
       />
+
+      {/*       <TeamCard
+        headShot={GrantRich.src}}
+        name="Grant Rich"
+        linkedIn="https://www.linkedin.com/in/grantjrich/"
+      /> */}
     </>
   );
 };

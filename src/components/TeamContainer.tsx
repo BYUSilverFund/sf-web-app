@@ -3,12 +3,9 @@ import React, { useState } from "react";
 import TeamCard from "@/components/TeamCard";
 
 // grad fund images
-import ElizabethHall from "@/images/fund-members/elizabeth-hall.jpeg";
-import JosephLunt from "@/images/fund-members/joseph-lunt.jpg";
+import MichaelRhoton from "@/images/fund-members/michael-rhoton.png";
+import CashClark from "@/images/fund-members/cash-clark.jpg";
 // Quantitative images
-import BrandonWaits from "@/images/fund-members/brandon_waits.jpg";
-import AndrewHall from "@/images/fund-members/andrew-hall.jpg";
-import NathanPreslar from "@/images/fund-members/nathan-preslar.jpg";
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // Undergraduate images
 import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
@@ -58,40 +55,22 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
       {activeTab === "Presidents" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3vw] md:gap-[2vw] mb-16">
           <TeamCard
-            headShot={BrandonWaits.src}
-            name="Brandon Waits"
-            position="Quantitative Fund"
-            linkedIn="https://www.linkedin.com/in/brandonwaits/"
-          />
-          <TeamCard
-            headShot={AndrewHall.src}
-            name="Andrew Hall"
-            position="Quantitative Fund"
-            linkedIn="https://www.linkedin.com/in/andrewhall1124/"
-          />
-          <TeamCard
-            headShot={NathanPreslar.src}
-            name="Nathan Preslar"
-            position="Quantitative Fund"
-            linkedIn="https://www.linkedin.com/in/nathan-preslar/"
-          />
-          <TeamCard
             headShot={AndyCriddle.src}
             name="Andy Criddle"
             position="Quantitative Fund"
             linkedIn="https://www.linkedin.com/in/andrewcriddle"
           />
           <TeamCard
-            headShot={ElizabethHall.src}
-            name="Elizabeth Hall"
+            headShot={MichaelRhoton.src}
+            name="Michael Rhoton"
             position="Graduate Fund"
-            linkedIn="https://www.linkedin.com/in/elizabethdhall/"
+            linkedIn="https://www.linkedin.com/in/michaelrhoton/"
           />
           <TeamCard
-            headShot={JosephLunt.src}
-            name="Joseph Lunt"
+            headShot={CashClark.src}
+            name="Cash Clark"
             position="Graduate Fund"
-            linkedIn="https://www.linkedin.com/in/joseph-lunt-54740bb2/"
+            linkedIn="https://www.linkedin.com/in/cashclark/"
           />
           <TeamCard
             headShot={ChristianBaggaley.src}
