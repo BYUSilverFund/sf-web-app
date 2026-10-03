@@ -3,10 +3,12 @@ import React from "react";
 import { useState } from "react";
 // components
 import TeamCard from "@/components/TeamCard";
+import GroupFundTeamCard from "@/components/GroupFundTeamCard";
 import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 // grad fund images
 import MichaelRhoton from "@/images/fund-members/michael-rhoton.png";
 import CashClark from "@/images/fund-members/cash-clark.jpg";
+import GradFundGroup from "@/images/fund-members/grad-fund-group.jpg";
 // quant fund images
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // undergrad fund images
@@ -20,13 +22,18 @@ import IanWright from "@/images/fund-advisors/ian-wright.jpg";
 
 interface TeamTabContainerProps {
   children: React.ReactNode;
+  groupPhoto?: React.ReactNode;
 }
-const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ children }) => {
+const TeamTabContainer: React.FC<TeamTabContainerProps> = ({
+  children,
+  groupPhoto,
+}) => {
   return (
-    <div className="flex flex-col items-center">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3vw] md:gap-[2vw] mb-16">
+    <div className="flex flex-col items-center gap-10 mb-16 w-full">
+      <div className="flex flex-wrap justify-center gap-[3vw] md:gap-[2vw] w-full [&>div]:w-[40vw] sm:[&>div]:w-[25vw] md:[&>div]:w-[17.5vw] lg:[&>div]:w-[15vw]">
         {children}
       </div>
+      {groupPhoto && <div className="w-full max-w-3xl">{groupPhoto}</div>}
     </div>
   );
 };
@@ -96,12 +103,12 @@ const GradFundTab: React.FC = () => {
     <>
       <TeamCard
         headShot={MichaelRhoton.src}
-        name="Michael Rhoton"
+        name="Co-President: Michael Rhoton"
         linkedIn="https://www.linkedin.com/in/michaelrhoton/"
       />
       <TeamCard
         headShot={CashClark.src}
-        name="Cash Clark"
+        name="Co-President: Cash Clark"
         linkedIn="https://www.linkedin.com/in/cashclark/"
       />
     </>
@@ -113,7 +120,7 @@ const QuantFundTab: React.FC = () => {
     <>
       <TeamCard
         headShot={AndyCriddle.src}
-        name="Andy Criddle"
+        name="Co-President: Andy Criddle"
         linkedIn="https://www.linkedin.com/in/andrewcriddle"
       />
 
@@ -187,7 +194,16 @@ const TeamContainer: React.FC = () => {
           </button>
         </div>
         {activeTab === "Spotlights" && <BioTab />}
-        <TeamTabContainer>
+        <TeamTabContainer
+          groupPhoto={
+            activeTab === "Grad Fund" ? (
+              <GroupFundTeamCard
+                groupPhotos={GradFundGroup.src}
+                groupName="Graduate Fund"
+              />
+            ) : undefined
+          }
+        >
           {activeTab === "Grad Fund" && <GradFundTab />}
           {activeTab === "Quant Fund" && <QuantFundTab />}
           {activeTab === "Undergrad Fund" && <UndergradFundTab />}
