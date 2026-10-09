@@ -1,26 +1,12 @@
-import { AllPortfoliosRequest, AllPortfoliosSummaryResponse } from "../types";
-import { API_BASE_URL } from "../variables";
+import type {
+  AllPortfoliosRequest,
+  AllPortfoliosSummaryResponse,
+} from "../types";
+import { postJson, type ApiRequestOptions } from "./client";
 
-export async function getAllPortfoliosSummary(
+export function getAllPortfoliosSummary(
   request: AllPortfoliosRequest,
+  options?: ApiRequestOptions,
 ): Promise<AllPortfoliosSummaryResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "all-portfolios/summary", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsSummaryResponse: AllPortfoliosSummaryResponse =
-      await response.json();
-
-    return allFundsSummaryResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("all-portfolios/summary", request, options);
 }

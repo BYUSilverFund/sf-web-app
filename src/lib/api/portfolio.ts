@@ -1,101 +1,35 @@
-import {
+import type {
   PortfolioRequest,
   PortfolioSummaryResponse,
   PortfolioTimeSeriesResponse,
   TradesResponse,
 } from "../types";
-import { API_BASE_URL } from "../variables";
+import { postJson, type ApiRequestOptions } from "./client";
 
-export async function getPortfolioSummary(
+export function getPortfolioSummary(
   request: PortfolioRequest,
+  options?: ApiRequestOptions,
 ): Promise<PortfolioSummaryResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "portfolio/summary", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsSummaryResponse: PortfolioSummaryResponse =
-      await response.json();
-
-    return allFundsSummaryResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("portfolio/summary", request, options);
 }
 
-export async function getActivePortfolioSummary(
+export function getActivePortfolioSummary(
   request: PortfolioRequest,
+  options?: ApiRequestOptions,
 ): Promise<PortfolioSummaryResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "portfolio/summary/active", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const activePortfolioSummaryResponse: PortfolioSummaryResponse =
-      await response.json();
-
-    return activePortfolioSummaryResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("portfolio/summary/active", request, options);
 }
 
-export async function getPortfolioTimeSeries(
+export function getPortfolioTimeSeries(
   request: PortfolioRequest,
+  options?: ApiRequestOptions,
 ): Promise<PortfolioTimeSeriesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "portfolio/time-series", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsTimeSeriesResponse: PortfolioTimeSeriesResponse =
-      await response.json();
-
-    return allFundsTimeSeriesResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("portfolio/time-series", request, options);
 }
 
-export async function getPortfolioTrades(
+export function getPortfolioTrades(
   request: PortfolioRequest,
+  options?: ApiRequestOptions,
 ): Promise<TradesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "portfolio/trades", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const tradesResponse: TradesResponse = await response.json();
-    return tradesResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch trades data.");
-  }
+  return postJson("portfolio/trades", request, options);
 }

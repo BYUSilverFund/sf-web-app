@@ -174,18 +174,21 @@ export const handlers = [
       }),
     );
   }),
-  rest.get(new RegExp(`${API_BASE}/risk_forecast(/.*)?`), (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        tickers: [],
-        weights: [],
-        volatility: 0,
-        beta: 0,
-        tracking_error: 0,
-      }),
-    );
-  }),
+  rest.get(
+    new RegExp(`${API_BASE}/risk_forecast(/.*)?`, "i"),
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          tickers: [],
+          weights: [],
+          volatility: 0,
+          beta: 0,
+          tracking_error: 0,
+        }),
+      );
+    },
+  ),
 
   // Factor exposures
   rest.get(`${API_BASE}/factor-exposures/:fund`, (req, res, ctx) => {
