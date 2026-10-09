@@ -221,7 +221,6 @@ const BurgerMenu: React.FC = () => {
         <nav className="flex flex-col items-center text-center w-full p-6">
           {[
             { href: "/", label: "Home" },
-            { href: "/positions", label: "Portfolio" },
             { href: "/performance", label: "Performance" },
             { href: "/team", label: "Team" },
             { href: "/alumni", label: "Alumni" },
