@@ -1,126 +1,43 @@
-import {
+import type {
   DividendsResponse,
   HoldingRequest,
   HoldingSummaryResponse,
   HoldingTimeSeriesResponse,
   TradesResponse,
 } from "../types";
-import { API_BASE_URL } from "../variables";
+import { postJson, type ApiRequestOptions } from "./client";
 
-export async function getHoldingSummary(
+export function getHoldingSummary(
   request: HoldingRequest,
+  options?: ApiRequestOptions,
 ): Promise<HoldingSummaryResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "holding/summary", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsSummaryResponse: HoldingSummaryResponse =
-      await response.json();
-
-    return allFundsSummaryResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("holding/summary", request, options);
 }
 
-export async function getHoldingTimeSeries(
+export function getHoldingTimeSeries(
   request: HoldingRequest,
+  options?: ApiRequestOptions,
 ): Promise<HoldingTimeSeriesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "holding/time-series", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsTimeSeriesResponse: HoldingTimeSeriesResponse =
-      await response.json();
-
-    return allFundsTimeSeriesResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("holding/time-series", request, options);
 }
 
-export async function getDividends(
+export function getDividends(
   request: HoldingRequest,
+  options?: ApiRequestOptions,
 ): Promise<DividendsResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "holding/dividends", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result: DividendsResponse = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("holding/dividends", request, options);
 }
 
-export async function getTrades(
+export function getTrades(
   request: HoldingRequest,
+  options?: ApiRequestOptions,
 ): Promise<TradesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "holding/trades", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result: TradesResponse = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("holding/trades", request, options);
 }
 
-export async function getRecentTrades(
+export function getRecentTrades(
   request: HoldingRequest,
+  options?: ApiRequestOptions,
 ): Promise<TradesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "holding/recent-trades", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result: TradesResponse = await response.json();
-    console.log("result", result);
-
-    return result;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("holding/recent-trades", request, options);
 }
