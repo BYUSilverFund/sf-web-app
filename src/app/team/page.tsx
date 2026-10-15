@@ -122,12 +122,10 @@ const QuantFundTab: React.FC = () => {
         name="Co-President: Andy Criddle"
         linkedIn="https://www.linkedin.com/in/andrewcriddle"
       />
-
-      {/*       <TeamCard
-        headShot={GrantRich.src}}
-        name="Grant Rich"
-        linkedIn="https://www.linkedin.com/in/grantjrich/"
-      /> */}
+      <TeamCard
+        name="Co-President: Grant Rich"
+        linkedIn="https://www.linkedin.com/in/grantjrich/?isSelfProfile=false"
+      />
     </>
   );
 };
