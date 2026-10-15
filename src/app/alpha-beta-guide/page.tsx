@@ -5,14 +5,17 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MathFormula } from "@/components/MathFormula";
 import { UndergradBetaChart } from "@/components/BetaChart";
+import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 
 export default function AlphaBetaGuidePage() {
   const router = useRouter();
 
   return (
-    <div className="lg:px-24 md:px-12 sm:px-6 py-8">
-      <div className="flex justify-center">
-        <Card className="w-full max-w-4xl">
+    <div className="relative overflow-hidden lg:px-24 md:px-12 sm:px-6 py-8">
+      <SquareSvgTl className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none" />
+      <SquareSvgBr className="absolute bottom-0 left-0 w-full h-auto z-0 pointer-events-none" />
+      <div className="flex justify-center relative z-10">
+        <Card className="w-full max-w-4xl bg-card">
           <CardHeader className="pb-4 pt-3">
             <div>
               <Button variant="outline" size="sm" onClick={() => router.back()}>

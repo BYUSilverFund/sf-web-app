@@ -10,6 +10,7 @@ export function useExposures(fund?: string) {
   const [exposures, setExposures] = useState<FactorData[]>([]);
   const [excludedHoldings, setExcludedHoldings] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   // simple in-hook cache to avoid refetching
   const cacheRef = useRef<
     Record<string, { exposures: FactorData[]; excluded: string[] }>
@@ -24,16 +25,24 @@ export function useExposures(fund?: string) {
       if (cached) {
         setExposures(cached.exposures);
         setExcludedHoldings(cached.excluded);
+        setError(null);
+        setLoading(false);
         return;
       }
       try {
         setLoading(true);
+        setError(null);
+        setExposures([]);
+        setExcludedHoldings([]);
         const session = await fetchAuthSession();
         const token = session.tokens?.accessToken?.toString();
         const endpoint = `${API_BASE_URL}factor-exposures/${fund}`;
         const response = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (!response.ok) {
+          throw new Error(`Request failed (HTTP ${response.status}).`);
+        }
         const data = await response.json();
         const exposuresObj = data?.exposures ?? {};
         const exposureData = Object.entries(exposuresObj)
@@ -49,6 +58,13 @@ export function useExposures(fund?: string) {
         cacheRef.current[key] = { exposures: exposureData, excluded };
       } catch (err) {
         console.error("Failed fetching exposures:", err);
+        if (mounted) {
+          setError(
+            err instanceof Error
+              ? `Unable to load factor exposures: ${err.message}`
+              : "Unable to load factor exposures. Please try again.",
+          );
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -57,5 +73,5 @@ export function useExposures(fund?: string) {
     return () => void (mounted = false);
   }, [fund]);
 
-  return { exposures, excludedHoldings, loading };
+  return { exposures, excludedHoldings, loading, error };
 }

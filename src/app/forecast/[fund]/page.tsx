@@ -38,12 +38,14 @@ export default function FactorExposures() {
     exposures,
     excludedHoldings,
     loading: exposuresLoading,
+    error: exposuresError,
   } = useExposures(fund);
-  const { detailData, detailLabel } = useDetailData(
-    fund,
-    factorParam,
-    holdingParam,
-  );
+  const {
+    detailData,
+    detailLabel,
+    loading: detailLoading,
+    error: detailError,
+  } = useDetailData(fund, factorParam, holdingParam);
   const { riskForecast } = useRiskForecast(fund, holdingParam || undefined);
 
   const fundKeys = [
@@ -103,6 +105,12 @@ export default function FactorExposures() {
   ];
   const isFactorDetail = Boolean(factorParam);
   const isHoldingDetail = Boolean(holdingParam);
+  const isDetailView = isFactorDetail || isHoldingDetail;
+  const forecastLoading = isDetailView
+    ? detailLoading || (!detailData && !detailError)
+    : exposuresLoading;
+  const forecastError = isDetailView ? detailError : exposuresError;
+  const forecastData = isDetailView ? detailData : exposures;
 
   const pagesForBreadcrumbs =
     isFactorDetail || isHoldingDetail
@@ -170,10 +178,21 @@ export default function FactorExposures() {
             <div className="flex-1 min-w-0 flex flex-col">
               <Card className="p-0 m-0 flex-1 flex flex-col">
                 <div className="flex-1 flex flex-col">
-                  {detailData ? (
+                  {forecastLoading ? (
+                    <div className="p-6">
+                      <div className="animate-pulse space-y-4">
+                        <div className="h-6 w-1/3 rounded bg-muted" />
+                        <div className="h-40 rounded bg-muted" />
+                      </div>
+                    </div>
+                  ) : forecastError ? (
+                    <div className="p-6 text-sm text-destructive" role="alert">
+                      {forecastError}
+                    </div>
+                  ) : (
                     <div className="flex-1 flex flex-col">
                       <ForecastView
-                        data={detailData}
+                        data={forecastData ?? []}
                         showTop={showTop}
                         setShowTop={(v) => updateURLForShowTop(v)}
                         onFactorClick={
@@ -189,30 +208,6 @@ export default function FactorExposures() {
                         onViewChange={(v) => updateURLForView(v)}
                       />
                     </div>
-                  ) : (
-                    <>
-                      {exposuresLoading ? (
-                        <div className="p-6">
-                          <div className="animate-pulse space-y-4">
-                            <div className="h-6 w-1/3 bg-muted rounded" />
-                            <div className="h-40 bg-muted rounded" />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex-1 flex flex-col">
-                          <ForecastView
-                            data={exposures}
-                            showTop={showTop}
-                            setShowTop={(v) => updateURLForShowTop(v)}
-                            onFactorClick={(s) => openFactorView(s)}
-                            contributionMode={isFactorDetail}
-                            headerTitle={headerTooltipElement}
-                            view={view}
-                            onViewChange={(v) => updateURLForView(v)}
-                          />
-                        </div>
-                      )}
-                    </>
                   )}
                 </div>
               </Card>

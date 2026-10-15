@@ -1,53 +1,20 @@
-import {
+import type {
   FundRequest,
   FundSummaryResponse,
   FundTimeSeriesResponse,
 } from "../types";
-import { API_BASE_URL } from "../variables";
+import { postJson, type ApiRequestOptions } from "./client";
 
-export async function getFundSummary(
+export function getFundSummary(
   request: FundRequest,
+  options?: ApiRequestOptions,
 ): Promise<FundSummaryResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "fund/summary", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsSummaryResponse: FundSummaryResponse = await response.json();
-
-    return allFundsSummaryResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("fund/summary", request, options);
 }
 
-export async function getFundTimeSeries(
+export function getFundTimeSeries(
   request: FundRequest,
+  options?: ApiRequestOptions,
 ): Promise<FundTimeSeriesResponse> {
-  try {
-    const response = await fetch(API_BASE_URL + "fund/time-series", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const allFundsTimeSeriesResponse: FundTimeSeriesResponse =
-      await response.json();
-
-    return allFundsTimeSeriesResponse;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch data.");
-  }
+  return postJson("fund/time-series", request, options);
 }

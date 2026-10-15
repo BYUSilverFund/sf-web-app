@@ -108,3 +108,40 @@ The Alumni directory on the team page is fetched using AWS AppSync GraphQL query
 
 This app is deployed on **AWS Amplify**.
 Pushes to the `dev` and `prod` branches automatically trigger deployments to their respective Amplify environments.
+
+## HTTPS certificate management
+
+The website uses an **Amplify-managed certificate** issued through
+AWS Certificate Manager (ACM). Amplify handles certificate issuance,
+deployment, and automatic renewal.
+
+### Set up the certificate
+
+1. Open **AWS Amplify → your app → Custom domains**.
+2. Add `silverfund.byu.edu`, or open its existing domain configuration.
+3. Select **Amplify-managed certificate** when choosing the certificate.
+4. Copy the certificate verification CNAME name and value provided by Amplify.
+5. Open **Route 53 → Hosted zones → silverfund.byu.edu**.
+6. Create the verification record:
+
+   | Field          | Setting                                                         |
+   | -------------- | --------------------------------------------------------------- |
+   | Record name    | Verification name from Amplify, excluding `.silverfund.byu.edu` |
+   | Record type    | CNAME                                                           |
+   | Alias          | Off                                                             |
+   | Value          | Verification target from Amplify                                |
+   | TTL            | 300                                                             |
+   | Routing policy | Simple                                                          |
+
+7. Verify the full record name, then click **Create records**.
+8. Return to Amplify and wait for certificate validation and deployment.
+9. Open **https://silverfund.byu.edu** in a private window and confirm
+   the certificate is valid.
+
+### Renewal and troubleshooting
+
+Keep the verification CNAME in Route 53 so AWS can validate future renewals.
+
+If the certificate expires, compare the existing CNAME with the record
+currently shown in Amplify. Add or correct it if needed. Certificate
+updates could take time after DNS validation succeeds.

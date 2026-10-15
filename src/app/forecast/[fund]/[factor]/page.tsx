@@ -26,7 +26,11 @@ export default function FactorDetailPage() {
   const factor = params.factor as string;
   const router = useRouter();
 
-  const { detailData } = useDetailData(fund, factor, null);
+  const {
+    detailData,
+    loading: detailLoading,
+    error: detailError,
+  } = useDetailData(fund, factor, null);
   const { riskForecast } = useRiskForecast(fund);
 
   function updateURLForFund(fundVal: string) {
@@ -118,20 +122,33 @@ export default function FactorDetailPage() {
             <div className="flex-1 min-w-0 flex flex-col">
               <Card className="p-0 flex-1 flex flex-col">
                 <div className="sm:mx-2 p-1 flex-1 flex flex-col">
-                  <ForecastView
-                    data={detailData ?? []}
-                    showTop={showTop}
-                    setShowTop={(v) => updateURLForShowTop(v)}
-                    onFactorClick={
-                      fund !== "all_funds"
-                        ? (s) => openHoldingPage(s)
-                        : undefined
-                    }
-                    contributionMode={true}
-                    headerTitle={headerTooltipElement}
-                    view={view}
-                    onViewChange={(v) => updateURLForView(v)}
-                  />
+                  {detailLoading || (!detailData && !detailError) ? (
+                    <div className="p-6">
+                      <div className="animate-pulse space-y-4">
+                        <div className="h-6 w-1/3 rounded bg-muted" />
+                        <div className="h-40 rounded bg-muted" />
+                      </div>
+                    </div>
+                  ) : detailError ? (
+                    <div className="p-6 text-sm text-destructive" role="alert">
+                      {detailError}
+                    </div>
+                  ) : (
+                    <ForecastView
+                      data={detailData ?? []}
+                      showTop={showTop}
+                      setShowTop={(v) => updateURLForShowTop(v)}
+                      onFactorClick={
+                        fund !== "all_funds"
+                          ? (s) => openHoldingPage(s)
+                          : undefined
+                      }
+                      contributionMode={true}
+                      headerTitle={headerTooltipElement}
+                      view={view}
+                      onViewChange={(v) => updateURLForView(v)}
+                    />
+                  )}
                 </div>
               </Card>
             </div>

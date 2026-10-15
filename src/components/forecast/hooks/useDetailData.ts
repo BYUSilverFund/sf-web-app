@@ -12,10 +12,25 @@ export function useDetailData(
 ) {
   const [detailData, setDetailData] = useState<FactorData[] | null>(null);
   const [detailLabel, setDetailLabel] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!fund) return;
     let mounted = true;
+    const hasDetailRequest = Boolean(fund && (factorParam || holdingParam));
+    setDetailData(null);
+    setDetailLabel(null);
+    setError(null);
+    setLoading(hasDetailRequest);
+
+    if (!fund) {
+      return () => void (mounted = false);
+    }
+
+    const getRequestError = (err: unknown, label: string) =>
+      err instanceof Error
+        ? `Unable to load ${label}: ${err.message}`
+        : `Unable to load ${label}. Please try again.`;
 
     const fetchFactor = async (f: string) => {
       try {
@@ -27,6 +42,9 @@ export function useDetailData(
             headers: { Authorization: `Bearer ${token}` },
           },
         );
+        if (!response.ok) {
+          throw new Error(`Request failed (HTTP ${response.status}).`);
+        }
         const data = await response.json();
         const src =
           data?.positions ?? data?.holdings ?? data?.exposures ?? data;
@@ -58,6 +76,9 @@ export function useDetailData(
         setDetailLabel(f);
       } catch (err) {
         console.error("Failed fetching factor details:", err);
+        if (mounted) setError(getRequestError(err, "factor details"));
+      } finally {
+        if (mounted) setLoading(false);
       }
     };
 
@@ -71,6 +92,9 @@ export function useDetailData(
             headers: { Authorization: `Bearer ${token}` },
           },
         );
+        if (!response.ok) {
+          throw new Error(`Request failed (HTTP ${response.status}).`);
+        }
         const data = await response.json();
         const src = data?.exposures ?? data?.factors ?? data;
         let arr: FactorData[] = [];
@@ -101,6 +125,9 @@ export function useDetailData(
         setDetailLabel(h);
       } catch (err) {
         console.error("Failed fetching holding factors:", err);
+        if (mounted) setError(getRequestError(err, "holding factors"));
+      } finally {
+        if (mounted) setLoading(false);
       }
     };
 
@@ -113,12 +140,11 @@ export function useDetailData(
         await fetchHolding(holdingParam);
         return;
       }
-      setDetailData(null);
-      setDetailLabel(null);
+      setLoading(false);
     })();
 
     return () => void (mounted = false);
   }, [fund, factorParam, holdingParam]);
 
-  return { detailData, detailLabel };
+  return { detailData, detailLabel, loading, error };
 }

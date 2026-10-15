@@ -60,11 +60,6 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             linkedIn="https://www.linkedin.com/in/andrewcriddle"
           />
           <TeamCard
-            name="Grant Rich"
-            position="Quantitative Fund"
-            linkedIn="https://www.linkedin.com/in/grantjrich/?isSelfProfile=false"
-          />
-          <TeamCard
             headShot={MichaelRhoton.src}
             name="Michael Rhoton"
             position="Graduate Fund"
