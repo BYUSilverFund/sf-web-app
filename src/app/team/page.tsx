@@ -12,8 +12,7 @@ import GradFundGroup from "@/images/fund-members/grad-fund-group.jpg";
 // quant fund images
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // undergrad fund images
-import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
-import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
+import JonathanLambert from "@/images/fund-members/jonathan-lambert.jpg";
 // fund advisor images
 import BrandonBates from "@/images/fund-advisors/brandon-bates.jpg";
 import BrianBoyer from "@/images/fund-advisors/brian-boyer.jpg";
@@ -123,12 +122,10 @@ const QuantFundTab: React.FC = () => {
         name="Co-President: Andy Criddle"
         linkedIn="https://www.linkedin.com/in/andrewcriddle"
       />
-
-      {/*       <TeamCard
-        headShot={GrantRich.src}}
-        name="Grant Rich"
-        linkedIn="https://www.linkedin.com/in/grantjrich/"
-      /> */}
+      <TeamCard
+        name="Co-President: Grant Rich"
+        linkedIn="https://www.linkedin.com/in/grantjrich/?isSelfProfile=false"
+      />
     </>
   );
 };
@@ -137,14 +134,13 @@ const UndergradFundTab: React.FC = () => {
   return (
     <>
       <TeamCard
-        headShot={HudsonVogel.src}
-        name="Hudson Vogel"
-        linkedIn="https://www.linkedin.com/in/hudson-vogel/"
+        headShot={JonathanLambert.src}
+        name="Co-President: Jonathan Lambert"
+        linkedIn="https://www.linkedin.com/in/jonlambert1111/"
       />
       <TeamCard
-        headShot={ChristianBaggaley.src}
-        name="Christian Baggaley"
-        linkedIn="https://www.linkedin.com/in/christiantbaggaley/"
+        name="Co-President: Christian Evans"
+        linkedIn="https://www.linkedin.com/in/christian-evans-b98a5427a/"
       />
     </>
   );
