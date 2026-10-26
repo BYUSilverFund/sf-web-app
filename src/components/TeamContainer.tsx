@@ -8,8 +8,7 @@ import CashClark from "@/images/fund-members/cash-clark.jpg";
 // Quantitative images
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
 // Undergraduate images
-import HudsonVogel from "@/images/fund-members/hudson-vogel.jpg";
-import ChristianBaggaley from "@/images/fund-members/christian-baggaley.jpg";
+import JonathanLambert from "@/images/fund-members/jonathan-lambert.jpg";
 // fund advisor images
 import BrandonBates from "@/images/fund-advisors/brandon-bates.jpg";
 import BrianBoyer from "@/images/fund-advisors/brian-boyer.jpg";
@@ -61,6 +60,11 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             linkedIn="https://www.linkedin.com/in/andrewcriddle"
           />
           <TeamCard
+            name="Grant Rich"
+            position="Quantitative Fund"
+            linkedIn="https://www.linkedin.com/in/grantjrich/?isSelfProfile=false"
+          />
+          <TeamCard
             headShot={MichaelRhoton.src}
             name="Michael Rhoton"
             position="Graduate Fund"
@@ -73,16 +77,15 @@ const TeamTabContainer: React.FC<TeamTabContainerProps> = ({ activeTab }) => {
             linkedIn="https://www.linkedin.com/in/cashclark/"
           />
           <TeamCard
-            headShot={ChristianBaggaley.src}
-            name="Christian Baggaley"
+            headShot={JonathanLambert.src}
+            name="Jonathan Lambert"
             position="Undergraduate Fund"
-            linkedIn="https://www.linkedin.com/in/christiantbaggaley/"
+            linkedIn="https://www.linkedin.com/in/jonlambert1111/"
           />
           <TeamCard
-            headShot={HudsonVogel.src}
-            name="Hudson Vogel"
+            name="Christian Evans"
             position="Undergraduate Fund"
-            linkedIn="https://www.linkedin.com/in/hudson-vogel/"
+            linkedIn="https://www.linkedin.com/in/christian-evans-b98a5427a/"
           />
         </div>
       )}
