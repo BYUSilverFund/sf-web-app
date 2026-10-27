@@ -8,6 +8,7 @@ import { SquareSvgTl, SquareSvgBr } from "@/components/SquareSvg";
 // grad fund images
 import MichaelRhoton from "@/images/fund-members/michael-rhoton.png";
 import CashClark from "@/images/fund-members/cash-clark.jpg";
+import BraydenWhite from "@/images/fund-members/brayden-white.jpg";
 import GradFundGroup from "@/images/fund-members/grad-fund-group.jpg";
 // quant fund images
 import AndyCriddle from "@/images/fund-members/andy-criddle.jpg";
@@ -109,6 +110,11 @@ const GradFundTab: React.FC = () => {
         headShot={CashClark.src}
         name="Co-President: Cash Clark"
         linkedIn="https://www.linkedin.com/in/cashclark/"
+      />
+      <TeamCard
+        headShot={BraydenWhite.src}
+        name="Portfolio Manager: Brayden White"
+        linkedIn="https://www.linkedin.com/in/brayden-white/"
       />
     </>
   );
