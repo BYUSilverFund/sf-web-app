@@ -23,7 +23,7 @@ Copy `example.env` to `.env.local` and fill in the required values:
 cp example.env .env.local
 ```
 
-Refer to [`example.env`](example.env) for full descriptions and comments on each required variable (`NEXT_PUBLIC_FASTAPI_URL`, Cognito credentials, GraphQL API configuration).
+Refer to [`example.env`](example.env) for full descriptions and comments on each required variable (`NEXT_PUBLIC_FASTAPI_URL`, Cognito credentials, and the protected GraphQL endpoint).
 
 ### 3. Run Development Server
 
@@ -101,8 +101,8 @@ This application uses **AWS Cognito** for user authentication and route protecti
 
 The Alumni directory on the team page is fetched using AWS AppSync GraphQL querying an Amazon DynamoDB table (`src/graphql/backend.ts`).
 
-- **Authentication Mode**: API Key (`apiKey`).
-- **Annual Expiration & Rotation**: AWS AppSync API keys expire annually. When the key expires, generate a new key in the **AWS Console $\rightarrow$ AWS AppSync $\rightarrow$ Settings $\rightarrow$ API Keys** and update the Amplify environment configuration.
+- **Authentication Mode**: Cognito User Pool (`userPool`). The `/alumni` route requires a signed-in user before it loads the directory.
+- **Required AppSync configuration**: Configure the existing AppSync API to accept the same Cognito User Pool as an authorization provider, set the alumni query's authorization to Cognito, and remove the API key authorization mode after confirming deployment. Limit the signed-in role to the read-only alumni query.
 
 ## Deployment
 
