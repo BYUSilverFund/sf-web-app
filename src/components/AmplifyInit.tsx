@@ -9,9 +9,8 @@ export default function AmplifyInit(): null {
       API: {
         GraphQL: {
           endpoint: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "",
-          region: "us-west-2",
-          defaultAuthMode: "apiKey",
-          apiKey: process.env.NEXT_PUBLIC_GRAPHQL_API_KEY || "",
+          region: process.env.NEXT_PUBLIC_COGNITO_REGION || "us-west-2",
+          defaultAuthMode: "userPool",
         },
       },
       Auth: {

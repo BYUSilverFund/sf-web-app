@@ -32,7 +32,7 @@ export const getAlumniInfo = async (): Promise<AlumniInfo[]> => {
         }
       }
     `,
-    authMode: "apiKey",
+    authMode: "userPool",
   });
 
   return (result as ListSilverFundAlumniInfosResponse).data
