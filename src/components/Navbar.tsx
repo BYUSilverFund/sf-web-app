@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { fetchAuthSession, signOut } from "aws-amplify/auth";
+import { Hub } from "aws-amplify/utils";
 import { Background } from "@/components/Background";
 
 import { cn } from "@/lib/utils";
@@ -46,7 +48,16 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
-function NavbarNav({ className }: NavbarProps) {
+interface NavbarAuthProps {
+  signedIn: boolean;
+  onSignOut: () => Promise<void>;
+}
+
+function NavbarNav({
+  className,
+  signedIn,
+  onSignOut,
+}: NavbarProps & NavbarAuthProps) {
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
@@ -92,6 +103,23 @@ function NavbarNav({ className }: NavbarProps) {
               ))}
             </ul>
           </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink
+            asChild
+            className={cn(
+              navigationMenuTriggerStyle(),
+              "border border-white/50",
+            )}
+          >
+            {signedIn ? (
+              <button type="button" onClick={onSignOut}>
+                Sign out
+              </button>
+            ) : (
+              <Link href="/sign-in">Sign in</Link>
+            )}
+          </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
@@ -142,7 +170,7 @@ const TitleLogo: React.FC<NavbarProps> = ({ className }) => {
   );
 };
 
-const BurgerMenu: React.FC = () => {
+const BurgerMenu: React.FC<NavbarAuthProps> = ({ signedIn, onSignOut }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const linkStyle = "text-xl w-full border-b border-gray-400 py-4";
 
@@ -241,6 +269,22 @@ const BurgerMenu: React.FC = () => {
               {link.label}
             </Link>
           ))}
+          {signedIn ? (
+            <button
+              type="button"
+              className={linkStyle}
+              onClick={async () => {
+                await onSignOut();
+                toggleMenu();
+              }}
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link href="/sign-in" className={linkStyle} onClick={toggleMenu}>
+              Sign in
+            </Link>
+          )}
         </nav>
       </div>
     </div>
@@ -253,6 +297,47 @@ interface NavbarProps {
 }
 
 export function Navbar({ light = true }: NavbarProps) {
+  const [signedIn, setSignedIn] = React.useState(false);
+  const [authError, setAuthError] = React.useState("");
+
+  React.useEffect(() => {
+    let active = true;
+    let version = 0;
+    const check = async () => {
+      const current = ++version;
+      try {
+        const session = await fetchAuthSession();
+        if (active && current === version)
+          setSignedIn(Boolean(session.tokens?.accessToken));
+      } catch {
+        if (active && current === version) setSignedIn(false);
+      }
+    };
+    const unsubscribe = Hub.listen("auth", ({ payload }) => {
+      if (payload.event === "signedOut") {
+        version++;
+        setSignedIn(false);
+      } else {
+        void check();
+      }
+    });
+    void check();
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    setAuthError("");
+    try {
+      await signOut();
+      setSignedIn(false);
+    } catch {
+      setAuthError("Unable to sign out. Please try again.");
+    }
+  };
+
   return (
     <Background>
       <div
@@ -264,11 +349,18 @@ export function Navbar({ light = true }: NavbarProps) {
           className=" md:mb-0 flex-3 md:flex-1 sm:h-12 md:h-14 w-auto flex items-center"
         />
         <NavbarNav
+          signedIn={signedIn}
+          onSignOut={handleSignOut}
           light={light}
           className="flex-1 items-center hidden md:flex z-50"
         />
-        <BurgerMenu />
+        <BurgerMenu signedIn={signedIn} onSignOut={handleSignOut} />
       </div>
+      {authError && (
+        <p role="alert" className="text-white">
+          {authError}
+        </p>
+      )}
     </Background>
   );
 }

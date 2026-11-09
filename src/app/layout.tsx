@@ -4,6 +4,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "../components/Footer";
 import Navbar from "@/components/Navbar";
+import SilverFundAssistant from "@/components/assistant/SilverFundAssistant";
 import AmplifyInit from "@/components/AmplifyInit";
 
 // Configure the Inter font with specific settings
@@ -67,6 +68,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
 
           <Footer />
+          <SilverFundAssistant />
         </div>
       </body>
     </html>
