@@ -52,3 +52,18 @@ it("leaves an incomplete streamed equation as text until its closing delimiter a
   rerender(<Answer content={String.raw`Answer: $$\sigma_i$$ [1]`} />);
   expect(container.querySelector(".katex")).not.toBeNull();
 });
+
+it("aligns financial table values without changing precision, units or prose", () => {
+  const { container } = render(
+    <Answer
+      content={
+        "| Fund | Reported value | Return |\n| --- | --- | --- |\n| Grad | 1,926,941.8800 | -2.50% |\n| Quant | unavailable | 0.00% |\n\nAs of November 11. Currency not specified."
+      }
+    />,
+  );
+  expect(screen.getByText("1,926,941.8800")).toHaveClass("sf-numeric");
+  expect(screen.getByText("-2.50%")).toHaveClass("sf-numeric");
+  expect(screen.getByText("unavailable")).not.toHaveClass("sf-numeric");
+  expect(container.textContent).toContain("Currency not specified.");
+  expect(container.textContent).not.toContain("$");
+});

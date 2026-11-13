@@ -17,7 +17,7 @@ interface FundTabsBarProps {
   actions?: React.ReactNode;
 }
 
-const fundKeys = [
+export const fundKeys = [
   "all_funds",
   "grad",
   "undergrad",

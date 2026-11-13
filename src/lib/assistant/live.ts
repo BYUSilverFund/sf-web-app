@@ -15,7 +15,10 @@ export const liveAdapter: AssistantAdapter = {
         "Content-Type": "application/json",
         Accept: "text/event-stream",
       },
-      body: JSON.stringify({ message: question }),
+      body: JSON.stringify({
+        message: question,
+        ...(options?.fund ? { fund: options.fund } : {}),
+      }),
       signal: options?.signal,
     });
     if (!response.ok) {
