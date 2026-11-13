@@ -137,3 +137,31 @@ describe("verified dev chat contract", () => {
     );
   });
 });
+
+it.each([
+  "all_funds",
+  "quant",
+  "undergrad",
+  "grad",
+  "quant_paper",
+  "brigham_capital",
+])("sends structured fund %s with the question", async (fund) => {
+  vi.mocked(fetchAuthSession).mockResolvedValue({
+    tokens: { accessToken: { toString: () => "token" } },
+  } as never);
+  const fetcher = vi.fn().mockResolvedValue({
+    ok: true,
+    headers: new Headers({ "content-type": "text/event-stream" }),
+    body: stream(event("delta", { text: "Answer" }) + event("done", {})),
+  });
+  vi.stubGlobal("fetch", fetcher);
+  await liveAdapter.ask("Question", {
+    fund,
+    signal: new AbortController().signal,
+    onUpdate: vi.fn(),
+  });
+  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({
+    message: "Question",
+    fund,
+  });
+});

@@ -145,3 +145,25 @@ Keep the verification CNAME in Route 53 so AWS can validate future renewals.
 If the certificate expires, compare the existing CNAME with the record
 currently shown in Amplify. Add or correct it if needed. Certificate
 updates could take time after DNS validation succeeds.
+
+## Chatbot fund scope and composer
+
+The authenticated assistant supports All Funds or one selected fund. It sends the
+selection as structured metadata, labels each answer with its original scope, and
+retries a failed question using that same scope. Selection is locked during a
+stream. No API endpoint or authentication mode changes are required.
+
+The compact and expanded views use the site's Silver Fund logo, navy palette,
+and shared controls. Example questions adapt to the fund scope. The question box
+grows automatically, and submission scrolls to the new exchange. Reading older
+messages pauses stream-following until the user returns to the bottom.
+
+Equation opens a separate LaTeX panel with a bounded, untrusted KaTeX preview.
+Insert equation adds display-math delimiters to the existing question, without
+sending it. Invalid syntax and the 4,000-character question limit are validated.
+Source disclosures retain document citations and safe external links.
+
+Validation: `npm test`, `npm run lint`, `npx tsc --noEmit`. The live adapter continues
+to use `NEXT_PUBLIC_FASTAPI_URL` and a Cognito access token. Local browser review
+uses simulated streamed answers; authenticated end-to-end checks require signing
+in normally. No preview mode or authentication bypass is shipped.

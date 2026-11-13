@@ -11,6 +11,7 @@ export interface AssistantMessage {
   role: "user" | "assistant";
   content: string;
   sources?: AssistantSource[];
+  fund?: string;
 }
 export interface AssistantAdapter {
   connected: boolean;
@@ -18,6 +19,7 @@ export interface AssistantAdapter {
     question: string,
     options?: {
       signal: AbortSignal;
+      fund?: string;
       onUpdate: (answer: Omit<AssistantMessage, "id" | "role">) => void;
     },
   ): Promise<Omit<AssistantMessage, "id" | "role">>;

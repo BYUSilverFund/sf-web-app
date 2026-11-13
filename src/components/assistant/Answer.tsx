@@ -146,7 +146,18 @@ export function Answer({ content }: { content: string }) {
                   {lines.slice(2).map((line, j) => (
                     <TableRow key={j}>
                       {cells(line).map((cell, k) => (
-                        <TableCell key={k}>{inline(cell)}</TableCell>
+                        <TableCell
+                          key={k}
+                          className={
+                            /^[($€£+−-]?[\d,.]+(?:%|\))?$/.test(
+                              cell.replace(/\*\*/g, "").trim(),
+                            )
+                              ? "sf-numeric"
+                              : undefined
+                          }
+                        >
+                          {inline(cell)}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}
